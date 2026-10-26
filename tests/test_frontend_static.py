@@ -1,4 +1,4 @@
-"""Static validation tests for Phase 4 frontend assets, CSS constraints, and contrast."""
+"""Static validation tests for Phase 4 & Phase 5 frontend assets, CSS constraints, and contrast."""
 
 import re
 from pathlib import Path
@@ -16,12 +16,20 @@ def test_required_files_exist():
         FRONTEND_DIR / "css" / "eye.css",
         FRONTEND_DIR / "css" / "tape.css",
         FRONTEND_DIR / "css" / "why.css",
+        FRONTEND_DIR / "css" / "phone.css",
+        FRONTEND_DIR / "css" / "stamp.css",
+        FRONTEND_DIR / "css" / "receipt.css",
         FRONTEND_DIR / "css" / "awaaz.css",
         FRONTEND_DIR / "js" / "strings.js",
         FRONTEND_DIR / "js" / "app.js",
+        FRONTEND_DIR / "js" / "ws.js",
+        FRONTEND_DIR / "js" / "api.js",
         FRONTEND_DIR / "js" / "eye.js",
         FRONTEND_DIR / "js" / "tape.js",
         FRONTEND_DIR / "js" / "why.js",
+        FRONTEND_DIR / "js" / "phone.js",
+        FRONTEND_DIR / "js" / "stamp.js",
+        FRONTEND_DIR / "js" / "receipt.js",
         FRONTEND_DIR / "js" / "waveform.js",
         FRONTEND_DIR / "js" / "devfeed.js",
         FRONTEND_DIR / "assets" / "sample_run.jsonl",
@@ -42,6 +50,60 @@ def test_file_line_limits():
         assert len(lines) <= 200, f"JS file {f.name} exceeds 200 lines ({len(lines)})"
 
 
+def test_fetch_only_in_api_js():
+    js_files = list((FRONTEND_DIR / "js").glob("*.js"))
+    for f in js_files:
+        content = f.read_text(encoding="utf-8")
+        if f.name == "api.js":
+            assert "fetch(" in content, "api.js must contain fetch()"
+        else:
+            assert "fetch(" not in content, f"Unauthorized fetch() call found in {f.name}"
+
+
+def test_websocket_only_in_ws_js():
+    js_files = list((FRONTEND_DIR / "js").glob("*.js"))
+    for f in js_files:
+        content = f.read_text(encoding="utf-8")
+        if f.name == "ws.js":
+            assert "new WebSocket(" in content, "ws.js must contain new WebSocket("
+        else:
+            assert "new WebSocket(" not in content, f"Unauthorized new WebSocket( found in {f.name}"
+
+
+def test_no_innerhtml_in_key_modules():
+    disallowed_files = ["app.js", "tape.js", "why.js", "phone.js", "receipt.js"]
+    for fname in disallowed_files:
+        f = FRONTEND_DIR / "js" / fname
+        content = f.read_text(encoding="utf-8")
+        assert ".innerHTML" not in content, f"Forbidden .innerHTML assignment found in {fname}"
+
+
+def test_error_codes_in_strings():
+    strings_text = (FRONTEND_DIR / "js" / "strings.js").read_text(encoding="utf-8")
+    required_error_codes = [
+        "no_key",
+        "auth",
+        "rate_limited",
+        "credits",
+        "network",
+        "stt_closed",
+        "tts_failed",
+        "cap_reached",
+        "bad_request",
+        "internal",
+    ]
+    for code in required_error_codes:
+        assert f"{code}:" in strings_text, f"Missing error code in strings.js: {code}"
+
+
+def test_prefers_reduced_motion_in_phase5_css():
+    phase5_css = ["stamp.css", "phone.css", "receipt.css"]
+    for fname in phase5_css:
+        f = FRONTEND_DIR / "css" / fname
+        content = f.read_text(encoding="utf-8")
+        assert "prefers-reduced-motion" in content, f"{fname} must contain prefers-reduced-motion"
+
+
 def test_external_urls_restricted_to_google_fonts():
     url_pattern = re.compile(r'https?://[^\s"\'<>)]+')
     allowed_domains = {"fonts.googleapis.com", "fonts.gstatic.com"}
@@ -52,7 +114,6 @@ def test_external_urls_restricted_to_google_fonts():
             continue
         text = f.read_text(encoding="utf-8", errors="ignore")
         for url in url_pattern.findall(text):
-            # Exclude XML namespace URLs like http://www.w3.org/2000/svg
             if "www.w3.org" in url:
                 continue
             assert any(allowed in url for allowed in allowed_domains), (
@@ -122,9 +183,8 @@ def test_index_html_structure():
 
 def test_strings_have_hi_and_en():
     strings_text = (FRONTEND_DIR / "js" / "strings.js").read_text(encoding="utf-8")
-    # Parse key blocks inside STRINGS
     keys = re.findall(r"(\w+):\s*\{\s*hi:\s*\"([^\"]+)\",\s*en:\s*\"([^\"]+)\"", strings_text)
-    assert len(keys) >= 15, "Expected at least 15 localized string entries"
+    assert len(keys) >= 20, "Expected at least 20 localized string entries"
     for k, hi, en in keys:
         assert hi.strip(), f"Empty hi string for key {k}"
         assert en.strip(), f"Empty en string for key {k}"

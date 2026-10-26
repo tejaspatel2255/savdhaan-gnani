@@ -15,6 +15,9 @@
   <link rel="stylesheet" href="css/eye.css">
   <link rel="stylesheet" href="css/tape.css">
   <link rel="stylesheet" href="css/why.css">
+  <link rel="stylesheet" href="css/phone.css">
+  <link rel="stylesheet" href="css/stamp.css">
+  <link rel="stylesheet" href="css/receipt.css">
   <link rel="stylesheet" href="css/awaaz.css">
 </head>
 <body data-level="calm">
@@ -23,6 +26,16 @@
       सावधान को चलाने के लिए जावास्क्रिप्ट सक्षम करें · Please enable JavaScript to run Savdhaan.
     </div>
   </noscript>
+
+  <!-- SVG Rubber Stamp Filter -->
+  <svg style="position: absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
+    <defs>
+      <filter id="stamp-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" />
+      </filter>
+    </defs>
+  </svg>
 
   <!-- Live Accessibility Announcements -->
   <div id="live-polite" class="visually-hidden" role="status" aria-live="polite"></div>
@@ -36,7 +49,10 @@
 
   <!-- Error Banner -->
   <div id="banner" class="hidden" role="alert">
-    <span class="banner-msg"></span>
+    <div class="banner-content">
+      <span class="banner-msg"></span>
+      <div class="banner-server-msg"></div>
+    </div>
     <button class="banner-close" aria-label="Dismiss banner">बंद करें · Close</button>
   </div>
 
@@ -63,7 +79,17 @@
       </div>
 
       <div id="controls" role="toolbar" aria-label="Call controls">
-        <!-- Controls empty for now (Phase 5) -->
+        <select id="call-select" class="select-ctrl" aria-label="Select call"></select>
+        <select id="lang-select" class="select-ctrl" aria-label="Select language"></select>
+        <select id="mode-select" class="select-ctrl" aria-label="Select mode"></select>
+
+        <label class="cb-label" for="speak-warning-cb">
+          <input type="checkbox" id="speak-warning-cb" checked>
+          <span class="cb-text">बोलकर चेतावनी</span>
+        </label>
+
+        <button id="btn-start" class="btn-ctrl btn-start">कॉल शुरू करें · Start call</button>
+        <button id="btn-stop" class="btn-ctrl btn-stop" disabled>कॉल रोकें · Stop call</button>
       </div>
     </header>
 
@@ -168,7 +194,7 @@
           <div class="why-footer"></div>
         </section>
 
-        <!-- Phone Slot (Heading only for Phase 4) -->
+        <!-- Phone Slot -->
         <section id="phone-slot" aria-label="Phone slot" role="region">
           <div class="panel-header">
             <h2>
@@ -176,6 +202,11 @@
               <span class="title-en">LISTENER'S PHONE</span>
             </h2>
           </div>
+          <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <div class="phone-screen" data-state="calm"></div>
+          </div>
+          <div class="family-card-slot"></div>
         </section>
       </div>
     </main>
@@ -199,7 +230,7 @@
 
   <!-- Overlays Root -->
   <div id="stamp-root" aria-hidden="true"></div>
-  <div id="receipt-root" aria-hidden="true"></div>
+  <div id="receipt-root" class="hidden" aria-hidden="true"></div>
 
   <!-- Entry Script -->
   <script type="module" src="js/app.js"></script>

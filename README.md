@@ -14,7 +14,7 @@ It streams incoming call audio to **Gnani Prisma v2.5** (real-time speech-to-tex
 - **Text-to-Speech**: [Gnani Timbre v3.0](https://docs.gnani.ai) (`https://api.vachana.ai/api/v1/tts/inference`)
 - **Backend**: Python 3.10+, FastAPI, Uvicorn, WebSockets, HTTPX, SoundFile, NumPy, PyYAML
 - **Frontend**: Plain HTML5, CSS custom properties, vanilla ES modules (No frameworks, bundlers, icon libraries, or CDN scripts)
-- **Design System**: "Nazar" (guardian evil-eye charm) control room with real-time SVG eye tracking, torn paper receipt tape, evidence why-list, and full-width mirrored audio waveform.
+- **Design System**: "Nazar" (guardian evil-eye charm) control room with real-time SVG eye tracking, torn paper receipt tape, evidence why-list, rubber stamp slam, interactive phone frame with family alerts, and printable call receipts.
 
 ---
 
@@ -65,21 +65,34 @@ uvicorn backend.main:app --reload --port 8000
 ```
 Then visit **http://localhost:8000** in your browser.
 
-### Visual Testing & Dev Feed (Phase 4)
+### Interactive Live Control Room (Phase 5)
 
-Inspect the Nazar control room with recorded mock event playback:
+Visit **[http://localhost:8000/?speed=8](http://localhost:8000/?speed=8)** to run live interactive sessions:
+1. Select a call (e.g. *Digital arrest call (synthetic mock)*).
+2. Choose language (*हिंदी · Hindi* or *English*) and mode (*MOCK*, *REPLAY*, or *FILE*).
+3. Toggle spoken warnings with the *"बोलकर चेतावनी · Speak the warning"* checkbox.
+4. Click **"कॉल शुरू करें · Start call"** to observe:
+   - Real-time rolling transcript on the paper tape with torn zigzag edges and keyword highlights.
+   - Guardian Eye tracking audio level and staring intensely upon detecting scam threats.
+   - Rubber **सावधान! SCAM LIKELY** stamp slam with rough edges and container vibration.
+   - Virtual listener's phone displaying high-contrast vermilion danger warnings and audio visualizer.
+   - Simulated family emergency notification card.
+   - Printable perforated **CALL RECEIPT** summarizing duration, risk score, STT latency, and credits used.
+
+### Visual Testing & Dev Feed Snapshot Mode (Phase 4)
+
+Inspect static snapshot states deterministically using recorded events:
 - **Listening state ($t = 0.5$s)**: [http://localhost:8000/?dev=1&at=0.5](http://localhost:8000/?dev=1&at=0.5)
 - **Careful state ($t = 17.6$s)**: [http://localhost:8000/?dev=1&at=17.6](http://localhost:8000/?dev=1&at=17.6)
 - **Danger state ($t = 24.7$s)**: [http://localhost:8000/?dev=1&at=24.7](http://localhost:8000/?dev=1&at=24.7)
 - **Ended state ($t = 50.0$s)**: [http://localhost:8000/?dev=1&at=50](http://localhost:8000/?dev=1&at=50)
-- **Continuous 2x playback**: [http://localhost:8000/?dev=1&speed=2](http://localhost:8000/?dev=1&speed=2)
 
 ---
 
 ## CLI Tools & Testing
 
 ```bash
-# Run complete test suite (91 automated unit and integration tests)
+# Run complete test suite (96 automated unit, integration, and security tests)
 pytest -q
 
 # Test warning synthesis character limits and templates without network usage
@@ -101,7 +114,8 @@ python scripts/stream_file.py --file data/cache/smoke_tts.wav --lang hi-IN --rat
 - [x] **Phase 2**: Scam scoring engine, token normalizer, rule pack loader, & fixture tests
 - [x] **Phase 3**: Session orchestrator, event bus, mock mode, and warning synthesizer
 - [x] **Phase 4**: Nazar control room UI, animated Eye, paper Tape slips, Why list, and dev feed
-- [ ] **Phase 5**: Real WebSocket UI connection, live call controls, and call picker
+- [x] **Phase 5**: Real WebSocket UI connection, live call controls, stamp slam, phone, family alert, & receipt
+- [ ] **Phase 5B**: Browser microphone capture (PCM streaming over WebSocket)
 - [ ] **Phase 6**: Audio source modes (Live Mic, Audio File, Replay, and Mock)
 - [ ] **Phase 7**: Evaluation Khata page, benchmark runner, and accuracy reports
 - [ ] **Phase 8**: System hardening, audio degradation tests, and error recovery

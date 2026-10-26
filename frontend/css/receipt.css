@@ -1,0 +1,137 @@
+#receipt-root {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(11, 15, 30, 0.75);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-16);
+  pointer-events: auto;
+}
+
+#receipt-root.hidden {
+  display: none;
+}
+
+.receipt-dialog {
+  width: 100%;
+  max-width: 440px;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  border-radius: var(--radius-panel);
+  padding: var(--sp-24);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-16);
+  clip-path: polygon(
+    0% 8px, 5% 0%, 10% 8px, 15% 0%, 20% 8px, 25% 0%, 30% 8px, 35% 0%, 40% 8px, 45% 0%, 50% 8px, 55% 0%, 60% 8px, 65% 0%, 70% 8px, 75% 0%, 80% 8px, 85% 0%, 90% 8px, 95% 0%, 100% 8px,
+    100% calc(100% - 8px), 95% 100%, 90% calc(100% - 8px), 85% 100%, 80% calc(100% - 8px), 75% 100%, 70% calc(100% - 8px), 65% 100%, 60% calc(100% - 8px), 55% 100%, 50% calc(100% - 8px), 45% 100%, 40% calc(100% - 8px), 35% 100%, 30% calc(100% - 8px), 25% 100%, 20% calc(100% - 8px), 15% 100%, 10% calc(100% - 8px), 5% 100%, 0% calc(100% - 8px)
+  );
+  animation: receiptReveal 900ms cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+@keyframes receiptReveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+  }
+  to {
+    clip-path: polygon(
+      0% 8px, 5% 0%, 10% 8px, 15% 0%, 20% 8px, 25% 0%, 30% 8px, 35% 0%, 40% 8px, 45% 0%, 50% 8px, 55% 0%, 60% 8px, 65% 0%, 70% 8px, 75% 0%, 80% 8px, 85% 0%, 90% 8px, 95% 0%, 100% 8px,
+      100% calc(100% - 8px), 95% 100%, 90% calc(100% - 8px), 85% 100%, 80% calc(100% - 8px), 75% 100%, 70% calc(100% - 8px), 65% 100%, 60% calc(100% - 8px), 55% 100%, 50% calc(100% - 8px), 45% 100%, 40% calc(100% - 8px), 35% 100%, 30% calc(100% - 8px), 25% 100%, 20% calc(100% - 8px), 15% 100%, 10% calc(100% - 8px), 5% 100%, 0% calc(100% - 8px)
+    );
+    opacity: 1;
+  }
+}
+
+.receipt-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  text-align: center;
+  border-bottom: 2px dashed var(--ink);
+  padding-bottom: var(--sp-8);
+}
+
+.receipt-table {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+  font-size: 13px;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted var(--paper-2);
+  padding-bottom: 2px;
+}
+
+.receipt-row-label {
+  color: var(--ink);
+  opacity: 0.8;
+}
+
+.receipt-row-value {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Verdict stamp */
+.receipt-verdict {
+  margin: var(--sp-8) auto;
+  padding: var(--sp-6) var(--sp-24);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transform: rotate(-4deg);
+}
+
+.receipt-verdict.safe {
+  border: 3px solid var(--nazar-deep);
+  color: var(--nazar-deep);
+}
+
+.receipt-verdict.scam {
+  border: 3px solid var(--danger-deep);
+  color: var(--danger-deep);
+}
+
+.receipt-actions {
+  display: flex;
+  gap: var(--sp-12);
+  margin-top: var(--sp-8);
+}
+
+.btn-receipt {
+  flex: 1;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-panel);
+  cursor: pointer;
+  border: 2px solid var(--ink);
+}
+
+.btn-receipt-replay {
+  background-color: var(--careful);
+  color: var(--ink);
+}
+
+.btn-receipt-close {
+  background-color: transparent;
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .receipt-dialog {
+    animation: none;
+    clip-path: none;
+  }
+}

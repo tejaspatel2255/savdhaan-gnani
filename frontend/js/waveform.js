@@ -13,6 +13,12 @@ export function init(rootEl) {
   renderWaveform();
 }
 
+export function reset() {
+  ringBuffer.fill(0.02);
+  bufferIdx = 0;
+  renderWaveform();
+}
+
 function renderWaveform() {
   if (!dom.path) return;
   const width = 1440;

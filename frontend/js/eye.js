@@ -25,6 +25,19 @@ export function init(rootEl) {
   updateLevelUI("calm", 0);
 }
 
+export function reset() {
+  currentScore = 0;
+  targetScore = 0;
+  if (scoreAnimFrame) cancelAnimationFrame(scoreAnimFrame);
+  if (dom && dom.scoreNum) {
+    dom.scoreNum.textContent = "00";
+    dom.gauge.style.strokeDashoffset = "1068";
+    updateTicks(0);
+    setEyeState("idle");
+    updateLevelUI("calm", 0);
+  }
+}
+
 function renderTicks() {
   if (!dom.ticksGroup) return;
   let html = "";

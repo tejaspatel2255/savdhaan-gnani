@@ -1,15 +1,11 @@
+import { fetchSampleRun } from "./api.js";
+
 /**
  * Dev feed replay driver for deterministic visual testing and design polish.
  */
 export async function playSample(url, dispatch, { speed = 1, at = null } = {}) {
   try {
-    const res = await fetch(url);
-    if (!res.ok) {
-      console.warn("Could not load sample run:", url, res.status);
-      return;
-    }
-
-    const text = await res.text();
+    const text = await fetchSampleRun(url);
     const lines = text.split("\n");
     const messages = [];
 

@@ -1,0 +1,223 @@
+#phone-slot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-12);
+  align-items: center;
+}
+
+.phone-frame {
+  width: 280px;
+  height: 480px;
+  border-radius: var(--radius-phone);
+  border: 2px solid var(--line);
+  background-color: var(--night-3);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Phone notch */
+.phone-notch {
+  width: 100px;
+  height: 18px;
+  background-color: var(--night);
+  border-radius: 0 0 12px 12px;
+  align-self: center;
+  position: absolute;
+  top: 0;
+  z-index: 10;
+}
+
+.phone-screen {
+  flex: 1;
+  padding: var(--sp-24) var(--sp-16) var(--sp-16) var(--sp-16);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+/* Screen States */
+.phone-screen[data-state="calm"] {
+  background-color: var(--night-3);
+  color: var(--text);
+  gap: var(--sp-12);
+}
+
+.phone-screen[data-state="careful"] {
+  background-color: var(--night-3);
+  color: var(--text);
+  gap: var(--sp-12);
+}
+
+.phone-careful-banner {
+  background-color: var(--careful);
+  color: var(--ink);
+  padding: var(--sp-8) var(--sp-16);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Danger State (Amendment 1 & 2: background --danger-deep, text --paper) */
+.phone-screen[data-state="danger"] {
+  background-color: var(--danger-deep);
+  color: var(--paper);
+  justify-content: space-between;
+  padding-top: var(--sp-32);
+}
+
+.danger-card-title {
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 1;
+  color: var(--paper);
+}
+
+.danger-lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-8);
+  margin: var(--sp-12) 0;
+}
+
+.danger-line-hi {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--paper);
+}
+
+.danger-line-en {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--paper-2);
+  opacity: 0.85;
+}
+
+.btn-hangup {
+  background-color: var(--paper);
+  color: var(--danger-deep);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  border: 2px solid var(--paper);
+  border-radius: var(--radius-pill);
+  padding: var(--sp-8) var(--sp-24);
+  cursor: pointer;
+  min-height: 44px;
+  width: 100%;
+}
+
+.phone-ended-safe {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--nazar-light);
+  border: 2px solid var(--nazar-light);
+  padding: var(--sp-8) var(--sp-16);
+  border-radius: var(--radius-pill);
+}
+
+/* Animated Audio Bars */
+.audio-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 24px;
+  margin: var(--sp-4) 0;
+}
+
+.audio-bar {
+  width: 4px;
+  height: 6px;
+  background-color: var(--paper);
+  border-radius: 2px;
+  animation: barWave 600ms ease-in-out infinite alternate;
+}
+
+.audio-bar:nth-child(2) { animation-delay: 120ms; }
+.audio-bar:nth-child(3) { animation-delay: 240ms; }
+.audio-bar:nth-child(4) { animation-delay: 360ms; }
+.audio-bar:nth-child(5) { animation-delay: 480ms; }
+
+@keyframes barWave {
+  from { height: 6px; }
+  to { height: 22px; }
+}
+
+.warning-reason {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--paper-2);
+  opacity: 0.75;
+}
+
+.btn-tap-audio {
+  background-color: var(--careful);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 4px var(--sp-12);
+  cursor: pointer;
+  min-height: 44px;
+  margin-top: var(--sp-4);
+}
+
+/* Family Alert Card */
+.family-card {
+  width: 280px;
+  background-color: var(--night-3);
+  border: 2px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: var(--sp-12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  animation: familySlide 300ms ease-out forwards;
+}
+
+@keyframes familySlide {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.family-card-hdr {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.simulated-tag {
+  background-color: var(--careful);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+}
+
+.family-card-msg {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .audio-bar { animation: none; height: 12px; }
+  .family-card { animation: none; }
+}
