@@ -1,0 +1,27 @@
+{
+"scam": [
+ {"id": "S1_digital_arrest", "alert_by_index": 3, "segments": ["main cyber crime branch se inspector bol raha hoon", "aapke naam par ek parcel mila hai jisme illegal saaman hai", "aapke khilaf arrest warrant nikla hai", "yeh baat kisi ko mat batana aur call cut mat karna", "verification ke liye apne paise safe account mein transfer karein"]},
+ {"id": "S2_otp_kyc", "alert_by_index": 2, "segments": ["sir aapka kyc expire ho gaya hai", "abhi update nahi kiya to account band ho jayega", "aapke phone par ek otp aaya hai wo otp bataiye"]},
+ {"id": "S3_remote_app", "alert_by_index": 1, "segments": ["main bank ke technical team se bol raha hoon", "aap anydesk download karke code bataiye", "screen share kijiye taaki hum refund kar saken"]},
+ {"id": "S4_devanagari_arrest", "alert_by_index": 2, "segments": ["मैं साइबर क्राइम से इंस्पेक्टर बोल रहा हूँ", "आपके खिलाफ गिरफ्तारी वारंट निकला है", "यह बात किसी को मत बताना और कॉल मत काटना"]},
+ {"id": "S5_customs_parcel", "alert_by_index": 2, "segments": ["aapka parcel customs mein pakda gaya hai", "usme narcotics mile hain aur aapke khilaf case darj ho jayega", "abhi paisa transfer karo warna giraftari hogi"]},
+ {"id": "S6_lottery", "alert_by_index": 2, "segments": ["congratulations aapne lucky draw jeeta hai", "inaam lene ke liye processing fee ka paisa transfer karein", "yeh offer sirf aaj hi hai kisi ko mat batana"]},
+ {"id": "S7_digital_arrest_hi", "alert_by_index": 0, "segments": ["आप डिजिटल अरेस्ट में हैं"]}
+],
+"legit": [
+ {"id": "L1_bank_reminder", "max_score_below": 30, "segments": ["namaste main aapke bank ki taraf se automated reminder bol raha hoon", "aapki emi 5 tareekh ko due hai", "kripya samay par bhugtaan karein", "dhanyavaad"]},
+ {"id": "L2_bank_warning", "max_score_below": 30, "segments": ["kripya apna otp kisi ke saath share na karein", "bank kabhi otp ya pin nahi maangta", "fraud se savdhan rahein"]},
+ {"id": "L3_delivery", "max_score_below": 30, "segments": ["aapka order aaj shaam tak deliver ho jayega", "delivery partner aapko call karega", "abhi aap track kar sakte hain"]},
+ {"id": "L4_appointment", "max_score_below": 30, "segments": ["doctor ki appointment kal subah das baje hai", "kripya samay se pahunchein"]},
+ {"id": "L5_police_verification", "max_score_below": 30, "segments": ["aapke college ka police verification form complete ho gaya hai", "ek hafte mein certificate mil jayega"]},
+ {"id": "L6_family", "max_score_below": 30, "segments": ["beta jaldi ghar aao khana ready hai", "abhi aa jao"]},
+ {"id": "L7_hindi_bank_warning", "max_score_below": 30, "segments": ["कृपया अपना ओटीपी किसी के साथ शेयर न करें", "बैंक कभी ओटीपी नहीं मांगता"]},
+ {"id": "L8_transaction_alert", "max_score_below": 30, "segments": ["aapke account mein ek transaction alert aaya hai", "kripya apne bank branch mein sampark karein"]},
+ {"id": "L9_news_chat", "max_score_below": 30, "segments": ["kal news mein dekha ki ek aadmi ko arrest kiya gaya", "bahut bura hua"]},
+ {"id": "L10_support_call", "max_score_below": 30, "segments": ["main aapki complaint abhi resolve karta hoon", "aur turant refund process karunga"]}
+],
+"gating": [
+ {"id": "G1_single_credentials", "no_alert": true, "segments": ["apna otp bataiye"]},
+ {"id": "G2_rush_plus_money", "no_alert": true, "segments": ["abhi paisa transfer karo"]}
+]
+}
