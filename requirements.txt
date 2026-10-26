@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+websockets>=13
+httpx
+python-dotenv
+pydantic
+numpy
+soundfile
+pyyaml
+jiwer
+pytest
