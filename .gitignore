@@ -1,8 +1,52 @@
+# Environment variables and secrets (CRITICAL: NEVER COMMIT)
 .env
+.env*.local
+.env.*
+!.env.example
+
+# Python virtual environments
 .venv/
+venv/
+env/
+ENV/
+
+# Python byte-code and caches
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Pytest and coverage
 .pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+
+# Local session logs and data caches
 data/cache/
-data/runs/
+data/runs/*.jsonl
+!data/runs/.gitkeep
+
+# Local audio files (synthetic audio test recordings)
 data/calls/*.wav
 data/calls/*.pcm
+data/calls/*.mp3
+data/calls/*.ogg
+data/calls/*.flac
+
+# Editor and OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Logs and scratch
+*.log
+scratch/

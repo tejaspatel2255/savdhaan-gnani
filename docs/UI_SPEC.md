@@ -89,3 +89,10 @@ BEHAVIOUR RULES
 REPORT PAGE, "KHATA" (frontend/report.html, css/khata.css, js/report.js)
 Same tokens and fonts, but the page is a ledger book: cream paper, ruled lines (repeating-linear-gradient every 32px, colour #C9B98F at .5), a red vertical margin line at 72px, headings in the display font, numbers in mono. Title "हिसाब-किताब · EVALUATION KHATA" with the note "synthetic calls only, measured not estimated". Sections: error rate by noise condition (a table plus hand-drawn SVG bars that look like pencil strokes); scam detection (precision, recall, F1, false alarms); time to alert (a dot plot on a 0 to 60 s axis, one dot per scam call); STT latency p50 and p95; a list of missed or falsely flagged calls with their transcripts. Data only from GET /api/eval. If it is absent show "अभी आँकड़े नहीं · Run the evaluation first".
 
+Amendments (Phase 4)
+(1) token --danger-deep #A82A14 is the fill for danger surfaces that carry small text, with --paper text; --danger is for rings, borders, big display text and the stamp border; small danger text uses --danger-text.
+(2) the stamp's small mono line uses --danger-text; the phone danger card uses --danger-deep.
+(3) control outlines use --muted.
+(4) the LIVE MIC badge is a vermilion outline with --danger-text text.
+(5) the danger vignette flash is a fixed overlay with a 24px solid var(--danger) border that fades in and out; no gradients, no blur.
+

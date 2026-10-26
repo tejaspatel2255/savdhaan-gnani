@@ -1,0 +1,196 @@
+#col-tape {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--night-2);
+}
+
+.tape-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--sp-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-16);
+  scroll-behavior: smooth;
+}
+
+.tape-empty {
+  margin: auto;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--muted);
+  padding: var(--sp-32);
+}
+
+/* Tape Slip */
+.tape-slip {
+  background-color: var(--paper);
+  color: var(--ink);
+  padding: var(--sp-12) var(--sp-16) var(--sp-24) var(--sp-16);
+  border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% calc(100% - 10px),
+    95% 100%, 90% calc(100% - 10px), 85% 100%, 80% calc(100% - 10px),
+    75% 100%, 70% calc(100% - 10px), 65% 100%, 60% calc(100% - 10px),
+    55% 100%, 50% calc(100% - 10px), 45% 100%, 40% calc(100% - 10px),
+    35% 100%, 30% calc(100% - 10px), 25% 100%, 20% calc(100% - 10px),
+    15% 100%, 10% calc(100% - 10px), 5% 100%, 0% calc(100% - 10px)
+  );
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: slipEnter 220ms ease-out forwards;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-8);
+}
+
+@keyframes slipEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px dashed var(--ink);
+  padding-bottom: var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.slip-time {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.slip-latency {
+  background-color: var(--paper-2);
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  font-size: 10px;
+  color: var(--ink);
+}
+
+.slip-latency.hidden {
+  display: none;
+}
+
+.slip-text {
+  font-family: var(--font-body);
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink);
+  word-break: break-word;
+  animation: textReveal 350ms ease-out forwards;
+}
+
+@keyframes textReveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Marks in slips */
+mark.hit-raise {
+  background-color: var(--careful);
+  color: var(--ink);
+  padding: 1px 4px;
+  display: inline;
+  transform: skewX(-1deg);
+  border-radius: 2px;
+}
+
+mark.hit-high-raise {
+  background-color: var(--careful);
+  color: var(--ink);
+  padding: 1px 4px;
+  display: inline;
+  transform: skewX(-1deg);
+  border-bottom: 3px solid var(--danger);
+  border-radius: 2px;
+}
+
+mark.hit-dampen {
+  background: transparent;
+  color: var(--ink);
+  border-bottom: 2px dotted var(--calm);
+}
+
+/* Category chips on slip */
+.slip-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-6);
+  margin-top: var(--sp-4);
+}
+
+.slip-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-4);
+  background-color: var(--paper-2);
+  border: 1px solid var(--ink);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+}
+
+.chip-label-hi {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.chip-label-en {
+  font-size: 10px;
+  color: var(--ink);
+}
+
+.chip-weight {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  margin-left: 2px;
+}
+
+.chip-weight.raise {
+  color: var(--danger-deep);
+}
+
+.chip-weight.dampen {
+  color: var(--nazar-deep);
+}
+
+/* Jump to latest pill */
+#btn-jump-latest {
+  position: absolute;
+  bottom: var(--sp-16);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--night-3);
+  color: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: var(--radius-pill);
+  padding: var(--sp-6) var(--sp-16);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 10;
+  display: none;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
+#btn-jump-latest.visible {
+  display: inline-flex;
+}

@@ -5,7 +5,7 @@ SERVING: FastAPI serves frontend/ at / (index.html), /report.html, /css, /js, /a
 REST
 GET  /api/health -> {"ok":true,"gnani_key_present":bool,"version":"0.1"}
 GET  /api/calls -> {"calls":[{"id","title","label":"scam"|"legit","lang","duration_s","modes":["mock","replay","file"]}]} built from data/mock, data/transcripts and data/calls/manifest.json
-POST /api/session/start  body {"mode":"mock"|"replay"|"file"|"mic","call_id":str|null,"lang":"hi-IN","sample_rate":8000,"danger":60,"careful":30,"speak_warning":true} -> {"session_id":str}. Only one session at a time; a second start returns 409.
+POST /api/session/start  body {"mode":"mock"|"replay"|"file"|"mic","call_id":str|null,"lang":"hi-IN","sample_rate":8000,"danger":60,"careful":30,"speak_warning":true,"speed":float|null} -> {"session_id":str}. Only one session at a time; a second start returns 409.
 POST /api/session/stop  body {"session_id":str} -> {"ok":true}. Must end the session cleanly and still emit session(ended) and summary.
 GET  /api/audio/{name}.wav -> cached warning audio.
 GET  /api/usage -> contents of data/usage_ledger.json plus caps.
@@ -26,7 +26,7 @@ family_alert: {contact_label:"Trusted contact (simulated)", message:str, simulat
 error: {code:"no_key"|"auth"|"rate_limited"|"credits"|"network"|"stt_closed"|"tts_failed"|"cap_reached"|"bad_request"|"internal", message:str, recoverable:bool}
 summary: {duration_s:float, segments:int, time_to_alert_s:float|null, max_score:int, final_level:str, categories:{category:count}, stt_latency_ms:{p50:int|null,p95:int|null}, credits_used:{stt_seconds:float, tts_chars:int}, mode:str, synthetic:bool}
 
-ORDER: session(starting) -> session(listening) -> any number of [audio_level, segment_processing, transcript, risk] -> at most one [alert, warning_audio, family_alert] -> session(ended) -> summary. After a fatal error: error -> session(error) -> summary with partial data. summary is always last.
+ORDER: session(starting) -> session(listening) -> any number of [audio_level, segment_processing, transcript, risk] -> at most one [alert, family_alert, warning_audio] -> session(ended) -> summary. After a fatal error: error -> session(error) -> summary with partial data. summary is always last.
 
 LEVELS: calm = score below careful (30); careful = 30 up to below danger; danger = at or above danger (60). Hysteresis: once alert has fired, level may not drop below careful for the rest of the session.
 

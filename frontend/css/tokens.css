@@ -1,0 +1,70 @@
+:root {
+  /* Surfaces and page */
+  --night: #0B0F1E;
+  --night-2: #121832;
+  --night-3: #1B2347;
+  --line: #2C3668;
+
+  /* Typography and paper */
+  --text: #EDE6D6;
+  --muted: #9AA3C7;
+  --paper: #F3E9D2;
+  --paper-2: #E8DBBC;
+  --ink: #2B2116;
+
+  /* Nazar eye layers */
+  --nazar-deep: #12308F;
+  --nazar-white: #F4F7FF;
+  --nazar-light: #4DA6FF;
+  --pupil: #04060C;
+
+  /* Level colours */
+  --calm: #4DA6FF;
+  --calm-text: #7FC0FF;
+  --careful: #FFB400;
+  --danger: #E5391F;
+  --danger-text: #FF6A4D;
+  --danger-deep: #A82A14;
+
+  /* Focus ring */
+  --focus: #FFD36B;
+
+  /* Typography fonts */
+  --font-display: "Yatra One", "Noto Serif Devanagari", Georgia, serif;
+  --font-body: "Hind", "Noto Sans Devanagari", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Radius */
+  --radius-panel: 6px;
+  --radius-card: 14px;
+  --radius-phone: 36px;
+  --radius-pill: 999px;
+
+  /* Spacing */
+  --sp-4: 4px;
+  --sp-8: 8px;
+  --sp-12: 12px;
+  --sp-16: 16px;
+  --sp-24: 24px;
+  --sp-32: 32px;
+  --sp-48: 48px;
+
+  /* Default dynamic level variables */
+  --level: var(--calm);
+  --level-text: var(--calm-text);
+}
+
+body[data-level="calm"] {
+  --level: var(--calm);
+  --level-text: var(--calm-text);
+}
+
+body[data-level="careful"] {
+  --level: var(--careful);
+  --level-text: var(--careful);
+}
+
+body[data-level="danger"] {
+  --level: var(--danger);
+  --level-text: var(--danger-text);
+}

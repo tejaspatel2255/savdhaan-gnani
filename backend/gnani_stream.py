@@ -210,6 +210,7 @@ async def stream_call(
     rate: int,
     settings: Settings,
     on_event: Callable[[Any], None],
+    on_level: Optional[Callable[[float], None]] = None,
     stop: Optional[asyncio.Event] = None,
     tail_silence_ms: int = 1500,
     max_reconnects: int = 2,
@@ -260,7 +261,7 @@ async def stream_call(
                         await stream.send(fr)
                         frame_index += 1
 
-                    await pace_frames(iter(remaining), rate, send_wrapper, stop=stop)
+                    await pace_frames(iter(remaining), rate, send_wrapper, on_level=on_level, stop=stop)
                     # Allow VAD and transcripts to arrive
                     await asyncio.sleep(tail_silence_ms / 1000.0 + 0.5)
                     await stream.close()

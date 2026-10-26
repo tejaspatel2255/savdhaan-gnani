@@ -1,11 +1,207 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Savdhaan</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>सावधान · SAVDHAAN</title>
+  <!-- Google Fonts: Display, Body, Mono (page still works if offline) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Yatra+One&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/eye.css">
+  <link rel="stylesheet" href="css/tape.css">
+  <link rel="stylesheet" href="css/why.css">
+  <link rel="stylesheet" href="css/awaaz.css">
 </head>
-<body>
-    <p>Savdhaan: Phase 0 OK</p>
+<body data-level="calm">
+  <noscript>
+    <div style="padding: 20px; background: #A82A14; color: #F3E9D2; font-family: monospace;">
+      सावधान को चलाने के लिए जावास्क्रिप्ट सक्षम करें · Please enable JavaScript to run Savdhaan.
+    </div>
+  </noscript>
+
+  <!-- Live Accessibility Announcements -->
+  <div id="live-polite" class="visually-hidden" role="status" aria-live="polite"></div>
+  <div id="live-assertive" class="visually-hidden" role="alert" aria-live="assertive"></div>
+
+  <!-- Danger Vignette Flash Overlay -->
+  <div id="vignette-overlay" aria-hidden="true"></div>
+
+  <!-- Reconnect Indicator Chip -->
+  <div id="reconnect-chip" class="hidden" role="status">पुनः संपर्क जोड़ रहे हैं... Reconnecting...</div>
+
+  <!-- Error Banner -->
+  <div id="banner" class="hidden" role="alert">
+    <span class="banner-msg"></span>
+    <button class="banner-close" aria-label="Dismiss banner">बंद करें · Close</button>
+  </div>
+
+  <div class="app-shell">
+    <!-- Header Bar -->
+    <header id="hdr" role="banner">
+      <div class="hdr-left">
+        <svg class="logo-eye" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="11" fill="var(--nazar-deep)"/>
+          <circle cx="12" cy="12" r="8" fill="var(--nazar-white)"/>
+          <circle cx="12" cy="12" r="5" fill="var(--nazar-light)"/>
+          <circle cx="12" cy="12" r="2.5" fill="var(--pupil)"/>
+        </svg>
+        <div class="logo-brand">
+          <h1 class="brand-hi" lang="hi">सावधान</h1>
+          <span class="brand-en">SAVDHAAN</span>
+          <span class="brand-tagline" lang="hi">हर कॉल पर नज़र</span>
+        </div>
+      </div>
+
+      <div class="hdr-centre">
+        <span id="mode-badge" class="badge-pill mode-mock hidden">MOCK</span>
+        <span id="synthetic-pill" class="badge-pill hidden">SYNTHETIC</span>
+      </div>
+
+      <div id="controls" role="toolbar" aria-label="Call controls">
+        <!-- Controls empty for now (Phase 5) -->
+      </div>
+    </header>
+
+    <!-- Main Content 3-Column Grid -->
+    <main id="main-grid">
+      <!-- Left Column: The Tape -->
+      <section id="col-tape" class="panel" aria-label="Transcript Tape" role="region">
+        <div class="panel-header">
+          <h2>
+            <span class="title-hi" lang="hi">कान · पर्ची</span>
+            <span class="title-en">THE TAPE</span>
+          </h2>
+        </div>
+        <div class="tape-scroll" role="log" aria-live="off">
+          <div class="tape-empty">पर्ची यहाँ छपेगी... Slips print here once a call starts.</div>
+        </div>
+        <button id="btn-jump-latest" aria-label="Jump to latest slip">नीचे · jump to latest</button>
+      </section>
+
+      <!-- Centre Column: The Eye -->
+      <section id="col-eye" aria-label="Guardian Eye" role="region">
+        <div class="eye-container">
+          <svg class="eye-svg" viewBox="0 0 400 400" data-state="idle" aria-hidden="true">
+            <defs>
+              <clipPath id="eye-clip">
+                <circle cx="200" cy="200" r="150" />
+              </clipPath>
+            </defs>
+
+            <!-- 1. Ring Track -->
+            <circle class="eye-ring-track" cx="200" cy="200" r="170" />
+
+            <!-- 2. Ring Gauge -->
+            <circle class="eye-ring-gauge" cx="200" cy="200" r="170" />
+
+            <!-- 3. Ticks -->
+            <g class="eye-ticks"></g>
+
+            <!-- 4. Clipped Nazar Eye -->
+            <g clip-path="url(#eye-clip)">
+              <!-- Sclera / Outer Deep Blue -->
+              <circle class="eye-sclera" cx="200" cy="200" r="150" />
+              <!-- Iris Outer White -->
+              <circle class="eye-iris-outer" cx="200" cy="200" r="118" />
+              <!-- Iris Inner Light Blue -->
+              <circle class="eye-iris-inner" cx="200" cy="200" r="86" />
+              <!-- Pupil -->
+              <circle class="eye-pupil" cx="200" cy="200" r="46" />
+              <!-- White Highlight -->
+              <circle class="eye-highlight" cx="184" cy="184" r="8" />
+
+              <!-- 5. Lids -->
+              <rect class="eye-lid eye-lid-top" x="0" y="0" width="400" height="200" />
+              <rect class="eye-lid eye-lid-bottom" x="0" y="200" width="400" height="200" />
+
+              <!-- 6. Danger Overlay -->
+              <circle class="eye-danger-overlay" cx="200" cy="200" r="150" />
+            </g>
+
+            <!-- Danger Rays -->
+            <g class="eye-rays">
+              <line x1="200" y1="0" x2="200" y2="24" />
+              <line x1="200" y1="400" x2="200" y2="376" />
+              <line x1="0" y1="200" x2="24" y2="200" />
+              <line x1="400" y1="200" x2="376" y2="200" />
+              <line x1="58" y1="58" x2="75" y2="75" />
+              <line x1="342" y1="58" x2="325" y2="75" />
+              <line x1="58" y1="342" x2="75" y2="325" />
+              <line x1="342" y1="342" x2="325" y2="325" />
+            </g>
+          </svg>
+
+          <!-- Score Numerals -->
+          <div class="score-box" aria-live="off">
+            <span class="score-num">00</span>
+            <span class="score-denom">/100</span>
+          </div>
+
+          <!-- Level Badge -->
+          <div class="level-badge" data-level="calm">
+            <svg class="level-icon" viewBox="0 0 16 16" aria-hidden="true"></svg>
+            <span class="level-text">शांत · CALM</span>
+          </div>
+
+          <!-- State Line -->
+          <div class="state-line">कॉल शुरू करें · Start a call</div>
+        </div>
+      </section>
+
+      <!-- Right Column: Why on top, Phone slot below -->
+      <div class="right-stack">
+        <section id="col-why" class="panel" aria-label="Evidence and Signals" role="region">
+          <div class="panel-header">
+            <h2>
+              <span class="title-hi" lang="hi">चौकीदार · संकेत</span>
+              <span class="title-en">WHY THIS SCORE</span>
+            </h2>
+          </div>
+          <div class="why-list">
+            <div class="why-empty">अभी कोई संकेत नहीं · No signals yet</div>
+          </div>
+          <div class="why-footer"></div>
+        </section>
+
+        <!-- Phone Slot (Heading only for Phase 4) -->
+        <section id="phone-slot" aria-label="Phone slot" role="region">
+          <div class="panel-header">
+            <h2>
+              <span class="title-hi" lang="hi">सामने वाले का फ़ोन</span>
+              <span class="title-en">LISTENER'S PHONE</span>
+            </h2>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Bottom Audio Strip -->
+    <div id="awaaz" aria-label="Audio Waveform" role="region">
+      <div class="awaaz-header">
+        <span lang="hi">आवाज़</span>
+        <span class="awaaz-mode-tag">MOCK</span>
+      </div>
+      <svg class="waveform-svg" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
+        <path class="waveform-path" d="M 0,48 L 1440,48 Z" />
+      </svg>
+    </div>
+
+    <!-- Footer Line -->
+    <footer id="foot" role="contentinfo">
+      <span>सुनता है: Gnani Prisma v2.5 · बोलता है: Gnani Timbre v3.0 · SYNTHETIC DEMO, no real calls</span>
+    </footer>
+  </div>
+
+  <!-- Overlays Root -->
+  <div id="stamp-root" aria-hidden="true"></div>
+  <div id="receipt-root" aria-hidden="true"></div>
+
+  <!-- Entry Script -->
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>

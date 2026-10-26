@@ -1,0 +1,159 @@
+#col-why {
+  background-color: var(--night-2);
+  display: flex;
+  flex-direction: column;
+}
+
+.why-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--sp-12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-8);
+  max-height: 380px;
+}
+
+.why-empty {
+  margin: auto;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--muted);
+  padding: var(--sp-24);
+}
+
+/* Why Row */
+.why-row {
+  background-color: var(--night-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  padding: var(--sp-8) var(--sp-12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-12);
+  animation: whySlide 200ms ease-out forwards;
+}
+
+@keyframes whySlide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.why-row-left {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-12);
+  min-width: 0;
+}
+
+.why-cat-icon {
+  width: 22px;
+  height: 22px;
+  fill: var(--muted);
+  flex-shrink: 0;
+}
+
+.why-labels {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.why-label-hi {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.why-label-en {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.why-matched {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--paper-2);
+  background-color: var(--night-2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.why-weight-pill {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+  border: 1px solid currentColor;
+}
+
+.why-weight-pill.raise {
+  color: var(--careful);
+  background-color: transparent;
+}
+
+.why-weight-pill.raise-high {
+  color: var(--danger-text);
+  background-color: transparent;
+}
+
+.why-weight-pill.dampen {
+  color: var(--calm-text);
+  background-color: transparent;
+}
+
+/* Category Dot Meters Footer */
+.why-footer {
+  padding: var(--sp-8) var(--sp-12);
+  border-top: 1px solid var(--line);
+  background-color: var(--night-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-12);
+  align-items: center;
+}
+
+.meter-group {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.meter-dots {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.meter-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--line);
+}
+
+.meter-dot.active {
+  background-color: var(--level);
+}

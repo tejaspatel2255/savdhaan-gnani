@@ -1,0 +1,239 @@
+#col-eye {
+  position: relative;
+  overflow: hidden;
+}
+
+.eye-container {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-12);
+}
+
+.eye-svg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  display: block;
+}
+
+/* Gauge styling */
+.eye-ring-track {
+  fill: none;
+  stroke: var(--night-3);
+  stroke-width: 16;
+}
+
+.eye-ring-gauge {
+  fill: none;
+  stroke: var(--level);
+  stroke-width: 16;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 200px 200px;
+  stroke-dasharray: 1068;
+  stroke-dashoffset: 1068;
+  transition: stroke-dashoffset 600ms cubic-bezier(0.2, 0.8, 0.2, 1), stroke 300ms ease;
+}
+
+body[data-level="danger"] .eye-ring-gauge {
+  stroke: var(--danger);
+}
+
+.eye-ticks line {
+  stroke: var(--line);
+  stroke-width: 2;
+  transition: stroke 200ms ease;
+}
+
+.eye-ticks line.active {
+  stroke: var(--level);
+}
+
+/* Eye layers */
+.eye-sclera {
+  fill: var(--nazar-deep);
+}
+
+.eye-iris-outer {
+  fill: var(--nazar-white);
+}
+
+.eye-iris-inner {
+  fill: var(--nazar-light);
+}
+
+.eye-pupil {
+  fill: var(--pupil);
+  transition: r 250ms ease-out, transform 100ms ease-out;
+}
+
+.eye-highlight {
+  fill: #FFFFFF;
+  opacity: 0.85;
+}
+
+/* Lids */
+.eye-lid {
+  fill: var(--night-3);
+  transition: transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.eye-lid-top {
+  transform-origin: 200px 50px;
+}
+
+.eye-lid-bottom {
+  transform-origin: 200px 350px;
+}
+
+/* Danger overlay and rays */
+.eye-danger-overlay {
+  fill: var(--danger);
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+.eye-rays {
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.eye-rays line {
+  stroke: var(--danger);
+  stroke-width: 3;
+}
+
+/* Eye States via data-state */
+.eye-svg[data-state="idle"] {
+  animation: breathing 4s ease-in-out infinite;
+}
+
+.eye-svg[data-state="idle"] .eye-lid-top {
+  transform: translateY(150px);
+}
+
+.eye-svg[data-state="idle"] .eye-lid-bottom {
+  transform: translateY(-150px);
+}
+
+.eye-svg[data-state="listening"] .eye-lid-top {
+  transform: translateY(0);
+}
+
+.eye-svg[data-state="listening"] .eye-lid-bottom {
+  transform: translateY(0);
+}
+
+.eye-svg[data-state="processing"] .eye-lid-top {
+  transform: translateY(125px);
+  transition: transform 120ms ease-in-out;
+}
+
+.eye-svg[data-state="processing"] .eye-lid-bottom {
+  transform: translateY(-125px);
+  transition: transform 120ms ease-in-out;
+}
+
+.eye-svg[data-state="careful"] .eye-lid-top,
+.eye-svg[data-state="careful"] .eye-lid-bottom {
+  transform: translateY(0);
+}
+
+.eye-svg[data-state="danger"] .eye-lid-top {
+  transform: translateY(-20px);
+}
+
+.eye-svg[data-state="danger"] .eye-lid-bottom {
+  transform: translateY(20px);
+}
+
+.eye-svg[data-state="danger"] .eye-danger-overlay {
+  opacity: 0.22;
+}
+
+.eye-svg[data-state="danger"] .eye-rays {
+  opacity: 1;
+  animation: rayPulse 1.2s ease-in-out infinite;
+}
+
+.eye-svg[data-state="ended"] .eye-lid-top {
+  transform: translateY(150px);
+  transition: transform 1200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.eye-svg[data-state="ended"] .eye-lid-bottom {
+  transform: translateY(-150px);
+  transition: transform 1200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes breathing {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.98); }
+}
+
+@keyframes rayPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Score display */
+.score-box {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  font-family: var(--font-mono);
+  color: var(--text);
+  line-height: 1;
+  margin-top: var(--sp-8);
+}
+
+.score-num {
+  font-size: 88px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  color: var(--level);
+}
+
+.score-denom {
+  font-size: 24px;
+  color: var(--muted);
+  margin-left: 2px;
+}
+
+/* Level indicator */
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-8);
+  padding: var(--sp-6) var(--sp-16);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 2px solid var(--level);
+  color: var(--level-text);
+  background-color: var(--night-3);
+}
+
+.level-icon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* State line */
+.state-line {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: var(--sp-4);
+}
