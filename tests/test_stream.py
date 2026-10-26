@@ -89,7 +89,7 @@ async def test_fake_server_transcripts_parsed_and_t_increases():
             rate=16000,
             settings=dummy_settings,
             on_event=lambda ev: events_received.append(ev),
-            tail_silence_ms=200,
+            tail_silence_ms=50,
             base_url=f"ws://127.0.0.1:{port}",
         )
 
@@ -123,7 +123,7 @@ async def test_auth_failure_4001_raises_auth_error():
                 rate=16000,
                 settings=dummy_settings,
                 on_event=lambda ev: None,
-                tail_silence_ms=100,
+                tail_silence_ms=50,
                 base_url=f"ws://127.0.0.1:{port}",
             )
         assert exc_info.value.code == "auth"
@@ -145,7 +145,7 @@ async def test_tail_silence_sent():
             rate=16000,
             settings=dummy_settings,
             on_event=lambda ev: None,
-            tail_silence_ms=1000,
+            tail_silence_ms=200,
             base_url=f"ws://127.0.0.1:{port}",
         )
         assert len(server.frames_received) > 10

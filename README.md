@@ -43,7 +43,7 @@ python scripts/replay_transcript.py data/transcripts/smoke_hi.jsonl --speed 4
 
 - [x] **Phase 0**: Project scaffold, usage ledger, configuration, and API smoke tests
 - [x] **Phase 1**: Streaming speech-to-text client, audio pacer, & transcript recorder
-- [ ] **Phase 2**: Scorer engine & scam rules
+- [x] **Phase 2**: Scam scoring engine, rule pack loader, & fixture evaluator
 - [ ] **Phase 3**: Warning generation & Timbre TTS synthesis
 - [ ] **Phase 4**: Realtime streaming orchestrator & WebSocket server
 - [ ] **Phase 5**: Nazar control room UI & visual alerts
