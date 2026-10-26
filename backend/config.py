@@ -2,6 +2,7 @@
 
 import os
 from dataclasses import dataclass, field
+from typing import Optional
 from dotenv import load_dotenv
 
 # Load environment variables from .env if present
@@ -36,6 +37,16 @@ class Settings:
     )
     warning_model: str = field(
         default_factory=lambda: os.getenv("WARNING_MODEL", "timbre-v3.0")
+    )
+    tts_credits_per_1k_chars: Optional[float] = field(
+        default_factory=lambda: float(os.getenv("TTS_CREDITS_PER_1K_CHARS"))
+        if os.getenv("TTS_CREDITS_PER_1K_CHARS") and os.getenv("TTS_CREDITS_PER_1K_CHARS").strip()
+        else None
+    )
+    stt_credits_per_minute: Optional[float] = field(
+        default_factory=lambda: float(os.getenv("STT_CREDITS_PER_MINUTE"))
+        if os.getenv("STT_CREDITS_PER_MINUTE") and os.getenv("STT_CREDITS_PER_MINUTE").strip()
+        else None
     )
 
     @property

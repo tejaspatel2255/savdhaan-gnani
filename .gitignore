@@ -30,6 +30,13 @@ data/cache/
 data/runs/*.jsonl
 !data/runs/.gitkeep
 
+# Temporary / test audio and scratch artifacts
+*.wav
+*.pcm
+test_call_tmp/
+test_tmp/
+tmp_test_dir/
+
 # Local audio files (synthetic audio test recordings)
 data/calls/*.wav
 data/calls/*.pcm

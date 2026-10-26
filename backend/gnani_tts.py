@@ -125,3 +125,31 @@ async def synthesize(
                 err_body = response.text
 
             raise GnaniError.from_http(response.status_code, err_body)
+
+
+def is_cached(
+    text: str,
+    *,
+    voice: str,
+    model: str,
+    language: str,
+    sample_rate: int = 24000,
+) -> bool:
+    """Check if synthesis result for the given text and parameters exists in local cache."""
+    payload = {
+        "text": text,
+        "model": model,
+        "voice": voice,
+        "language": language,
+        "speed": 1.0,
+        "audio_config": {
+            "sample_rate": sample_rate,
+            "num_channels": 1,
+            "sample_width": 2,
+            "container": "wav",
+            "encoding": "linear_pcm",
+        },
+    }
+    key = _cache_key(payload)
+    cache_file = CACHE_DIR / f"{key}.wav"
+    return cache_file.exists()

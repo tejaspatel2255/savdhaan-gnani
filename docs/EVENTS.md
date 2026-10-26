@@ -33,5 +33,5 @@ LEVELS: calm = score below careful (30); careful = 30 up to below danger; danger
 FILE FORMATS
 data/transcripts/<name>.jsonl, one line per segment: {"t":float,"segment_index":int,"segment_id":str,"text":str,"audio_duration_ms":int,"latency":int|null}. t is call-audio seconds when the transcript arrived. Recorded from real Gnani output; used by REPLAY and by evaluation.
 data/mock/mock_call.json: {"title":str,"lang":"hi-IN","segments":[{"t":float,"text":str,"audio_duration_ms":int}]}. Hand-written, synthetic, labelled MOCK everywhere. Runs through the real scorer.
-data/calls/manifest.json: list of {"id","title","label":"scam"|"legit","lang","script_path","audio_path","noise":str,"duration_s":float,"first_cue_s":float|null}
+data/calls/manifest.json: list of {"id","title","label":"scam"|"legit","lang","split":"dev"|"test","script_path","audio_path","noise":str,"duration_s":float,"first_cue_s":float|null,"variants":{"condition":path},"voices":{"caller":str,"listener":str},"chars":int}
 data/runs/<session_id>.jsonl: every WS message sent, one per line.

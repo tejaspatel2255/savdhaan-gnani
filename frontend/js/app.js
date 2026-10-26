@@ -1,6 +1,7 @@
 import { t, LANGS } from "./strings.js";
 import { getCalls, startSession, stopSession, ApiError } from "./api.js";
 import { connect } from "./ws.js";
+import { startMic, stopMic, MicError } from "./mic.js";
 import * as eye from "./eye.js";
 import * as tape from "./tape.js";
 import * as why from "./why.js";
@@ -10,7 +11,7 @@ import * as phone from "./phone.js";
 import * as receipt from "./receipt.js";
 import { playSample } from "./devfeed.js";
 
-export const FEATURES = { mic: false };
+export const FEATURES = { mic: true };
 export const state = { sessionId: null, mode: "mock", modeLabel: "MOCK", lang: "hi-IN", level: "calm", score: 0, alertFired: false };
 
 let audioCtx = null, callsList = [];
@@ -100,7 +101,17 @@ async function handleStart() {
     speak_warning: el.speakCb.checked, speed: p.get("speed") ? parseFloat(p.get("speed")) : 1.0,
   };
   try {
-    await startSession(body);
+    const res = await startSession(body);
+    if (body.mode === "mic") {
+      try { await startMic(res.session_id); }
+      catch (merr) {
+        const code = merr instanceof MicError
+          ? (merr.code === "denied" ? "mic_denied" : "mic_no_device") : "internal";
+        showBanner(code, merr.message);
+        try { await stopSession(res.session_id); } catch (_) {}
+        el.btnStart.disabled = false; el.btnStop.disabled = true;
+      }
+    }
   } catch (err) {
     el.btnStart.disabled = false; el.btnStop.disabled = true;
     showBanner((err instanceof ApiError && err.status === 409) ? "call_already_running" : "internal", err.message);
@@ -108,6 +119,7 @@ async function handleStart() {
 }
 
 async function handleStop() {
+  stopMic();
   if (!state.sessionId) return;
   el.btnStop.disabled = true;
   try { await stopSession(state.sessionId); } catch (err) { showBanner("internal", err.message); }
@@ -150,6 +162,7 @@ export function dispatch(msg) {
         }
         if (el.synthetic) el.synthetic.classList.toggle("hidden", !msg.synthetic);
         const running = (msg.state === "listening" || msg.state === "starting");
+        if (!running) stopMic();
         if (el.btnStart) el.btnStart.disabled = running;
         if (el.btnStop) el.btnStop.disabled = !running;
         break;

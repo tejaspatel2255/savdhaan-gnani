@@ -46,13 +46,15 @@ def test_api_start_validation():
     resp_thresh = client.post("/api/session/start", json={"mode": "mock", "careful": 80, "danger": 50})
     assert resp_thresh.status_code == 422
 
-    # Mode mic -> 400
-    resp_mic = client.post("/api/session/start", json={"mode": "mic"})
-    assert resp_mic.status_code == 400
-
     # Unknown call_id for replay -> 400
     resp_unknown = client.post("/api/session/start", json={"mode": "replay", "call_id": "non_existent_12345"})
     assert resp_unknown.status_code == 400
+
+    # Mode mic with key present creates a session or fails if key missing -> 400 when no key
+    from backend.config import settings
+    if not settings.key_present:
+        resp_mic = client.post("/api/session/start", json={"mode": "mic"})
+        assert resp_mic.status_code == 400
 
 
 def test_ws_ui_delivers_history_of_finished_session():

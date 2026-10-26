@@ -26,6 +26,7 @@ from backend.gnani_errors import GnaniError
 from backend.gnani_tts import synthesize as default_tts
 from backend.metrics import build_summary
 from backend.scorer import ScamScorer, load_pack
+from backend.mic import MicSource
 from backend.sources import FileSource, MockSource, ReplaySource, SourceEvent
 from backend.warning import family_message, get_warning, pick_key
 from backend import usage
@@ -71,7 +72,8 @@ class SessionManager:
         self._active_emitter: Optional[Emitter] = None
         self._last_emitter: Optional[Emitter] = None
 
-        # Rule pack cache
+        # Active mic source reference for attach_mic()
+        self._active_mic_source: Optional[MicSource] = None
         self._rule_packs: Dict[str, Any] = {}
         self._pack_routes = {
             "hi-IN": Path("rules/scam_rules_hi_en.json"),
@@ -121,8 +123,8 @@ class SessionManager:
         if req.mode not in ("mock", "replay", "file", "mic"):
             raise ValueError(f"Unknown mode: {req.mode}")
 
-        if req.mode == "mic":
-            raise ValueError("Live microphone mode is not supported until Phase 5B")
+        if req.mode == "mic" and not self.settings.key_present:
+            raise ValueError("GNANI_API_KEY is required for mic mode")
 
         if req.mode == "replay":
             if not req.call_id:
@@ -253,6 +255,12 @@ class SessionManager:
                     settings=self.settings,
                     base_url=self.stt_base_url,
                 )
+
+            elif req.mode == "mic":
+                mic_source = MicSource(self.settings, req.lang, base_url=self.stt_base_url)
+                self._active_mic_source = mic_source
+                call_title = "Live microphone"
+                source = mic_source
 
         except GnaniError as ge:
             build_error_event(emitter, code=ge.code, message=ge.message, recoverable=ge.recoverable)
@@ -467,6 +475,9 @@ class SessionManager:
                 reason=None,
                 t=event_t,
             )
+            # Mute mic for warning duration so speaker audio is not transcribed
+            if req.mode == "mic" and self._active_mic_source and w_res.duration_s:
+                await self._active_mic_source.mute(w_res.duration_s + 0.7)
         except GnaniError as ge:
             reason = "cap_reached" if ge.code == "cap_reached" else "tts_failed"
             build_warning_audio_event(emitter, audio_url=None, duration_s=None, text="", cached=False, reason=reason, t=event_t)
@@ -519,3 +530,21 @@ class SessionManager:
         self._active_task = None
         self._active_stop = None
         self._active_emitter = None
+        self._active_mic_source = None
+
+    def attach_mic(self, session_id: str, websocket: Any) -> bool:
+        """Signal mic attach for the given session. Returns False if not applicable."""
+        if self._active_session_id != session_id or self._active_mic_source is None:
+            return False
+        self._active_mic_source.attach(websocket)
+        return True
+
+    async def push_mic(self, session_id: str, data: bytes) -> None:
+        """Forward a binary chunk from /ws/mic to the active MicSource queue."""
+        if self._active_session_id == session_id and self._active_mic_source:
+            await self._active_mic_source.push(data)
+
+    async def stop_mic(self, session_id: str) -> None:
+        """Signal end-of-stream from the browser to the active MicSource."""
+        if self._active_session_id == session_id and self._active_mic_source:
+            await self._active_mic_source.stop_push()

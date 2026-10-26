@@ -101,10 +101,10 @@ async def start_session(body: SessionStartBody):
             detail="Thresholds must satisfy 0 < careful < danger <= 100",
         )
 
-    if body.mode == "mic":
+    if body.mode == "mic" and not settings.key_present:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Live microphone mode is not supported until Phase 5B",
+            detail="GNANI_API_KEY is required for mic mode",
         )
 
     req = StartSessionRequest(
@@ -191,6 +191,33 @@ async def websocket_ui(websocket: WebSocket):
         pass
     finally:
         session_manager.unsubscribe(q)
+
+
+@app.websocket("/ws/mic")
+async def websocket_mic(websocket: WebSocket, session_id: str = ""):
+    """Receive browser microphone audio and route to the active mic session."""
+    allowed = {"http://localhost:8000", "http://127.0.0.1:8000"}
+    origin = websocket.headers.get("origin", "")
+    if (origin and origin not in allowed) or not session_id:
+        await websocket.close(code=1008)
+        return
+    await websocket.accept()
+    if not session_manager.attach_mic(session_id, websocket):
+        await websocket.close(code=1008)
+        return
+    try:
+        while True:
+            msg = await websocket.receive()
+            data = msg.get("bytes")
+            text = msg.get("text")
+            if data:
+                await session_manager.push_mic(session_id, data)
+            elif text == "stop" or msg.get("type") == "websocket.disconnect":
+                break
+    except (WebSocketDisconnect, Exception):
+        pass
+    finally:
+        await session_manager.stop_mic(session_id)
 
 
 # Mount frontend static directory LAST

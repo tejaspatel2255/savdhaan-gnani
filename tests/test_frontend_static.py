@@ -32,6 +32,8 @@ def test_required_files_exist():
         FRONTEND_DIR / "js" / "receipt.js",
         FRONTEND_DIR / "js" / "waveform.js",
         FRONTEND_DIR / "js" / "devfeed.js",
+        FRONTEND_DIR / "js" / "mic.js",
+        FRONTEND_DIR / "js" / "mic-worklet.js",
         FRONTEND_DIR / "assets" / "sample_run.jsonl",
     ]
     for p in required_files:
@@ -60,14 +62,22 @@ def test_fetch_only_in_api_js():
             assert "fetch(" not in content, f"Unauthorized fetch() call found in {f.name}"
 
 
-def test_websocket_only_in_ws_js():
+def test_websocket_isolation():
     js_files = list((FRONTEND_DIR / "js").glob("*.js"))
     for f in js_files:
         content = f.read_text(encoding="utf-8")
-        if f.name == "ws.js":
-            assert "new WebSocket(" in content, "ws.js must contain new WebSocket("
+        if f.name in ("ws.js", "mic.js"):
+            assert "new WebSocket(" in content, f"{f.name} must contain new WebSocket("
         else:
             assert "new WebSocket(" not in content, f"Unauthorized new WebSocket( found in {f.name}"
+
+
+def test_no_audio_recording():
+    js_files = list((FRONTEND_DIR / "js").glob("*.js"))
+    for f in js_files:
+        content = f.read_text(encoding="utf-8")
+        assert "MediaRecorder" not in content, f"MediaRecorder found in {f.name}"
+        assert "localStorage" not in content, f"localStorage found in {f.name}"
 
 
 def test_no_innerhtml_in_key_modules():

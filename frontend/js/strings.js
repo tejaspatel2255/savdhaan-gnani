@@ -52,6 +52,11 @@ export const STRINGS = {
   bad_request: { hi: "अमान्य अनुरोध भेजा गया", en: "Bad request payload" },
   internal: { hi: "आंतरिक सर्वर त्रुटि", en: "Internal server error" },
 
+  /* Mic errors */
+  mic_permission_needed: { hi: "माइक की अनुमति चाहिए · Microphone permission needed", en: "Microphone permission needed" },
+  mic_no_device: { hi: "माइक्रोफ़ोन नहीं मिला", en: "No microphone found" },
+  mic_denied: { hi: "माइक्रोफ़ोन की अनुमति नहीं मिली", en: "Microphone permission denied" },
+
   /* Phone screen text */
   phone_calm_title: { hi: "कॉल पर नज़र है", en: "Savdhaan is listening" },
   phone_calm_sub: { hi: "सुरक्षित बातचीत जारी है", en: "Call in progress" },
