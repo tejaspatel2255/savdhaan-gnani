@@ -10,4 +10,7 @@
 ## Other
 
 - Exact latency breakdown for live streaming over wss://api.vachana.ai/stt/v3/stream.
-- Best language code behavior for Hinglish code-mixed audio (en-IN vs hi-IN) to be measured in Phase 1.
+- Best language code behavior for Hinglish code-mixed audio (en-IN vs hi-IN) to be measured in Phase 1:
+  - `hi-IN` transcript: "नमस्ते, यह सावधान का एक छोटा परीक्षण है।" (Devanagari script, latency 75 ms)
+  - `en-IN` transcript: "namaste ye savdhan ka ek chhota parikshan hai" (Latin script / Hinglish, latency 130 ms)
+  - Both modes achieved ultra-low latency (<150 ms) on the live WebSocket stream.

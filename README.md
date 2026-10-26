@@ -29,10 +29,20 @@ uvicorn backend.main:app --reload --port 8000
 ```
 Then open http://localhost:8000 in your browser.
 
+## Streaming Audio & Replay Scripts
+
+```bash
+# 1. Stream an audio file to Gnani Prisma v2.5 live WebSocket:
+python scripts/stream_file.py --file data/cache/smoke_tts.wav --lang hi-IN --rate 16000 --name smoke_hi
+
+# 2. Replay recorded transcript locally without hitting the network:
+python scripts/replay_transcript.py data/transcripts/smoke_hi.jsonl --speed 4
+```
+
 ## Roadmap & Checklist
 
 - [x] **Phase 0**: Project scaffold, usage ledger, configuration, and API smoke tests
-- [ ] **Phase 1**: STT baseline & language exploration
+- [x] **Phase 1**: Streaming speech-to-text client, audio pacer, & transcript recorder
 - [ ] **Phase 2**: Scorer engine & scam rules
 - [ ] **Phase 3**: Warning generation & Timbre TTS synthesis
 - [ ] **Phase 4**: Realtime streaming orchestrator & WebSocket server
