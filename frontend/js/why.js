@@ -98,10 +98,11 @@ export function handle(msg, state) {
       const labels = document.createElement("div");
       labels.className = "why-labels";
 
-      const labelHi = document.createElement("span");
-      labelHi.className = "why-label-hi";
-      labelHi.textContent = h.label_hi || "";
-      labels.appendChild(labelHi);
+      const labelLocal = document.createElement("span");
+      labelLocal.className = "why-label-hi";
+      const userLang = (state && state.lang) || "hi";
+      labelLocal.textContent = (userLang.startsWith("gu") && h.label_gu) ? h.label_gu : (h.label_hi || "");
+      labels.appendChild(labelLocal);
 
       const labelEn = document.createElement("span");
       labelEn.className = "why-label-en";

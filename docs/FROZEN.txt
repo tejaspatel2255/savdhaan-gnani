@@ -1,0 +1,6 @@
+# FROZEN RULES SHA256 DIGESTS
+# Date: 2026-10-27
+
+rules/scam_rules_hi_en.json: 477cca5dd0ad163cab2ca14a55c0f32d810d3c614686def2ae2f7b1ecb2ed8c3
+rules/scam_rules_gu.json: 3c5a1762caecce1a2e7c3e3870fe791dfd22384aeeaf570ba537b0b615b133c9
+rules/warnings_gu.json: 8f192b67f10b7a8698944510bc4727181c0399120df0f10cceec008fe51c6b8c

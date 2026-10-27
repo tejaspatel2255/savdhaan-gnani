@@ -60,6 +60,10 @@ export async function getUsage() {
   return request("/api/usage");
 }
 
+export async function getEval() {
+  return request("/api/eval");
+}
+
 export async function fetchSampleRun(url) {
   const res = await fetch(url);
   if (!res.ok) throw new ApiError(res.status, `Failed to load sample run: ${res.statusText}`);

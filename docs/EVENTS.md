@@ -35,3 +35,28 @@ data/transcripts/<name>.jsonl, one line per segment: {"t":float,"segment_index":
 data/mock/mock_call.json: {"title":str,"lang":"hi-IN","segments":[{"t":float,"text":str,"audio_duration_ms":int}]}. Hand-written, synthetic, labelled MOCK everywhere. Runs through the real scorer.
 data/calls/manifest.json: list of {"id","title","label":"scam"|"legit","lang","split":"dev"|"test","script_path","audio_path","noise":str,"duration_s":float,"first_cue_s":float|null,"variants":{"condition":path},"voices":{"caller":str,"listener":str},"chars":int}
 data/runs/<session_id>.jsonl: every WS message sent, one per line.
+data/eval/results.json: served by GET /api/eval (404 with {"error":"no_results"} when missing). Shape:
+  {
+    "generated_at": str (ISO timestamp),
+    "rules_sha256": str,
+    "rules_pack": str,
+    "thresholds": {"careful": int, "danger": int},
+    "n_calls": int,
+    "splits": {
+      "dev": {detection_summary fields..., "n": int, "ceiling": {detection_summary fields..., "n": int}|null},
+      "test": {detection_summary fields..., "n": int, "ceiling": {detection_summary fields..., "n": int}|null}
+    },
+    "latency_ms": {"p50": int|null, "p95": int|null, "n": int}|null,
+    "wer": {
+      "conditions": {
+        "clean": {"wer": float|null, "n": int}|null,
+        "phone": {"wer": float|null, "n": int}|null,
+        "phone_noise": {"wer": float|null, "n": int}|null,
+        "phone_noise_drops": {"wer": float|null, "n": int}|null
+      },
+      "note": str
+    },
+    "calls": [{"id": str, "split": str, "label": "scam"|"legit", "alerted": bool, "alert_t": float|null, "first_cue_s": float|null, "max_score": int, "max_level": str, "segments": [{"t": float, "text": str}]}],
+    "test_scoring": {"times_scored": int, "rules_changed_since_first": bool},
+    "limitations": [str]
+  }

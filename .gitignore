@@ -25,26 +25,38 @@ htmlcov/
 nosetests.xml
 coverage.xml
 
-# Local session logs and data caches
-data/cache/
+# ── Runtime data (never commit) ─────────────────────────────────────────────
+
+# API response cache (STT / TTS) – can be large, regenerated automatically
+data/cache/stt/
+data/cache/tts/
+data/cache/warnings/
+data/cache/*.wav
+data/cache/*.json
+
+# Live session run logs
 data/runs/*.jsonl
 !data/runs/.gitkeep
 
-# Temporary / test audio and scratch artifacts
-*.wav
-*.pcm
-test_call_tmp/
-test_tmp/
-tmp_test_dir/
+# Eval run log (raw per-run data; results.json is committed, run log is not)
+data/eval/test_runs.jsonl
+data/eval/dev_runs.jsonl
 
-# Local audio files (synthetic audio test recordings)
+# ── Audio files (synthetic recordings) ──────────────────────────────────────
+# Keep data/cache/.gitkeep and data/calls/.gitkeep, ignore audio blobs
 data/calls/*.wav
 data/calls/*.pcm
 data/calls/*.mp3
 data/calls/*.ogg
 data/calls/*.flac
 
-# Editor and OS files
+# Global wav/pcm catch-all (smoke test outputs, tmp recordings)
+*.pcm
+test_call_tmp/
+test_tmp/
+tmp_test_dir/
+
+# ── Editor and OS files ──────────────────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
@@ -54,6 +66,6 @@ data/calls/*.flac
 Thumbs.db
 ehthumbs.db
 
-# Logs and scratch
+# ── Logs and scratch ─────────────────────────────────────────────────────────
 *.log
 scratch/

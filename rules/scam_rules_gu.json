@@ -1,0 +1,73 @@
+{
+  "pack": "gu",
+  "version": 1,
+  "window_segments": 6,
+  "decay": 0.9,
+  "strong_rule_weight": 45,
+  "min_categories_for_danger": 2,
+  "negation_window_after": 6,
+  "negation_window_before": 2,
+  "negation_guard_categories": ["credentials", "payment"],
+  "negation_phrases": [
+    "na aapo", "na aapis", "aapsho nahi", "aapsho na", "na kehsho", "na kehta", "nahi aapo", "nathi", "nahi", "mat", "never", "not", "dont", "do not",
+    "ન આપો", "ન આપશો", "આપશો નહીં", "કહેશો નહીં", "નથી", "નહીં", "ના આપો", "મત"
+  ],
+  "negation_exceptions": ["nahi to", "nahin to", "નહીં તો", "નહીંતર"],
+  "_review": [
+    "GU_PAY_CRYPTO_GIFT",
+    "GU_REMOTE_TOOL"
+  ],
+  "categories": {
+    "credentials": {"weight": 30, "label_en": "Asks for OTP, PIN or card details", "label_hi": "OTP / PIN माँगा", "label_gu": "OTP અથવા PIN માંગ્યો"},
+    "payment": {"weight": 28, "label_en": "Asks to move money or pay a fee", "label_hi": "पैसे भेजने को कहा", "label_gu": "રૂપિયા મોકલવા કહ્યું"},
+    "remote_app": {"weight": 28, "label_en": "Asks to install an app or share the screen", "label_hi": "रिमोट ऐप / स्क्रीन शेयर", "label_gu": "રિમોટ એપ અથવા સ્ક્રીન શેર"},
+    "threat": {"weight": 22, "label_en": "Arrest, legal or blocking threat", "label_hi": "गिरफ़्तारी / बंद की धमकी", "label_gu": "ધરપકડ અથવા બ્લોકની ધમકી"},
+    "secrecy": {"weight": 22, "label_en": "Told to keep quiet or stay on the line", "label_hi": "किसी को न बताने को कहा", "label_gu": "કોઈને ન કહેવા જણાવ્યું"},
+    "prize_kyc": {"weight": 14, "label_en": "Prize, refund or KYC bait", "label_hi": "इनाम / KYC का लालच", "label_gu": "ઇનામ અથવા KYCની લાલચ"},
+    "authority": {"weight": 10, "label_en": "Claims to be an officer or agency", "label_hi": "अधिकारी बनकर बात", "label_gu": "અધિકારી બનીને વાત કરી"},
+    "urgency": {"weight": 6, "label_en": "Pressure to act right now", "label_hi": "जल्दबाज़ी का दबाव", "label_gu": "તરત જ કરવાની ઉતાવળ"}
+  },
+  "rules": [
+    {"id": "GU_CRED_OTP_ASK", "category": "credentials", "patterns": ["otp aapo*", "otp bolo*", "tamaro otp", "otp share karo*", "otp number aapo*", "ઓટીપી આપો*", "ઓટીપી બોલો*", "તમારો ઓટીપી", "ઓટીપી શેર કરો*", "ઓટીપી નંબર"]},
+    {"id": "GU_CRED_PIN_ASK", "category": "credentials", "patterns": ["pin number aapo*", "pin aapo*", "tamaro pin", "atm pin", "cvv number", "card number aapo*", "પિન આપો*", "પિન નંબર*", "તમારો પિન", "એટીએમ પિન", "કાર્ડ નંબર"]},
+    {"id": "GU_CRED_ID_ASK", "category": "credentials", "weight": 15, "patterns": ["aadhaar card number", "pan card number", "aadhar number aapo*", "આધાર કાર્ડ નંબર", "પાન કાર્ડ નંબર"]},
+    {"id": "GU_AUTH_AGENCY", "category": "authority", "patterns": ["police", "cyber crime", "crime branch", "customs", "cbi", "trai", "inspector", "પોલીસ", "સાયબર ક્રાઈમ", "ક્રાઈમ બ્રાન્ચ", "કસ્ટમ્સ", "સીબીઆઈ", "ઇન્સ્પેક્ટર"]},
+    {"id": "GU_AUTH_SELF", "category": "authority", "patterns": ["adhikari bolu chu", "officer bolu chu", "bank manager bolu chu", "head office thi", "અધિકારી બોલું છું", "ઓફિસર બોલું છું", "મેનેજર બોલું છું", "હેડ ઓફિસથી"]},
+    {"id": "GU_AUTH_COURT", "category": "authority", "patterns": ["high court", "supreme court", "court case", "ન્યાયાલય", "કોર્ટ", "જજ સાહેબ"]},
+    {"id": "GU_THREAT_ARREST", "category": "threat", "patterns": ["dharpakad", "arrest kari leshe", "jail ma nakhi", "police case", "warrant nikalyo", "ધરપકડ", "અરેસ્ટ", "જેલમાં", "વોરન્ટ", "પોલીસ કેસ"]},
+    {"id": "GU_THREAT_DIGITAL_ARREST", "category": "threat", "weight": 60, "patterns": ["digital arrest", "ડિજિટલ અરેસ્ટ"]},
+    {"id": "GU_THREAT_BLOCK", "category": "threat", "patterns": ["khata block", "khata bandh", "account bandh thai jashe", "sim card bandh", "line kapi nakhashe", "ખાતું બંધ", "ખાતું બ્લોક", "સિમ કાર્ડ બંધ", "જોડાણ કપાશે"]},
+    {"id": "GU_PAY_TRANSFER", "category": "payment", "patterns": ["rupya transfer karo*", "paise transfer", "rakam moklo*", "account ma transfer", "rupya moklo*", "રૂપિયા ટ્રાન્સફર", "રકમ મોકલો", "પૈસા મોકલો", "ખાતામાં ટ્રાન્સફર"]},
+    {"id": "GU_PAY_SAFE_ACC", "category": "payment", "weight": 45, "patterns": ["safe account", "rbi account", "surakshit khata ma", "સેફ એકાઉન્ટ", "આરબીઆઈ ખાતામાં", "સુરક્ષિત ખાતું"]},
+    {"id": "GU_PAY_FEE", "category": "payment", "patterns": ["processing fee", "registration charge", "suraksha deposit", "પ્રોસેસિંગ ફી", "રજિસ્ટ્રેશન ચાર્જ", "ડિપોઝિટ"]},
+    {"id": "GU_PAY_CRYPTO_GIFT", "category": "payment", "patterns": ["gift card", "crypto", "usdt", "ગિફ્ટ કાર્ડ", "ક્રિપ્ટો"]},
+    {"id": "GU_REMOTE_TOOL", "category": "remote_app", "weight": 45, "patterns": ["anydesk", "any desk", "teamviewer", "quicksupport", "rustdesk", "એનીડેસ્ક", "ટીમવ્યુઅર", "ક્વિક સપોર્ટ"]},
+    {"id": "GU_REMOTE_ACTION", "category": "remote_app", "patterns": ["screen share karo*", "app download karo*", "link par click karo*", "સ્ક્રીન શેર કરો", "એપ ડાઉનલોડ કરો", "લિંક પર ક્લિક"]},
+    {"id": "GU_SECRECY_KEEP", "category": "secrecy", "patterns": ["koi ne kahesho nahi", "koi ne na bolta", "kisi ko mat", "chhanu rakhjo", "gupta vat", "કોઈને કહેશો નહીં", "કોઈને ન કહેતા", "ગુપ્ત વાત"]},
+    {"id": "GU_SECRECY_LINE", "category": "secrecy", "patterns": ["call kapsho nahi", "phone mat kato", "line par raho", "phone chalu rakho", "કૉલ કાપશો નહીં", "ફોન કાપશો નહીં", "લાઇન પર રહો"]},
+    {"id": "GU_PRIZE_LOTTERY", "category": "prize_kyc", "patterns": ["inam lagyu che", "lottery lagi che", "kbc lottery", "lucky draw", "ઇનામ લાગ્યું છે", "લોટરી લાગી છે", "લકી ડ્રો"]},
+    {"id": "GU_PRIZE_REFUND", "category": "prize_kyc", "patterns": ["refund aavshe", "cashback malyo", "paisa parat", "રીફંડ મળશે", "કેશબેક", "રૂપિયા પરત"]},
+    {"id": "GU_BAIT_KYC", "category": "prize_kyc", "patterns": ["kyc update", "kyc pending", "kyc expire", "કેવાયસી અપડેટ", "કેવાયસી બાકી"]},
+    {"id": "GU_BAIT_ELECTRICITY", "category": "prize_kyc", "patterns": ["light bill baki", "vijli connection", "લાઈટ બિલ બાકી", "વીજળી કનેક્શન"]},
+    {"id": "GU_URG_NOW", "category": "urgency", "patterns": ["haltha j", "hali j", "aaje j", "turant", "ek kalak ma", "હમણાં જ", "તરત જ", "આજે જ", "એક કલાકમાં"]},
+    {"id": "GU_URG_WARNING", "category": "urgency", "patterns": ["chheli chetavni", "last chance", "છેલ્લી ચેતવણી"]},
+    {"id": "GU_CRED_PASS", "category": "credentials", "patterns": ["password aapo*", "net banking password", "પાસવર્ડ આપો"]},
+    {"id": "GU_THREAT_LEGAL", "category": "threat", "patterns": ["kaydesar pagla", "court notice", "FIR thashe", "કાયદેસર પગલાં", "કોર્ટ નોટિસ", "એફઆઈઆર"]},
+    {"id": "GU_PAY_UPI", "category": "payment", "patterns": ["gpay karo", "phonepe karo", "paytm karo", "યુપીઆઈ કરો"]},
+    {"id": "GU_AUTH_CUSTOMS_PARCEL", "category": "authority", "patterns": ["parcel ma drugs", "parcel pakdayu", "પાર્સલ પકડાયું", "પાર્સલમાં નશીલો સામાન"]},
+    {"id": "GU_REMOTE_APK", "category": "remote_app", "patterns": ["apk file moklu chu", "apk install karo", "એપીકે ફાઈલ"]},
+    {"id": "GU_SECRECY_FAMILY", "category": "secrecy", "patterns": ["ghar ma koi ne", "parivar ne na kahesho", "ઘરમાં કોઈને ન કહેતા"]},
+    {"id": "GU_BAIT_SIM", "category": "prize_kyc", "patterns": ["sim 24 kalak ma", "સિમ ૨૪ કલાકમાં"]}
+  ],
+  "combos": [
+    {"id": "GU_COMBO_AUTH_THREAT", "requires_all": ["authority", "threat"], "bonus": 15, "label_en": "Officer plus threat", "label_hi": "અધિકારી + ધમકી"},
+    {"id": "GU_COMBO_AUTH_CRED", "requires_all": ["authority", "credentials"], "bonus": 20, "label_en": "Officer asks for OTP or PIN", "label_hi": "અધિકારીએ OTP / PIN માંગ્યો"},
+    {"id": "GU_COMBO_PAY_SECRECY", "requires_all": ["payment", "secrecy"], "bonus": 20, "label_en": "Money transfer plus secrecy", "label_hi": "પૈસા + ગુપ્તતા"},
+    {"id": "GU_COMBO_REMOTE_AUTH", "requires_all": ["remote_app", "authority"], "bonus": 20, "label_en": "Officer asks for remote access", "label_hi": "અધિકારીએ રિમોટ એક્સેસ માંગ્યો"}
+  ],
+  "dampeners": [
+    {"id": "GU_SAFE_DONT_SHARE", "weight": -25, "label_en": "Warns not to share OTP", "label_hi": "OTP શેર ન કરવાની સલાહ", "patterns": ["otp koi sathe share na karsho", "otp na aapsho", "bank kyarey otp nathi mangti", "ઓટીપી કોઈ સાથે શેર ન કરશો", "ઓટીપી આપશો નહીં", "બેંક ક્યારેય ઓટીપી માંગતી નથી"]},
+    {"id": "GU_SAFE_DONT_CLICK", "weight": -20, "label_en": "Warns not to click links", "label_hi": "લિંક પર ક્લિક ન કરવાની સલાહ", "patterns": ["link par click na karsho", "link na kholsho", "લિંક પર ક્લિક ન કરશો"]},
+    {"id": "GU_SAFE_OFFICIAL_BRANCH", "weight": -20, "label_en": "Advises to visit branch", "label_hi": "શાખાની મુલાકાત લેવાની સલાહ", "patterns": ["branch ma jaine", "shakha par sampark karo", "બ્રાન્ચમાં જઈને સંપર્ક કરો", "શાખા પર જાવ"]}
+  ]
+}

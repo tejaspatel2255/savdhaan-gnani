@@ -38,6 +38,9 @@ class Settings:
     warning_model: str = field(
         default_factory=lambda: os.getenv("WARNING_MODEL", "timbre-v3.0")
     )
+    scorer_packs: str = field(
+        default_factory=lambda: os.getenv("SCORER_PACKS", "hi_en")
+    )
     tts_credits_per_1k_chars: Optional[float] = field(
         default_factory=lambda: float(os.getenv("TTS_CREDITS_PER_1K_CHARS"))
         if os.getenv("TTS_CREDITS_PER_1K_CHARS") and os.getenv("TTS_CREDITS_PER_1K_CHARS").strip()
@@ -47,6 +50,9 @@ class Settings:
         default_factory=lambda: float(os.getenv("STT_CREDITS_PER_MINUTE"))
         if os.getenv("STT_CREDITS_PER_MINUTE") and os.getenv("STT_CREDITS_PER_MINUTE").strip()
         else None
+    )
+    demo: bool = field(
+        default_factory=lambda: os.getenv("DEMO", "0").lower() in ("1", "true", "yes")
     )
 
     @property

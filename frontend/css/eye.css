@@ -237,3 +237,32 @@ body[data-level="danger"] .eye-ring-gauge {
   text-transform: uppercase;
   margin-top: var(--sp-4);
 }
+
+.demo-actions-box {
+  display: flex;
+  gap: var(--sp-8);
+  margin-top: var(--sp-8);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-demo {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--line);
+  background: var(--night-3);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.btn-demo-scam {
+  border-color: var(--danger);
+  color: var(--danger-text);
+}
+
+.btn-demo-normal {
+  border-color: var(--calm);
+  color: var(--calm-text);
+}

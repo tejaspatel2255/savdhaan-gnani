@@ -26,6 +26,13 @@ WARNINGS: Dict[str, Dict[str, str]] = {
         "money": "Be careful! There is no such thing as a safe account. Do not send money. Hang up and talk to someone you trust.",
         "remote": "Be careful! Do not install any app or share your screen. Hang up now.",
     },
+    "gu-IN": {
+        "generic": "સાવધાન રહો, આ ફોન કોલ છેતરપિંડી હોઈ શકે છે. તમારી અંગત માહિતી શેર કરશો નહીં અને ફોન કાપી નાખો.",
+        "arrest": "ધ્યાન આપો, કોઈ સરકારી અધિકારી ફોન પર ધરપકડની ધમકી આપતા નથી. ગભરાશો નહીં અને તરત જ કોલ કાપો.",
+        "otp": "ચેતવણી, બેંક ક્યારેય ઓટીપી અથવા પિન માંગતી નથી. કોઈને પણ ઓટીપી આપશો નહીં અને કોલ બંધ કરો.",
+        "money": "સાવચેત રહો, વેરિફિકેશન માટે કોઈ સુરક્ષિત ખાતામાં પૈસા મોકલવા જરૂરી નથી. કોઈને પણ રૂપિયા ટ્રાન્સફર ન કરો.",
+        "remote": "ચેતવણી, અજાણ્યા વ્યક્તિના કહેવાથી એનીડેસ્ક કે કોઈ એપ ડાઉનલોડ કરશો નહીં. સ્ક્રીન શેર ન કરો અને કોલ કાપો.",
+    },
 }
 
 CACHE_DIR = Path("data/cache/warnings")

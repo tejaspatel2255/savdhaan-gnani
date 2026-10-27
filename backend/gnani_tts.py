@@ -51,6 +51,8 @@ async def synthesize(
     Uses httpx POST to docs/API_CONTRACT.md specs with audio_config container wav,
     encoding linear_pcm, num_channels 1, sample_width 2.
     """
+    if settings.demo:
+        raise GnaniError("Gnani API calls disabled in demo mode", code="demo_mode")
     chars = len(text)
     payload = {
         "text": text,

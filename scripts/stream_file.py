@@ -8,6 +8,7 @@ import math
 import sys
 import time
 from pathlib import Path
+from typing import List
 
 # Add project root to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -88,15 +89,21 @@ def main():
         print("Dry run complete: no network calls made.")
         return
 
-    asyncio.run(run_stream(args, pcm, name))
+    asyncio.run(record_call(input_file, out_file, lang=args.lang, rate=args.rate))
 
 
-async def run_stream(args, pcm: bytes, name: str):
-    # Real streaming
-    out_dir = Path("data/transcripts")
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_file = out_dir / f"{name}.jsonl"
+async def record_call(
+    input_file: Path,
+    out_file: Path,
+    lang: str = "hi-IN",
+    rate: int = 8000,
+) -> List[dict]:
+    """Stream an audio file through Gnani Realtime STT and record transcript lines."""
+    input_file = Path(input_file)
+    out_file = Path(out_file)
+    pcm = file_to_pcm(input_file, rate)
 
+    out_file.parent.mkdir(parents=True, exist_ok=True)
     latencies = []
     recorded_segments = []
     t_start = time.perf_counter()
@@ -110,7 +117,6 @@ async def run_stream(args, pcm: bytes, name: str):
             if ev.latency is not None:
                 latencies.append(ev.latency)
 
-            # Record in docs/EVENTS.md format
             record = {
                 "t": ev.t,
                 "segment_index": ev.segment_index,
@@ -124,26 +130,20 @@ async def run_stream(args, pcm: bytes, name: str):
             print(f"{format_t(ev.t)} error: {ev.message}")
 
     print(f"\n--- Streaming audio to wss://api.vachana.ai/stt/v3/stream ---")
-    try:
-        await stream_call(
-            pcm,
-            lang=args.lang,
-            rate=args.rate,
-            settings=settings,
-            on_event=on_event,
-        )
-    except Exception as exc:
-        print(f"Streaming error: {exc}", file=sys.stderr)
-        sys.exit(1)
+    await stream_call(
+        pcm,
+        lang=lang,
+        rate=rate,
+        settings=settings,
+        on_event=on_event,
+    )
 
     wall_clock = time.perf_counter() - t_start
 
-    # Write recorded transcript lines
     with open(out_file, "w", encoding="utf-8") as f:
         for r in recorded_segments:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
 
-    # Compute p50 and p95 latency
     p50 = None
     p95 = None
     if latencies:
@@ -161,6 +161,7 @@ async def run_stream(args, pcm: bytes, name: str):
     print(f"Wall-clock elapsed: {wall_clock:.2f} s")
     print(f"Transcript saved: {out_file}")
     print(f"Usage ledger totals: {ledger_data.get('lifetime', {})}")
+    return recorded_segments
 
 
 if __name__ == "__main__":

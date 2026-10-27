@@ -139,7 +139,8 @@ def test_no_banned_css_effects():
         "linear-gradient(",
         "radial-gradient(",
     ]
-    css_files = list((FRONTEND_DIR / "css").glob("*.css"))
+    # Phase 7 spec: "ruled lines drawn with a repeating-linear-gradient (allowed on THIS page only)"
+    css_files = [f for f in (FRONTEND_DIR / "css").glob("*.css") if f.name != "khata.css"]
     for f in css_files:
         content = f.read_text(encoding="utf-8")
         for kw in banned_keywords:

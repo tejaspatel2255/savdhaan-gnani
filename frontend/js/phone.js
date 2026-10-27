@@ -1,4 +1,5 @@
 import { t } from "./strings.js";
+import { playTwoToneBeep } from "./beep.js";
 
 let dom = null;
 let currentScreen = "calm";
@@ -137,9 +138,10 @@ function handleWarningAudio(msg, state) {
       barsBox.appendChild(tapBtn);
     });
   } else if (!msg.audio_url && msg.reason) {
+    playTwoToneBeep();
     const reasonSpan = document.createElement("div");
     reasonSpan.className = "warning-reason";
-    reasonSpan.textContent = `Warning: ${msg.reason}`;
+    reasonSpan.textContent = t("tts_failed");
     barsBox.appendChild(reasonSpan);
   }
 

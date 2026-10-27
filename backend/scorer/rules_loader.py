@@ -81,6 +81,11 @@ def load_pack(path: Union[str, Path]) -> RulePack:
         if k not in data:
             raise ValueError(f"Missing required key in rule pack: {k}")
 
+    # Allow and ignore unknown keys beginning with underscore (e.g. '_review')
+    for k in data.keys():
+        if k not in req_keys and not k.startswith("_"):
+            pass
+
     categories = data["categories"]
     if not isinstance(categories, dict) or not categories:
         raise ValueError("categories must be a non-empty dictionary")
@@ -191,3 +196,101 @@ def load_pack(path: Union[str, Path]) -> RulePack:
         combos=combos,
         dampeners=dampeners,
     )
+
+
+def merge_packs(packs: List[RulePack]) -> RulePack:
+    """Merge multiple RulePacks into a single unified RulePack.
+
+    Rules, combos, dampeners, and negation phrases from all packs are merged.
+    Categories are shared by ID (later packs can augment category labels/weights).
+    """
+    if not packs:
+        raise ValueError("Cannot merge empty list of packs")
+    if len(packs) == 1:
+        return packs[0]
+
+    primary = packs[0]
+    combined_name = "+".join(p.pack for p in packs)
+
+    merged_categories: Dict[str, Dict[str, Any]] = {}
+    for p in packs:
+        for cat_id, cat_info in p.categories.items():
+            if cat_id not in merged_categories:
+                merged_categories[cat_id] = dict(cat_info)
+            else:
+                merged_categories[cat_id].update(cat_info)
+
+    seen_rule_ids: Set[str] = set()
+    merged_rules: List[Rule] = []
+    for p in packs:
+        for r in p.rules:
+            if r.id not in seen_rule_ids:
+                seen_rule_ids.add(r.id)
+                merged_rules.append(r)
+
+    seen_combo_ids: Set[str] = set()
+    merged_combos: List[Combo] = []
+    for p in packs:
+        for c in p.combos:
+            if c.id not in seen_combo_ids:
+                seen_combo_ids.add(c.id)
+                merged_combos.append(c)
+
+    seen_dampener_ids: Set[str] = set()
+    merged_dampeners: List[Dampener] = []
+    for p in packs:
+        for d in p.dampeners:
+            if d.id not in seen_dampener_ids:
+                seen_dampener_ids.add(d.id)
+                merged_dampeners.append(d)
+
+    merged_neg_phrases: List[CompiledPattern] = []
+    seen_negs: Set[str] = set()
+    for p in packs:
+        for np in p.negation_phrases:
+            key = np.raw
+            if key not in seen_negs:
+                seen_negs.add(key)
+                merged_neg_phrases.append(np)
+
+    merged_neg_exceptions: List[CompiledPattern] = []
+    seen_ex: Set[str] = set()
+    for p in packs:
+        for ne in p.negation_exceptions:
+            key = ne.raw
+            if key not in seen_ex:
+                seen_ex.add(key)
+                merged_neg_exceptions.append(ne)
+
+    merged_guard_cats = set().union(*(p.negation_guard_categories for p in packs))
+
+    return RulePack(
+        pack=combined_name,
+        version=primary.version,
+        window_segments=primary.window_segments,
+        decay=primary.decay,
+        strong_rule_weight=primary.strong_rule_weight,
+        min_categories_for_danger=primary.min_categories_for_danger,
+        negation_window_after=primary.negation_window_after,
+        negation_window_before=primary.negation_window_before,
+        negation_guard_categories=merged_guard_cats,
+        negation_phrases=merged_neg_phrases,
+        negation_exceptions=merged_neg_exceptions,
+        categories=merged_categories,
+        rules=merged_rules,
+        combos=merged_combos,
+        dampeners=merged_dampeners,
+    )
+
+
+def load_configured_packs(pack_names: Optional[str] = None, rules_dir: Union[str, Path] = "rules") -> RulePack:
+    """Load packs specified by comma-separated string (e.g. 'hi_en,gu') and merge them."""
+    rules_dir = Path(rules_dir)
+    if not pack_names:
+        pack_names = "hi_en"
+    names = [n.strip() for n in pack_names.split(",") if n.strip()]
+    loaded = []
+    for name in names:
+        p_path = rules_dir / f"scam_rules_{name}.json"
+        loaded.append(load_pack(p_path))
+    return merge_packs(loaded)

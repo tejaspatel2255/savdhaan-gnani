@@ -1,11 +1,22 @@
 /**
+ * Pure backoff delay calculation sequence: 1s, 2s, 4s, 8s, 8s...
+ */
+export function getBackoffDelay(retryCount) {
+  const sequence = [1000, 2000, 4000, 8000];
+  if (retryCount < 0) return 1000;
+  if (retryCount < sequence.length) {
+    return sequence[retryCount];
+  }
+  return 8000;
+}
+
+/**
  * Resilient WebSocket client with exponential backoff and connection status events.
  */
 export function connect(url, onMessage, onStatus) {
   let ws = null;
   let retryCount = 0;
   let intentionalClose = false;
-  const backoffDelays = [1000, 2000, 4000, 8000, 10000];
 
   function getWsUrl() {
     if (url) return url;
@@ -29,9 +40,7 @@ export function connect(url, onMessage, onStatus) {
       if (onStatus) onStatus("open");
       try {
         ws.send(JSON.stringify({ type: "hello" }));
-      } catch (err) {
-        // Safe send
-      }
+      } catch (err) {}
     };
 
     ws.onmessage = (event) => {
@@ -53,13 +62,11 @@ export function connect(url, onMessage, onStatus) {
       }
     };
 
-    ws.onerror = () => {
-      // Browser triggers onclose right after error
-    };
+    ws.onerror = () => {};
   }
 
   function scheduleReconnect() {
-    const delay = backoffDelays[Math.min(retryCount, backoffDelays.length - 1)];
+    const delay = getBackoffDelay(retryCount);
     retryCount++;
     setTimeout(start, delay);
   }

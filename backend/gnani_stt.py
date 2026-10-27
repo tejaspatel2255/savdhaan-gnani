@@ -52,6 +52,8 @@ async def transcribe_file(
 
     Refuses audio longer than 60 s before sending. Caches by sha256 of file bytes plus parameters.
     """
+    if settings.demo:
+        raise GnaniError("Gnani API calls disabled in demo mode", code="demo_mode")
     audio_path = Path(path)
     if not audio_path.exists():
         raise GnaniError(f"Audio file not found: {audio_path}", code="bad_request")

@@ -1,5 +1,8 @@
+/**
+ * Main application entrypoint for Savdhaan.
+ */
 import { t, LANGS } from "./strings.js";
-import { getCalls, startSession, stopSession, ApiError } from "./api.js";
+import { getCalls, getHealth, startSession, stopSession, ApiError } from "./api.js";
 import { connect } from "./ws.js";
 import { startMic, stopMic, MicError } from "./mic.js";
 import * as eye from "./eye.js";
@@ -27,7 +30,14 @@ export async function init() {
     bannerServer: get("banner").querySelector(".banner-server-msg"),
     callSel: get("call-select"), langSel: get("lang-select"), modeSel: get("mode-select"),
     speakCb: get("speak-warning-cb"), btnStart: get("btn-start"), btnStop: get("btn-stop"),
+    btnDemoScam: get("btn-demo-scam"), btnDemoNormal: get("btn-demo-normal"),
   };
+
+  const bindDemo = (btn, at) => {
+    if (btn) btn.addEventListener("click", () => { unlockAudio(); resetAll(); playSample("/assets/sample_run.jsonl", dispatch, { speed: 1.0, at }); });
+  };
+  bindDemo(el.btnDemoScam, null);
+  bindDemo(el.btnDemoNormal, 0.1);
 
   el.banner.querySelector(".banner-close").addEventListener("click", () => el.banner.classList.add("hidden"));
   el.btnStart.addEventListener("click", handleStart);
@@ -44,6 +54,15 @@ export async function init() {
     el.langSel.appendChild(o);
   }
   await fetchCalls();
+
+  try {
+    const h = await getHealth();
+    if (h.demo && el.badge) {
+      el.badge.textContent = "DEMO · recorded";
+      el.badge.className = "badge-pill mode-mock";
+      el.badge.classList.remove("hidden");
+    }
+  } catch (_) {}
 
   const p = new URLSearchParams(window.location.search);
   if (p.get("dev") === "1") {
@@ -105,8 +124,7 @@ async function handleStart() {
     if (body.mode === "mic") {
       try { await startMic(res.session_id); }
       catch (merr) {
-        const code = merr instanceof MicError
-          ? (merr.code === "denied" ? "mic_denied" : "mic_no_device") : "internal";
+        const code = merr instanceof MicError ? (merr.code === "denied" ? "mic_denied" : "mic_no_device") : "internal";
         showBanner(code, merr.message);
         try { await stopSession(res.session_id); } catch (_) {}
         el.btnStart.disabled = false; el.btnStop.disabled = true;
@@ -150,50 +168,27 @@ export function dispatch(msg) {
   }
 
   try {
-    switch (msg.type) {
-      case "session":
-        state.mode = msg.mode || state.mode;
-        state.modeLabel = msg.mode_label || state.modeLabel;
-        state.lang = msg.lang || state.lang;
-        if (el.badge) {
-          el.badge.textContent = state.modeLabel;
-          el.badge.className = `badge-pill mode-${state.mode}`;
-          el.badge.classList.remove("hidden");
-        }
-        if (el.synthetic) el.synthetic.classList.toggle("hidden", !msg.synthetic);
-        const running = (msg.state === "listening" || msg.state === "starting");
-        if (!running) stopMic();
-        if (el.btnStart) el.btnStart.disabled = running;
-        if (el.btnStop) el.btnStop.disabled = !running;
-        break;
-
-      case "risk": {
-        const prev = state.level;
-        state.score = msg.score; state.level = msg.level;
-        document.body.setAttribute("data-level", msg.level);
-        if (prev !== msg.level && el.polite) el.polite.textContent = `Risk level ${msg.level}, score ${msg.score}`;
-        break;
-      }
-
-      case "alert":
-        if (!state.alertFired) {
-          state.alertFired = true;
-          if (el.assertive) el.assertive.textContent = t("alert_announcement");
-        }
-        break;
-
-      case "error":
-        showBanner(msg.code, msg.message);
-        if (!msg.recoverable) { el.btnStart.disabled = false; el.btnStop.disabled = true; }
-        break;
+    if (msg.type === "session") {
+      state.mode = msg.mode || state.mode; state.modeLabel = msg.mode_label || state.modeLabel; state.lang = msg.lang || state.lang;
+      if (el.badge) { el.badge.textContent = state.modeLabel; el.badge.className = `badge-pill mode-${state.mode}`; el.badge.classList.remove("hidden"); }
+      if (el.synthetic) el.synthetic.classList.toggle("hidden", !msg.synthetic);
+      const running = (msg.state === "listening" || msg.state === "starting");
+      if (!running) stopMic();
+      if (el.btnStart) el.btnStart.disabled = running;
+      if (el.btnStop) el.btnStop.disabled = !running;
+    } else if (msg.type === "risk") {
+      const prev = state.level; state.score = msg.score; state.level = msg.level;
+      document.body.setAttribute("data-level", msg.level);
+      if (prev !== msg.level && el.polite) el.polite.textContent = `Risk level ${msg.level}, score ${msg.score}`;
+    } else if (msg.type === "alert" && !state.alertFired) {
+      state.alertFired = true; if (el.assertive) el.assertive.textContent = t("alert_announcement");
+    } else if (msg.type === "error") {
+      showBanner(msg.code, msg.message);
+      if (!msg.recoverable) { el.btnStart.disabled = false; el.btnStop.disabled = true; }
     }
-
     eye.handle(msg, state); tape.handle(msg, state); why.handle(msg, state);
-    waveform.handle(msg, state); stamp.handle(msg, state); phone.handle(msg, state);
-    receipt.handle(msg, state);
-  } catch (err) {
-    console.error("Event error:", err, msg);
-  }
+    waveform.handle(msg, state); stamp.handle(msg, state); phone.handle(msg, state); receipt.handle(msg, state);
+  } catch (err) { console.error("Event error:", err, msg); }
 }
 
 window.addEventListener("DOMContentLoaded", init);

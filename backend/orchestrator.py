@@ -25,7 +25,7 @@ from backend.events import (
 from backend.gnani_errors import GnaniError
 from backend.gnani_tts import synthesize as default_tts
 from backend.metrics import build_summary
-from backend.scorer import ScamScorer, load_pack
+from backend.scorer import ScamScorer, load_pack, load_configured_packs
 from backend.mic import MicSource
 from backend.sources import FileSource, MockSource, ReplaySource, SourceEvent
 from backend.warning import family_message, get_warning, pick_key
@@ -78,12 +78,19 @@ class SessionManager:
         self._pack_routes = {
             "hi-IN": Path("rules/scam_rules_hi_en.json"),
             "en-IN": Path("rules/scam_rules_hi_en.json"),
+            "gu-IN": Path("rules/scam_rules_gu.json"),
         }
 
     def _get_pack(self, lang: str):
         if lang not in self._rule_packs:
-            pack_path = self._pack_routes.get(lang, Path("rules/scam_rules_hi_en.json"))
-            self._rule_packs[lang] = load_pack(pack_path)
+            # Check configured packs first
+            if getattr(self.settings, "scorer_packs", None) and "," in self.settings.scorer_packs:
+                self._rule_packs[lang] = load_configured_packs(self.settings.scorer_packs)
+            elif lang == "gu-IN" and Path("rules/scam_rules_gu.json").exists():
+                self._rule_packs[lang] = load_configured_packs("hi_en,gu")
+            else:
+                pack_path = self._pack_routes.get(lang, Path("rules/scam_rules_hi_en.json"))
+                self._rule_packs[lang] = load_pack(pack_path)
         return self._rule_packs[lang]
 
     def is_busy(self) -> bool:

@@ -39,6 +39,7 @@ async def health():
         "ok": True,
         "gnani_key_present": settings.key_present,
         "version": "0.1",
+        "demo": settings.demo,
     }
 
 
@@ -99,6 +100,12 @@ async def start_session(body: SessionStartBody):
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Thresholds must satisfy 0 < careful < danger <= 100",
+        )
+
+    if settings.demo and body.mode in ("file", "mic"):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={"error": "demo_mode"},
         )
 
     if body.mode == "mic" and not settings.key_present:
@@ -165,7 +172,10 @@ async def get_usage():
 async def get_eval():
     eval_file = Path("data/eval/results.json")
     if not eval_file.exists():
-        raise HTTPException(status_code=404, detail="No evaluation results found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"error": "no_results"},
+        )
     with open(eval_file, "r", encoding="utf-8") as f:
         return json.load(f)
 
