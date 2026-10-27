@@ -1,0 +1,31 @@
+{"type": "session", "session_id": "sess_demo_legit", "seq": 0, "t": 0.0, "state": "starting", "mode": "mock", "mode_label": "DEMO · recorded", "call_title": "", "synthetic": true, "lang": "hi-IN", "models": {"stt": "Gnani Prisma v2.5", "tts": "Gnani Timbre v3.0"}, "thresholds": {"careful": 30, "danger": 60}}
+{"type": "session", "session_id": "sess_demo_legit", "seq": 1, "t": 0.0, "state": "listening", "mode": "mock", "mode_label": "DEMO · recorded", "call_title": "Bank EMI reminder (synthetic, normal call)", "synthetic": true, "lang": "hi-IN", "models": {"stt": "Gnani Prisma v2.5", "tts": "Gnani Timbre v3.0"}, "thresholds": {"careful": 30, "danger": 60}}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 2, "t": 0.2, "rms": 0.03}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 3, "t": 0.4, "rms": 0.03}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 4, "t": 0.6, "rms": 0.03}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 5, "t": 0.8, "rms": 0.03}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 6, "t": 1.0, "rms": 0.03}
+{"type": "transcript", "session_id": "sess_demo_legit", "seq": 7, "t": 2.2, "segment_index": 0, "segment_id": "seg_0", "text": "namaste main aapke bank ki taraf se automated reminder bol raha hoon", "audio_duration_ms": 1200, "stt_latency_ms": 150}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 9, "t": 2.5, "rms": 0.25}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 10, "t": 2.8, "rms": 0.25}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 11, "t": 3.1, "rms": 0.25}
+{"type": "transcript", "session_id": "sess_demo_legit", "seq": 12, "t": 4.3, "segment_index": 1, "segment_id": "seg_1", "text": "aapki emi 5 tareekh ko due hai", "audio_duration_ms": 1200, "stt_latency_ms": 150}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 14, "t": 4.6, "rms": 0.25}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 15, "t": 4.9, "rms": 0.25}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 16, "t": 5.2, "rms": 0.25}
+{"type": "transcript", "session_id": "sess_demo_legit", "seq": 17, "t": 6.4, "segment_index": 2, "segment_id": "seg_2", "text": "kripya samay par bhugtaan karein", "audio_duration_ms": 1200, "stt_latency_ms": 150}
+{"type": "risk", "session_id": "sess_demo_legit", "seq": 18, "t": 6.4, "segment_index": 2, "score": 0, "level": "calm", "delta": 0, "hits": [], "categories": {}}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 19, "t": 6.7, "rms": 0.25}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 20, "t": 7.0, "rms": 0.25}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 21, "t": 7.3, "rms": 0.25}
+{"type": "transcript", "session_id": "sess_demo_legit", "seq": 22, "t": 8.5, "segment_index": 3, "segment_id": "seg_3", "text": "kisi bhi sahayata ke liye branch mein sampark karein", "audio_duration_ms": 1200, "stt_latency_ms": 150}
+{"type": "risk", "session_id": "sess_demo_legit", "seq": 23, "t": 8.5, "segment_index": 3, "score": 0, "level": "calm", "delta": 0, "hits": [], "categories": {}}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 24, "t": 8.8, "rms": 0.25}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 25, "t": 9.1, "rms": 0.25}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 26, "t": 9.4, "rms": 0.25}
+{"type": "transcript", "session_id": "sess_demo_legit", "seq": 27, "t": 10.6, "segment_index": 4, "segment_id": "seg_4", "text": "dhanyavaad", "audio_duration_ms": 1200, "stt_latency_ms": 150}
+{"type": "risk", "session_id": "sess_demo_legit", "seq": 28, "t": 10.6, "segment_index": 4, "score": 0, "level": "calm", "delta": 0, "hits": [], "categories": {}}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 29, "t": 10.9, "rms": 0.25}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 30, "t": 11.2, "rms": 0.25}
+{"type": "audio_level", "session_id": "sess_demo_legit", "seq": 31, "t": 11.5, "rms": 0.25}
+{"type": "summary", "session_id": "sess_demo_legit", "seq": 32, "t": 12.0, "duration_s": 12.0, "segments": 5, "time_to_alert_s": null, "max_score": 0, "final_level": "calm", "categories": {}, "stt_latency_ms": {"median": 150, "p95": 180}, "credits_used": {"tts_chars": 0, "stt_seconds": 12.0}, "mode": "mock", "synthetic": true}

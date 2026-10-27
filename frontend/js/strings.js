@@ -105,6 +105,16 @@ export const STRINGS = {
   btn_close: { hi: "बंद करें · Close", en: "Close", gu: "બંધ કરો · Close" },
   receipt_time_none: { hi: "कोई नहीं · none", en: "none", gu: "કોઈ નહીં · none" },
   receipt_na: { hi: "लागू नहीं · n/a", en: "n/a", gu: "લાગુ નથી · n/a" },
+  badge_static: {
+    hi: "स्टैटिक डेमो · रिकॉर्डेड",
+    en: "STATIC DEMO · recorded",
+    gu: "સ્ટેટિક ડેમો · રેકોર્ડેડ",
+  },
+  static_footer_note: {
+    hi: "रिकॉर्ड किया गया डेमो; किसी लाइव कॉल का विश्लेषण नहीं हो रहा है",
+    en: "recorded demo; no live call is being analysed",
+    gu: "રેકોર્ડ કરેલ ડેમો; કોઈ લાઈવ કોલનું વિશ્લેષણ કરવામાં આવી રહ્યું નથી",
+  },
 };
 
 const loggedFallbacks = new Set();

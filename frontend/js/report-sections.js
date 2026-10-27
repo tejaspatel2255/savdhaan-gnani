@@ -4,43 +4,86 @@
 
 import { el, renderPencilBar } from "./report-views.js";
 
+function renderMetricBlock(parent, title, sub, dataObj, emptyCommand) {
+  const block = el("div", "headline-block");
+  const bHead = el("div", "headline-block-head");
+  bHead.appendChild(el("h3", "block-title", title));
+  bHead.appendChild(el("span", "block-sub", sub));
+  block.appendChild(bHead);
+
+  if (!dataObj || dataObj.tp === null || dataObj.tp === undefined) {
+    const unmeasured = el("div", "unmeasured-box");
+    unmeasured.appendChild(el("span", "unmeasured-tag", "not measured yet"));
+    if (emptyCommand) {
+      unmeasured.appendChild(el("code", "unmeasured-cmd", emptyCommand));
+    }
+    block.appendChild(unmeasured);
+    parent.appendChild(block);
+    return;
+  }
+
+  const grid = el("div", "headline-grid");
+
+  // Recall card
+  const cRecall = el("div", "ledger-card");
+  cRecall.appendChild(el("div", "card-label", "धोखा पहचान दर · RECALL"));
+  const r1 = el("div", "card-stat-row");
+  const tp = dataObj.tp ?? 0;
+  const fn = dataObj.fn ?? 0;
+  const recVal = dataObj.recall !== null ? `${(dataObj.recall * 100).toFixed(1)}%` : "N/A";
+  r1.appendChild(el("span", "card-num", recVal));
+  r1.appendChild(el("span", "card-counts", `${tp} of ${tp + fn} scam calls`));
+  cRecall.appendChild(r1);
+  if (dataObj.recall_ci95 && dataObj.recall_ci95[0] !== null) {
+    cRecall.appendChild(el("div", "card-ci", `95% CI: [${dataObj.recall_ci95[0]}, ${dataObj.recall_ci95[1]}]`));
+  }
+  grid.appendChild(cRecall);
+
+  // False Alarm card
+  const cFar = el("div", "ledger-card danger-card");
+  cFar.appendChild(el("div", "card-label", "झूठा अलार्म · FALSE ALARM RATE"));
+  const r2 = el("div", "card-stat-row");
+  const fp = dataObj.fp ?? 0;
+  const tn = dataObj.tn ?? 0;
+  const farVal = dataObj.false_alarm_rate !== null ? `${(dataObj.false_alarm_rate * 100).toFixed(1)}%` : "N/A";
+  r2.appendChild(el("span", "card-num", farVal));
+  r2.appendChild(el("span", "card-counts", `${fp} of ${fp + tn} legit calls`));
+  cFar.appendChild(r2);
+  if (dataObj.false_alarm_ci95 && dataObj.false_alarm_ci95[0] !== null) {
+    cFar.appendChild(el("div", "card-ci", `95% CI: [${dataObj.false_alarm_ci95[0]}, ${dataObj.false_alarm_ci95[1]}]`));
+  }
+  grid.appendChild(cFar);
+
+  block.appendChild(grid);
+  parent.appendChild(block);
+}
+
 export function renderSectionsAtoC(root, data, devSplit, testSplit) {
-  // SECTION A: Headline Ledger
+  // SECTION A: Headline Ledger (Separated into Real vs Perfect Transcripts)
   const secA = el("section", "khata-section");
   const headA = el("div", "section-head");
   headA.appendChild(el("h2", null, "मुख्य आँकड़े (टेस्ट सेट)"));
   headA.appendChild(el("span", "sub", "Section A · Headline Performance on Frozen Test Split"));
   secA.appendChild(headA);
 
-  const gridA = el("div", "headline-grid");
-  const cRecall = el("div", "ledger-card");
-  cRecall.appendChild(el("div", "card-label", "धोखा पहचान दर · RECALL"));
-  const r1 = el("div", "card-stat-row");
-  const tp = testSplit.tp ?? 0;
-  const fn = testSplit.fn ?? 0;
-  const recVal = testSplit.recall !== null ? `${(testSplit.recall * 100).toFixed(1)}%` : "N/A";
-  r1.appendChild(el("span", "card-num", recVal));
-  r1.appendChild(el("span", "card-counts", `${tp} of ${tp + fn} scam calls`));
-  cRecall.appendChild(r1);
-  if (testSplit.recall_ci95 && testSplit.recall_ci95[0] !== null) {
-    cRecall.appendChild(el("div", "card-ci", `95% CI: [${testSplit.recall_ci95[0]}, ${testSplit.recall_ci95[1]}]`));
-  }
-  gridA.appendChild(cRecall);
+  // Block 1: Real Prisma
+  renderMetricBlock(
+    secA,
+    "Real Prisma speech recognition",
+    "Live STT through phone audio with noise",
+    testSplit,
+    "python scripts/run_eval.py record --split test --go"
+  );
 
-  const cFar = el("div", "ledger-card danger-card");
-  cFar.appendChild(el("div", "card-label", "झूठा अलार्म · FALSE ALARM RATE"));
-  const r2 = el("div", "card-stat-row");
-  const fp = testSplit.fp ?? 0;
-  const tn = testSplit.tn ?? 0;
-  const farVal = testSplit.false_alarm_rate !== null ? `${(testSplit.false_alarm_rate * 100).toFixed(1)}%` : "N/A";
-  r2.appendChild(el("span", "card-num", farVal));
-  r2.appendChild(el("span", "card-counts", `${fp} of ${fp + tn} legit calls`));
-  cFar.appendChild(r2);
-  if (testSplit.false_alarm_ci95 && testSplit.false_alarm_ci95[0] !== null) {
-    cFar.appendChild(el("div", "card-ci", `95% CI: [${testSplit.false_alarm_ci95[0]}, ${testSplit.false_alarm_ci95[1]}]`));
-  }
-  gridA.appendChild(cFar);
-  secA.appendChild(gridA);
+  // Block 2: Perfect transcripts (Ceiling)
+  renderMetricBlock(
+    secA,
+    "Perfect transcripts (script text, not real speech recognition)",
+    "Deterministic rule-matching ceiling without STT error",
+    testSplit.ceiling,
+    null
+  );
+
   root.appendChild(secA);
 
   // SECTION B: Comparison Table
@@ -79,11 +122,11 @@ export function renderSectionsAtoC(root, data, devSplit, testSplit) {
     trR.appendChild(el("td", null, "Gnani Prisma (phone_noise)"));
     const rTp = item.real?.tp ?? "-";
     const rNscam = (item.real?.tp ?? 0) + (item.real?.fn ?? 0);
-    trR.appendChild(el("td", "mono-num", `${rTp} / ${rNscam}`));
-    trR.appendChild(el("td", "mono-num", item.real?.recall != null ? `${(item.real.recall * 100).toFixed(0)}%` : "No STT data"));
+    trR.appendChild(el("td", "mono-num", rTp !== "-" ? `${rTp} / ${rNscam}` : "-"));
+    trR.appendChild(el("td", "mono-num", item.real?.recall != null ? `${(item.real.recall * 100).toFixed(0)}%` : "-"));
     const rFp = item.real?.fp ?? "-";
     const rNlegit = (item.real?.fp ?? 0) + (item.real?.tn ?? 0);
-    trR.appendChild(el("td", "mono-num", `${rFp} / ${rNlegit}`));
+    trR.appendChild(el("td", "mono-num", rFp !== "-" ? `${rFp} / ${rNlegit}` : "-"));
     trR.appendChild(el("td", "mono-num", item.real?.false_alarm_rate != null ? `${(item.real.false_alarm_rate * 100).toFixed(0)}%` : "-"));
     trR.appendChild(el("td", "mono-num", item.real?.f1 != null ? item.real.f1.toFixed(2) : "-"));
     tbodyB.appendChild(trR);
@@ -93,47 +136,28 @@ export function renderSectionsAtoC(root, data, devSplit, testSplit) {
   secB.appendChild(wrapB);
   root.appendChild(secB);
 
-  // SECTION C: WER
+  // SECTION C: Timing
   const secC = el("section", "khata-section");
   const headC = el("div", "section-head");
-  headC.appendChild(el("h2", null, "शब्द त्रुटि दर (शोर स्थितियाँ)"));
-  headC.appendChild(el("span", "sub", "Section C · Word Error Rate across Audio Conditions"));
+  headC.appendChild(el("h2", null, "चेतावनी का समय (सेकंड)"));
+  headC.appendChild(el("span", "sub", "Section C · Alert Latency & Detection Timings"));
   secC.appendChild(headC);
 
-  const wrapC = el("div", "table-wrapper");
-  const tC = el("table", "khata-table");
-  const theadC = el("thead");
-  const trhC = el("tr");
-  ["Audio Condition", "Sample Clips", "WER (%)", "Error Bar (0-100%)"].forEach((t, i) => trhC.appendChild(el("th", i === 3 ? "bar-svg-cell" : null, t)));
-  theadC.appendChild(trhC);
-  tC.appendChild(theadC);
+  const tta = testSplit.time_to_alert_s || testSplit.ceiling?.time_to_alert_s;
+  const tfc = testSplit.time_from_cue_s || testSplit.ceiling?.time_from_cue_s;
 
-  const tbodyC = el("tbody");
-  const werConds = (data.wer && data.wer.conditions) || {};
-  [
-    { key: "clean", label: "Clean Studio (24 kHz)" },
-    { key: "phone", label: "Telephone Bandpass (8 kHz, μ-law)" },
-    { key: "phone_noise", label: "Telephone + Street Noise (15 dB SNR)" },
-    { key: "phone_noise_drops", label: "Telephone + Noise + 3 Packet Drops" },
-  ].forEach((item) => {
-    const row = el("tr");
-    row.appendChild(el("td", null, item.label));
-    const cData = werConds[item.key];
-    const nVal = cData && cData.n != null ? cData.n : "-";
-    const werVal = cData && cData.wer != null ? (cData.wer * 100).toFixed(1) : "-";
-    row.appendChild(el("td", "mono-num", String(nVal)));
-    row.appendChild(el("td", "mono-num", werVal !== "-" ? `${werVal}%` : "Not evaluated"));
+  const gridC = el("div", "timing-grid");
+  const boxTTA = el("div", "timing-box");
+  boxTTA.appendChild(el("div", "timing-label", "कॉल शुरू से चेतावनी · TIME TO ALERT (TTA)"));
+  boxTTA.appendChild(el("div", "timing-val", tta?.median ? `${tta.median.toFixed(1)}s` : "-"));
+  boxTTA.appendChild(el("div", "timing-sub", `Median ${tta?.median ?? "-"}s | Mean ${tta?.mean ?? "-"}s | Max ${tta?.max ?? "-"}s`));
+  gridC.appendChild(boxTTA);
 
-    const svgCell = el("td", "bar-svg-cell");
-    const svgElem = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    renderPencilBar(svgElem, werVal !== "-" ? parseFloat(werVal) : 0);
-    svgCell.appendChild(svgElem);
-    row.appendChild(svgCell);
-    tbodyC.appendChild(row);
-  });
-  tC.appendChild(tbodyC);
-  wrapC.appendChild(tC);
-  secC.appendChild(wrapC);
-  if (data.wer && data.wer.note) secC.appendChild(el("p", "card-ci", data.wer.note));
+  const boxTFC = el("div", "timing-box");
+  boxTFC.appendChild(el("div", "timing-label", "धोखे के इशारे से चेतावनी · TIME FROM CUE (TFC)"));
+  boxTFC.appendChild(el("div", "timing-val", tfc?.median ? `${tfc.median.toFixed(1)}s` : "-"));
+  boxTFC.appendChild(el("div", "timing-sub", `Median ${tfc?.median ?? "-"}s | Mean ${tfc?.mean ?? "-"}s | Max ${tfc?.max ?? "-"}s`));
+  gridC.appendChild(boxTFC);
+  secC.appendChild(gridC);
   root.appendChild(secC);
 }

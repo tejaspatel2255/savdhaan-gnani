@@ -54,6 +54,9 @@ class Settings:
     demo: bool = field(
         default_factory=lambda: os.getenv("DEMO", "0").lower() in ("1", "true", "yes")
     )
+    allowed_origins: str = field(
+        default_factory=lambda: os.getenv("ALLOWED_ORIGINS", "").strip()
+    )
 
     @property
     def key_present(self) -> bool:

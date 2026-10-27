@@ -17,23 +17,16 @@ export function init(rootEl) {
 
 export function reset() {
   currentScreen = "calm";
-  if (audioElement) {
-    audioElement.pause();
-    audioElement = null;
-  }
+  if (audioElement) { audioElement.pause(); audioElement = null; }
   renderScreen("calm");
   if (dom && dom.familyContainer) {
-    while (dom.familyContainer.firstChild) {
-      dom.familyContainer.removeChild(dom.familyContainer.firstChild);
-    }
+    while (dom.familyContainer.firstChild) dom.familyContainer.removeChild(dom.familyContainer.firstChild);
   }
 }
 
 function clearScreen() {
   if (!dom || !dom.screen) return;
-  while (dom.screen.firstChild) {
-    dom.screen.removeChild(dom.screen.firstChild);
-  }
+  while (dom.screen.firstChild) dom.screen.removeChild(dom.screen.firstChild);
 }
 
 function renderScreen(stateName) {
@@ -118,21 +111,28 @@ function handleWarningAudio(msg, state) {
     }
     barsBox.appendChild(bars);
 
-    audioElement = new Audio(msg.audio_url);
-    audioElement.addEventListener("play", () => {
-      console.log("Audio playback started:", msg.audio_url);
+    let srcUrl = msg.audio_url;
+    if (state.isStatic && srcUrl && !srcUrl.startsWith("/assets/")) {
+      const fileName = srcUrl.split("/").pop();
+      srcUrl = `/assets/audio/${fileName}`;
+    }
+
+    audioElement = new Audio(srcUrl);
+    audioElement.addEventListener("play", () => {});
+    audioElement.addEventListener("error", () => {
+      playTwoToneBeep();
+      if (barsBox.parentNode) barsBox.parentNode.removeChild(barsBox);
     });
     audioElement.addEventListener("ended", () => {
       if (barsBox.parentNode) barsBox.parentNode.removeChild(barsBox);
     });
 
-    audioElement.play().catch((err) => {
-      console.warn("Audio autoplay blocked:", err);
+    audioElement.play().catch(() => {
       const tapBtn = document.createElement("button");
       tapBtn.className = "btn-tap-audio";
       tapBtn.textContent = t("tap_to_hear");
       tapBtn.addEventListener("click", () => {
-        audioElement.play();
+        audioElement.play().catch(() => { playTwoToneBeep(); });
         tapBtn.remove();
       });
       barsBox.appendChild(tapBtn);

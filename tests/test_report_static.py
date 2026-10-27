@@ -16,6 +16,13 @@ def test_report_js_security_and_dom_practices():
     assert "card" in js_content, "?card=1 handling must exist in report.js"
 
 
+def test_report_sections_separates_real_and_ceiling():
+    sec_content = Path("frontend/js/report-sections.js").read_text(encoding="utf-8")
+    assert "Real Prisma speech recognition" in sec_content
+    assert "Perfect transcripts (script text, not real speech recognition)" in sec_content
+    assert "not measured yet" in sec_content
+
+
 def test_khata_css_text_color_safety():
     css_content = Path("frontend/css/khata.css").read_text(encoding="utf-8")
     # Verify that #E5391F is not used as a text color (small danger text should use --danger-deep)

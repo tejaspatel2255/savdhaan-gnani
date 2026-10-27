@@ -7,7 +7,8 @@ import sys
 from pathlib import Path
 
 # Add project root to sys.path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
 
 # Ensure utf-8 output on Windows consoles
 if hasattr(sys.stdout, "reconfigure"):
@@ -19,34 +20,44 @@ from backend.warning import WARNINGS, get_warning
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Generate and cache spoken warning audio")
-    parser.add_argument("--lang", default="hi-IN", choices=["hi-IN", "en-IN"], help="Language code (default: hi-IN)")
-    parser.add_argument("--only", choices=["generic", "arrest", "otp", "money", "remote"], default=None, help="Generate only one specific warning key")
-    parser.add_argument("--dry-run", action="store_true", help="Print plan and character counts without calling TTS API")
+    parser.add_argument(
+        "--lang",
+        default="hi-IN",
+        choices=["hi-IN", "en-IN", "gu-IN", "all"],
+        help="Language code or 'all' (default: hi-IN)"
+    )
+    parser.add_argument(
+        "--only",
+        choices=["generic", "arrest", "otp", "money", "remote"],
+        default=None,
+        help="Generate only one specific warning key"
+    )
+    parser.add_argument(
+        "--go",
+        action="store_true",
+        help="Actually call TTS API to generate and cache audio (spends credits)"
+    )
     return parser.parse_args()
 
 
-def main():
-    args = parse_args()
-    lang = args.lang
+def process_language(lang: str, only_key: str, go: bool):
     lang_dict = WARNINGS.get(lang, WARNINGS["hi-IN"])
-
-    keys = [args.only] if args.only else list(lang_dict.keys())
-
+    keys = [only_key] if only_key else list(lang_dict.keys())
     total_chars = sum(len(lang_dict[k]) for k in keys)
 
-    print(f"=== Warning Audio Generation ({lang}) ===")
+    print(f"\n=== Warning Audio Preparation ({lang}) ===")
     print(f"Target Voice: {settings.warning_voice}")
     print(f"Target Model: {settings.warning_model}")
     print(f"Total Warnings: {len(keys)}")
-    print(f"Total Characters: {total_chars}")
-    print(f"Dry Run: {args.dry_run}\n")
+    print(f"Total Characters: {total_chars} (Cap: {settings.max_tts_chars_per_run})")
+    print(f"Mode: {'LIVE GENERATION (--go)' if go else 'DRY RUN'}\n")
 
-    if args.dry_run:
-        print("Planned Warnings:")
+    if not go:
+        print("Planned Warnings (Dry Run):")
         for k in keys:
             text = lang_dict[k]
             print(f"  [{k:<8s}] ({len(text)} chars): {text}")
-        print("\nDry run complete. No credits spent.")
+        print("Dry run complete for this language. No credits spent.")
         return
 
     asyncio.run(generate_warnings(keys, lang_dict, lang))
@@ -69,7 +80,15 @@ async def generate_warnings(keys, lang_dict, lang):
         except Exception as e:
             print(f"  [{k:<8s}] FAILED ({chars} chars): {e}")
 
-    print("\nWarning audio preparation complete.")
+    print(f"Warning audio preparation for {lang} complete.")
+
+
+def main():
+    args = parse_args()
+    langs_to_process = ["hi-IN", "en-IN", "gu-IN"] if args.lang == "all" else [args.lang]
+
+    for l in langs_to_process:
+        process_language(l, args.only, args.go)
 
 
 if __name__ == "__main__":

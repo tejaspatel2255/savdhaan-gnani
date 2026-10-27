@@ -2,7 +2,7 @@
  * Main application entrypoint for Savdhaan.
  */
 import { t, LANGS } from "./strings.js";
-import { getCalls, getHealth, startSession, stopSession, ApiError } from "./api.js";
+import { getCalls, getHealth, startSession, stopSession, detectBackend, ApiError } from "./api.js";
 import { connect } from "./ws.js";
 import { startMic, stopMic, MicError } from "./mic.js";
 import * as eye from "./eye.js";
@@ -15,7 +15,7 @@ import * as receipt from "./receipt.js";
 import { playSample } from "./devfeed.js";
 
 export const FEATURES = { mic: true };
-export const state = { sessionId: null, mode: "mock", modeLabel: "MOCK", lang: "hi-IN", level: "calm", score: 0, alertFired: false };
+export const state = { sessionId: null, mode: "mock", modeLabel: "MOCK", lang: "hi-IN", level: "calm", score: 0, alertFired: false, isStatic: false };
 
 let audioCtx = null, callsList = [];
 const handledMessages = new Set();
@@ -33,12 +33,8 @@ export async function init() {
     btnDemoScam: get("btn-demo-scam"), btnDemoNormal: get("btn-demo-normal"),
   };
 
-  const bindDemo = (btn, at) => {
-    if (btn) btn.addEventListener("click", () => { unlockAudio(); resetAll(); playSample("/assets/sample_run.jsonl", dispatch, { speed: 1.0, at }); });
-  };
-  bindDemo(el.btnDemoScam, null);
-  bindDemo(el.btnDemoNormal, 0.1);
-
+  if (el.btnDemoScam) el.btnDemoScam.addEventListener("click", () => { unlockAudio(); resetAll(); playSample("/assets/sample_run.jsonl", dispatch, { speed: 1.0 }); });
+  if (el.btnDemoNormal) el.btnDemoNormal.addEventListener("click", () => { unlockAudio(); resetAll(); playSample("/assets/sample_legit.jsonl", dispatch, { speed: 1.0 }); });
   el.banner.querySelector(".banner-close").addEventListener("click", () => el.banner.classList.add("hidden"));
   el.btnStart.addEventListener("click", handleStart);
   el.btnStop.addEventListener("click", handleStop);
@@ -49,19 +45,21 @@ export async function init() {
   receipt.init(get("receipt-root"), handleStart);
 
   for (const l of LANGS) {
-    const o = document.createElement("option");
-    o.value = l.code; o.textContent = l.label;
-    el.langSel.appendChild(o);
+    const o = document.createElement("option"); o.value = l.code; o.textContent = l.label; el.langSel.appendChild(o);
   }
-  await fetchCalls();
 
+  const hasBackend = await detectBackend();
+  if (!hasBackend) {
+    state.isStatic = true;
+    if (el.badge) { el.badge.textContent = t("badge_static", state.lang); el.badge.className = "badge-pill mode-mock"; el.badge.classList.remove("hidden"); }
+    [el.callSel, el.modeSel, el.btnStart, el.btnStop].forEach((node) => { if (node) node.style.display = "none"; });
+    return;
+  }
+
+  await fetchCalls();
   try {
     const h = await getHealth();
-    if (h.demo && el.badge) {
-      el.badge.textContent = "DEMO · recorded";
-      el.badge.className = "badge-pill mode-mock";
-      el.badge.classList.remove("hidden");
-    }
+    if (h.demo && el.badge) { el.badge.textContent = "DEMO · recorded"; el.badge.className = "badge-pill mode-mock"; el.badge.classList.remove("hidden"); }
   } catch (_) {}
 
   const p = new URLSearchParams(window.location.search);
@@ -78,9 +76,7 @@ async function fetchCalls() {
     callsList = res.calls || [];
     while (el.callSel.firstChild) el.callSel.removeChild(el.callSel.firstChild);
     for (const c of callsList) {
-      const o = document.createElement("option");
-      o.value = c.id; o.textContent = `${c.title} (SYNTHETIC)`;
-      el.callSel.appendChild(o);
+      const o = document.createElement("option"); o.value = c.id; o.textContent = `${c.title} (SYNTHETIC)`; el.callSel.appendChild(o);
     }
     syncModes();
   } catch (err) { showBanner("network", err.message); }
@@ -91,9 +87,7 @@ function syncModes() {
   while (el.modeSel.firstChild) el.modeSel.removeChild(el.modeSel.firstChild);
   for (const m of (c && c.modes) || ["mock"]) {
     if (m === "mic" && !FEATURES.mic) continue;
-    const o = document.createElement("option");
-    o.value = m; o.textContent = m.toUpperCase();
-    el.modeSel.appendChild(o);
+    const o = document.createElement("option"); o.value = m; o.textContent = m.toUpperCase(); el.modeSel.appendChild(o);
   }
 }
 
@@ -124,8 +118,7 @@ async function handleStart() {
     if (body.mode === "mic") {
       try { await startMic(res.session_id); }
       catch (merr) {
-        const code = merr instanceof MicError ? (merr.code === "denied" ? "mic_denied" : "mic_no_device") : "internal";
-        showBanner(code, merr.message);
+        showBanner(merr instanceof MicError ? (merr.code === "denied" ? "mic_denied" : "mic_no_device") : "internal", merr.message);
         try { await stopSession(res.session_id); } catch (_) {}
         el.btnStart.disabled = false; el.btnStop.disabled = true;
       }

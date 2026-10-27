@@ -222,6 +222,22 @@
   border-radius: var(--radius-panel);
 }
 
+@media (max-width: 1366px) {
+  #hdr {
+    height: auto;
+    min-height: 64px;
+    padding: var(--sp-12) var(--sp-16);
+    flex-wrap: wrap;
+    row-gap: var(--sp-8);
+  }
+  .hdr-left {
+    flex-shrink: 0;
+  }
+  #controls {
+    flex-wrap: wrap;
+  }
+}
+
 @media (max-width: 900px) {
   #hdr {
     height: auto;

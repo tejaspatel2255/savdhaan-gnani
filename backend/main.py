@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from urllib.parse import urlparse
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, status
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -206,9 +207,22 @@ async def websocket_ui(websocket: WebSocket):
 @app.websocket("/ws/mic")
 async def websocket_mic(websocket: WebSocket, session_id: str = ""):
     """Receive browser microphone audio and route to the active mic session."""
-    allowed = {"http://localhost:8000", "http://127.0.0.1:8000"}
     origin = websocket.headers.get("origin", "")
-    if (origin and origin not in allowed) or not session_id:
+    host = websocket.headers.get("host", "")
+    allowed = {"http://localhost:8000", "http://127.0.0.1:8000"}
+    if settings.allowed_origins:
+        for o in settings.allowed_origins.split(","):
+            if o.strip():
+                allowed.add(o.strip())
+
+    origin_ok = True
+    if origin:
+        parsed_origin = urlparse(origin)
+        origin_netloc = parsed_origin.netloc or parsed_origin.path
+        if origin_netloc != host and origin not in allowed:
+            origin_ok = False
+
+    if not origin_ok or not session_id:
         await websocket.close(code=1008)
         return
     await websocket.accept()

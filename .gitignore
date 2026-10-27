@@ -26,6 +26,7 @@ nosetests.xml
 coverage.xml
 
 # ── Runtime data (never commit) ─────────────────────────────────────────────
+data/usage_ledger.json
 
 # API response cache (STT / TTS) – can be large, regenerated automatically
 data/cache/stt/
@@ -55,6 +56,10 @@ data/calls/*.flac
 test_call_tmp/
 test_tmp/
 tmp_test_dir/
+
+# Commit static hosted assets
+!frontend/assets/audio/*.wav
+!frontend/assets/results.json
 
 # ── Editor and OS files ──────────────────────────────────────────────────────
 .vscode/

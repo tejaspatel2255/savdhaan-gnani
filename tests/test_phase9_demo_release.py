@@ -1,5 +1,6 @@
 """Tests for Phase 9: Demo mode, offline guards, release check, and documentation."""
 
+import json
 import sys
 from pathlib import Path
 import pytest
@@ -73,3 +74,23 @@ def test_readme_line_count_and_integrity():
     lines = readme_path.read_text(encoding="utf-8").splitlines()
     assert len(lines) <= 140, f"README exceeds 140 lines: {len(lines)}"
     assert check_readme_integrity() is True
+
+
+def test_check_release_rejects_invented_readme_numbers(tmp_path):
+    fake_readme = tmp_path / "README.md"
+    fake_results = tmp_path / "results.json"
+    fake_results.write_text(json.dumps({
+        "splits": {
+            "test": {
+                "ceiling": {"tp": 4, "fn": 1, "fp": 0, "tn": 5, "recall": 0.8, "false_alarm_rate": 0.0}
+            }
+        }
+    }), encoding="utf-8")
+
+    # Invented percentage: 99.9%
+    fake_readme.write_text("Measured recall: 99.9% (4 of 5)\n", encoding="utf-8")
+    assert check_readme_integrity(readme_path=fake_readme, results_path=fake_results) is False
+
+    # Invented count: 8 of 10
+    fake_readme.write_text("Measured recall: 80.0% (8 of 10)\n", encoding="utf-8")
+    assert check_readme_integrity(readme_path=fake_readme, results_path=fake_results) is False

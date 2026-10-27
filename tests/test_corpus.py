@@ -84,27 +84,6 @@ def test_text_level_sanity_dev_split():
             assert fired_alert is False, f"Legit call {c.id} fired unexpected alert"
 
 
-def test_text_level_eval_test_split_diagnostic(capsys):
-    test_calls = load_scripts([TEST_SCRIPT_PATH])
-    pack = load_pack("rules/scam_rules_hi_en.json")
-    results = []
-
-    for c in test_calls:
-        scorer = ScamScorer(pack, careful=30, danger=60)
-        fired = False
-        for idx, (spk, text) in enumerate(c.turns):
-            up = scorer.feed(text, segment_index=idx)
-            if up.alert:
-                fired = True
-        results.append((c.id, c.label, fired))
-
-    with capsys.disabled():
-        print("\n--- Test Split Frozen Sanity Diagnostic ---")
-        for cid, lbl, f in results:
-            status = "PASS" if (lbl == "scam" and f) or (lbl == "legit" and not f) else "FAIL"
-            print(f"  {cid:25s} [{lbl:5s}]: Alert={f!s:5s} ({status})")
-
-
 # 3. Audio assembly & build_call
 def test_assemble_timelines_and_first_cue():
     rate = 16000

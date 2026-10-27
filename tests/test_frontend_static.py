@@ -1,5 +1,6 @@
 """Static validation tests for Phase 4 & Phase 5 frontend assets, CSS constraints, and contrast."""
 
+import json
 import re
 from pathlib import Path
 import pytest
@@ -35,6 +36,7 @@ def test_required_files_exist():
         FRONTEND_DIR / "js" / "mic.js",
         FRONTEND_DIR / "js" / "mic-worklet.js",
         FRONTEND_DIR / "assets" / "sample_run.jsonl",
+        FRONTEND_DIR / "assets" / "sample_legit.jsonl",
     ]
     for p in required_files:
         assert p.exists(), f"Missing required file: {p}"
@@ -239,3 +241,23 @@ def test_contrast_ratios_from_tokens():
             f"Contrast {fg_token} ({color_map[fg_token]}) on {bg_token} ({color_map[bg_token]}) "
             f"is {ratio:.2f}, expected >= {min_ratio}"
         )
+
+
+def test_sample_legit_jsonl_integrity():
+    sample_path = FRONTEND_DIR / "assets" / "sample_legit.jsonl"
+    assert sample_path.exists()
+    lines = sample_path.read_text(encoding="utf-8").splitlines()
+    assert len(lines) >= 5
+
+    found_summary = False
+    for line in lines:
+        ev = json.loads(line)
+        assert ev.get("type") != "alert", "sample_legit.jsonl must never contain an alert event"
+        if ev.get("type") == "risk":
+            assert ev.get("score", 0) < 30, f"Score {ev.get('score')} must be below 30"
+        if ev.get("type") == "summary":
+            found_summary = True
+            assert ev.get("final_level") == "calm"
+            assert ev.get("time_to_alert_s") is None
+            assert ev.get("max_score", 0) < 30
+    assert found_summary is True, "sample_legit.jsonl must contain a summary event"

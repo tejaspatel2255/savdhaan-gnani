@@ -38,12 +38,14 @@ python -m backend.main
 
 All figures come directly from `data/eval/results.json` (`/report.html`):
 
+<!-- RESULTS:START -->
 | Evaluation Split | Mode | Scam Recall (95% CI) | False Alarm Rate (95% CI) | F1 Score |
 | :--- | :--- | :--- | :--- | :--- |
-| **Dev Split** (10 calls) | Perfect Transcript (Ceiling) | **100.0% (5/5)** `[0.5655, 1.0]` | **0.0% (0/5)** `[0.0, 0.4345]` | **1.0000** |
-| **Dev Split** (10 calls) | Real Prisma (`phone_noise`) | not measured yet (`python scripts/run_eval.py record --split dev --go`) | - | - |
-| **Test Split** (10 calls, frozen) | Perfect Transcript (Ceiling) | **80.0% (4/5)** `[0.3755, 0.9638]` | **0.0% (0/5)** `[0.0, 0.4345]` | **0.8889** |
-| **Test Split** (10 calls, frozen) | Real Prisma (`phone_noise`) | not measured yet (`python scripts/run_eval.py record --split test --go`) | - | - |
+| **Dev Split** (5 scam + 5 legit calls) | Perfect Transcript (Ceiling) | **100.0% (5 of 5)** `[0.5655, 1.0000]` | **0.0% (0 of 5)** `[0.0000, 0.4345]` | **1.0000** |
+| **Dev Split** (5 scam + 5 legit calls) | Real Prisma (`phone_noise`) | not measured yet (`python scripts/run_eval.py record --split dev --go`) | - | - |
+| **Test Split** (5 scam + 5 legit calls, frozen) | Perfect Transcript (Ceiling) | **80.0% (4 of 5)** `[0.3755, 0.9638]` | **0.0% (0 of 5)** `[0.0000, 0.4345]` | **0.8889** |
+| **Test Split** (5 scam + 5 legit calls, frozen) | Real Prisma (`phone_noise`) | not measured yet (`python scripts/run_eval.py record --split test --go`) | - | - |
+<!-- RESULTS:END -->
 
 - **Limitations**: Synthetic TTS voices; small sample sizes (10 calls/split); frozen test split scored 1 time.
 - Expected miss noted in test split: `T05_card_pin` (subtle conversational trap without threat keywords).

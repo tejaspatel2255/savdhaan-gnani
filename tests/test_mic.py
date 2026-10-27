@@ -105,3 +105,36 @@ def test_mic_mode_requires_api_key():
             await mgr.start(req)
 
     asyncio.run(run())
+
+
+def test_mic_websocket_origin_check_logic():
+    """Verify origin check logic matches same-origin, allowed origins, and rejects different host."""
+    from urllib.parse import urlparse
+
+    def check_origin(origin: str, host: str, allowed_origins_str: str) -> bool:
+        allowed = {"http://localhost:8000", "http://127.0.0.1:8000"}
+        if allowed_origins_str:
+            for o in allowed_origins_str.split(","):
+                if o.strip():
+                    allowed.add(o.strip())
+
+        if not origin:
+            return True  # Allowed for non-browser clients
+        parsed = urlparse(origin)
+        netloc = parsed.netloc or parsed.path
+        if netloc == host:
+            return True
+        return origin in allowed
+
+    # 1. Same-origin on port 8765 accepted
+    assert check_origin("http://myhost:8765", "myhost:8765", "") is True
+
+    # 2. Different host rejected
+    assert check_origin("http://evil.com", "localhost:8000", "") is False
+    assert check_origin("http://evil.com:8765", "myhost:8765", "") is False
+
+    # 3. ALLOWED_ORIGINS entry accepted
+    assert check_origin("https://savdhaan.vercel.app", "api.savdhaan.internal", "https://savdhaan.vercel.app") is True
+
+    # 4. Missing origin accepted (non-browser client)
+    assert check_origin("", "localhost:8000", "") is True

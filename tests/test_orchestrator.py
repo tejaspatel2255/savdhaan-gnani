@@ -54,11 +54,10 @@ def test_warning_pick_key_priority():
 
 
 def test_warning_texts_and_character_counts():
-    for lang in ("hi-IN", "en-IN"):
+    for lang in ("hi-IN", "en-IN", "gu-IN"):
         assert set(WARNINGS[lang].keys()) == {"generic", "arrest", "otp", "money", "remote"}
-
-    hi_chars = sum(len(t) for t in WARNINGS["hi-IN"].values())
-    assert hi_chars <= 600
+        lang_chars = sum(len(t) for t in WARNINGS[lang].values())
+        assert lang_chars <= 600
 
 
 def test_warning_unknown_lang_fallback():

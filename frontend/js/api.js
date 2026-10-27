@@ -10,6 +10,31 @@ export class ApiError extends Error {
   }
 }
 
+let cachedBackendStatus = null;
+
+export async function detectBackend() {
+  if (cachedBackendStatus !== null) return cachedBackendStatus;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+  try {
+    const res = await fetch("/api/health", { signal: controller.signal });
+    clearTimeout(timeoutId);
+    if (!res.ok) {
+      cachedBackendStatus = false;
+      return false;
+    }
+    const data = await res.json();
+    cachedBackendStatus = Boolean(data && data.ok);
+    return cachedBackendStatus;
+  } catch (_) {
+    clearTimeout(timeoutId);
+    cachedBackendStatus = false;
+    return false;
+  }
+}
+
 async function request(endpoint, options = {}) {
   const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
   let res;
@@ -61,7 +86,15 @@ export async function getUsage() {
 }
 
 export async function getEval() {
-  return request("/api/eval");
+  try {
+    return await request("/api/eval");
+  } catch (err) {
+    try {
+      const res = await fetch("/assets/results.json");
+      if (res.ok) return await res.json();
+    } catch (_) {}
+    throw err;
+  }
 }
 
 export async function fetchSampleRun(url) {

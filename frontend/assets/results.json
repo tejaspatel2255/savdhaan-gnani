@@ -1,0 +1,780 @@
+{
+  "generated_at": "2026-10-27T06:06:52Z",
+  "rules_sha256": "477cca5dd0ad163cab2ca14a55c0f32d810d3c614686def2ae2f7b1ecb2ed8c3",
+  "rules_pack": "hi_en",
+  "thresholds": {
+    "careful": 30,
+    "danger": 60
+  },
+  "n_calls": 20,
+  "splits": {
+    "test": {
+      "tp": null,
+      "fn": null,
+      "fp": null,
+      "tn": null,
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "false_alarm_rate": null,
+      "recall_ci95": [
+        null,
+        null
+      ],
+      "false_alarm_ci95": [
+        null,
+        null
+      ],
+      "careful_on_legit": null,
+      "time_to_alert_s": null,
+      "time_from_cue_s": null,
+      "n": 10,
+      "ceiling": {
+        "tp": 4,
+        "fn": 1,
+        "fp": 0,
+        "tn": 5,
+        "precision": 1.0,
+        "recall": 0.8,
+        "f1": 0.8889,
+        "false_alarm_rate": 0.0,
+        "recall_ci95": [
+          0.3755,
+          0.9638
+        ],
+        "false_alarm_ci95": [
+          0.0,
+          0.4345
+        ],
+        "careful_on_legit": 2,
+        "time_to_alert_s": {
+          "n": 4,
+          "median": 7.15,
+          "mean": 7.15,
+          "max": 7.9
+        },
+        "time_from_cue_s": {
+          "n": 4,
+          "median": 6.75,
+          "mean": 6.75,
+          "max": 7.5
+        },
+        "n": 10
+      }
+    },
+    "dev": {
+      "tp": null,
+      "fn": null,
+      "fp": null,
+      "tn": null,
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "false_alarm_rate": null,
+      "recall_ci95": [
+        null,
+        null
+      ],
+      "false_alarm_ci95": [
+        null,
+        null
+      ],
+      "careful_on_legit": null,
+      "time_to_alert_s": null,
+      "time_from_cue_s": null,
+      "n": 10,
+      "ceiling": {
+        "tp": 5,
+        "fn": 0,
+        "fp": 0,
+        "tn": 5,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "recall_ci95": [
+          0.5655,
+          1.0
+        ],
+        "false_alarm_ci95": [
+          0.0,
+          0.4345
+        ],
+        "careful_on_legit": 0,
+        "time_to_alert_s": {
+          "n": 5,
+          "median": 6.4,
+          "mean": 6.1,
+          "max": 7.9
+        },
+        "time_from_cue_s": {
+          "n": 5,
+          "median": 6.0,
+          "mean": 5.7,
+          "max": 7.5
+        },
+        "n": 10
+      }
+    }
+  },
+  "latency_ms": null,
+  "wer": {
+    "conditions": {
+      "clean": null,
+      "phone": null,
+      "phone_noise": null,
+      "phone_noise_drops": null
+    },
+    "note": "Digits vs spelled-out numbers and Roman vs Devanagari spellings count as errors; WER values are an upper bound."
+  },
+  "calls": [
+    {
+      "id": "D01_digital_arrest",
+      "split": "dev",
+      "label": "scam",
+      "alerted": true,
+      "alert_t": 6.4,
+      "first_cue_s": 0.4,
+      "max_score": 100,
+      "max_level": "danger",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, मैं साइबर क्राइम ब्रांच से इंस्पेक्टर बोल रहा हूँ।"
+        },
+        {
+          "t": 1.9,
+          "text": "जी, कहिए।"
+        },
+        {
+          "t": 3.4,
+          "text": "आपके आधार नंबर से भेजे गए एक पार्सल में नशीला सामान मिला है।"
+        },
+        {
+          "t": 4.9,
+          "text": "क्या? मैंने तो कोई पार्सल नहीं भेजा।"
+        },
+        {
+          "t": 6.4,
+          "text": "आपके खिलाफ गिरफ्तारी वारंट निकला है। आप अभी से डिजिटल अरेस्ट में हैं।"
+        },
+        {
+          "t": 7.9,
+          "text": "यह बात किसी को मत बताना और कॉल मत काटना।"
+        },
+        {
+          "t": 9.4,
+          "text": "मैं क्या करूँ?"
+        },
+        {
+          "t": 10.9,
+          "text": "वेरिफिकेशन के लिए अपने पैसे सेफ अकाउंट में ट्रांसफर करें।"
+        }
+      ]
+    },
+    {
+      "id": "D02_otp_kyc",
+      "split": "dev",
+      "label": "scam",
+      "alerted": true,
+      "alert_t": 6.4,
+      "first_cue_s": 0.4,
+      "max_score": 87,
+      "max_level": "danger",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते सर, मैं बैंक से बोल रहा हूँ। आपका केवाईसी एक्सपायर हो गया है।"
+        },
+        {
+          "t": 1.9,
+          "text": "अच्छा? मुझे तो पता नहीं था।"
+        },
+        {
+          "t": 3.4,
+          "text": "अभी अपडेट नहीं किया तो आपका अकाउंट बंद हो जाएगा।"
+        },
+        {
+          "t": 4.9,
+          "text": "ठीक है, बताइए क्या करना है।"
+        },
+        {
+          "t": 6.4,
+          "text": "आपके फोन पर एक ओटीपी आया है, वह ओटीपी बताइए।"
+        },
+        {
+          "t": 7.9,
+          "text": "अभी देखता हूँ।"
+        }
+      ]
+    },
+    {
+      "id": "D03_remote_app",
+      "split": "dev",
+      "label": "scam",
+      "alerted": true,
+      "alert_t": 3.4,
+      "first_cue_s": 0.4,
+      "max_score": 87,
+      "max_level": "danger",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, मैं सिक्योरिटी टीम से बोल रहा हूँ। आपके खाते में गड़बड़ी दिखी है।"
+        },
+        {
+          "t": 1.9,
+          "text": "कैसी गड़बड़ी?"
+        },
+        {
+          "t": 3.4,
+          "text": "आपका रिफंड पेंडिंग है। उसके लिए आपको एनीडेस्क ऐप डाउनलोड करना होगा।"
+        },
+        {
+          "t": 4.9,
+          "text": "वो क्या होता है?"
+        },
+        {
+          "t": 6.4,
+          "text": "बस ऐप डाउनलोड करके कोड बताइए और स्क्रीन शेयर कीजिए, हम रिफंड कर देंगे।"
+        },
+        {
+          "t": 7.9,
+          "text": "ठीक है, मैं देखता हूँ।"
+        }
+      ]
+    },
+    {
+      "id": "D04_lottery",
+      "split": "dev",
+      "label": "scam",
+      "alerted": true,
+      "alert_t": 7.9,
+      "first_cue_s": 0.4,
+      "max_score": 91,
+      "max_level": "danger",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "बधाई हो! आपने केबीसी का लकी ड्रॉ जीता है, पच्चीस लाख रुपये का इनाम।"
+        },
+        {
+          "t": 1.9,
+          "text": "सच में? मैंने तो कोई टिकट नहीं लिया था।"
+        },
+        {
+          "t": 3.4,
+          "text": "आपका नंबर चुना गया है। इनाम लेने के लिए प्रोसेसिंग फीस जमा करनी होगी।"
+        },
+        {
+          "t": 4.9,
+          "text": "कितनी फीस?"
+        },
+        {
+          "t": 6.4,
+          "text": "सिर्फ पाँच हज़ार रुपये। अभी पैसे भेजिए, यह ऑफर सिर्फ आज ही है।"
+        },
+        {
+          "t": 7.9,
+          "text": "और यह बात अभी किसी को मत बताइए।"
+        }
+      ]
+    },
+    {
+      "id": "D05_sim_block",
+      "split": "dev",
+      "label": "scam",
+      "alerted": true,
+      "alert_t": 6.4,
+      "first_cue_s": 0.4,
+      "max_score": 100,
+      "max_level": "danger",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, मैं ट्राई से बोल रहा हूँ। आपका सिम बंद हो जाएगा।"
+        },
+        {
+          "t": 1.9,
+          "text": "क्यों? मैंने तो कुछ गलत नहीं किया।"
+        },
+        {
+          "t": 3.4,
+          "text": "आपके नंबर से गलत कॉल की शिकायतें आई हैं। पुलिस केस दर्ज हो सकता है।"
+        },
+        {
+          "t": 4.9,
+          "text": "अब क्या करना होगा?"
+        },
+        {
+          "t": 6.4,
+          "text": "तुरंत इस लिंक पर क्लिक करके वेरिफाई कीजिए, और लाइन पर बने रहिए।"
+        }
+      ]
+    },
+    {
+      "id": "D06_emi_reminder",
+      "split": "dev",
+      "label": "legit",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": null,
+      "max_score": 0,
+      "max_level": "calm",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, मैं आपके बैंक की तरफ से ऑटोमेटेड रिमाइंडर बोल रहा हूँ।"
+        },
+        {
+          "t": 1.9,
+          "text": "आपकी ईएमआई पाँच तारीख को देय है।"
+        },
+        {
+          "t": 3.4,
+          "text": "कृपया समय पर भुगतान कर दें। धन्यवाद।"
+        }
+      ]
+    },
+    {
+      "id": "D07_delivery",
+      "split": "dev",
+      "label": "legit",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": null,
+      "max_score": 0,
+      "max_level": "calm",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, मैं डिलीवरी पार्टनर बोल रहा हूँ। आपका ऑर्डर आज शाम तक पहुँच जाएगा।"
+        },
+        {
+          "t": 1.9,
+          "text": "ठीक है, मैं घर पर ही हूँ।"
+        },
+        {
+          "t": 3.4,
+          "text": "मैं पाँच मिनट में पहुँच रहा हूँ, गेट खोल दीजिएगा।"
+        },
+        {
+          "t": 4.9,
+          "text": "जी, धन्यवाद।"
+        }
+      ]
+    },
+    {
+      "id": "D08_doctor_appointment",
+      "split": "dev",
+      "label": "legit",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": null,
+      "max_score": 0,
+      "max_level": "calm",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, क्लिनिक से बोल रही हूँ। कल सुबह दस बजे आपकी अपॉइंटमेंट है।"
+        },
+        {
+          "t": 1.9,
+          "text": "जी, मैं समय पर पहुँच जाऊँगा।"
+        },
+        {
+          "t": 3.4,
+          "text": "कृपया पुरानी रिपोर्ट साथ लाइएगा।"
+        },
+        {
+          "t": 4.9,
+          "text": "जी ज़रूर।"
+        }
+      ]
+    },
+    {
+      "id": "D09_family",
+      "split": "dev",
+      "label": "legit",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": null,
+      "max_score": 6,
+      "max_level": "calm",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "बेटा, जल्दी घर आ जाओ, खाना तैयार है।"
+        },
+        {
+          "t": 1.9,
+          "text": "ठीक है माँ, अभी आ रहा हूँ।"
+        },
+        {
+          "t": 3.4,
+          "text": "रास्ते में दूध भी ले आना।"
+        },
+        {
+          "t": 4.9,
+          "text": "जी, ले आऊँगा।"
+        }
+      ]
+    },
+    {
+      "id": "D10_bank_awareness",
+      "split": "dev",
+      "label": "legit",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": null,
+      "max_score": 0,
+      "max_level": "calm",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, यह आपके बैंक की तरफ से जागरूकता कॉल है।"
+        },
+        {
+          "t": 1.9,
+          "text": "कृपया अपना ओटीपी किसी के साथ शेयर न करें।"
+        },
+        {
+          "t": 3.4,
+          "text": "बैंक कभी ओटीपी या पिन नहीं माँगता। धोखाधड़ी से सावधान रहें।"
+        },
+        {
+          "t": 4.9,
+          "text": "जी, धन्यवाद।"
+        }
+      ]
+    },
+    {
+      "id": "T01_customs_courier",
+      "split": "test",
+      "label": "scam",
+      "alerted": true,
+      "alert_t": 6.4,
+      "first_cue_s": 0.4,
+      "max_score": 82,
+      "max_level": "danger",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "हैलो, मैं कस्टम विभाग से बोल रहा हूँ। आपके नाम का एक कूरियर पकड़ा गया है।"
+        },
+        {
+          "t": 1.9,
+          "text": "कूरियर? मैंने कुछ मँगाया ही नहीं।"
+        },
+        {
+          "t": 3.4,
+          "text": "उसमें नकली पासपोर्ट और ड्रग्स मिले हैं। यह गंभीर मामला है, केस दर्ज होगा।"
+        },
+        {
+          "t": 4.9,
+          "text": "पर यह मेरा नहीं है!"
+        },
+        {
+          "t": 6.4,
+          "text": "अगर केस से बचना है तो जुर्माने के लिए पैसे ट्रांसफर करने होंगे।"
+        },
+        {
+          "t": 7.9,
+          "text": "अभी करिए, नहीं तो पुलिस आपके घर पहुँच जाएगी।"
+        }
+      ]
+    },
+    {
+      "id": "T02_telecom_officer",
+      "split": "test",
+      "label": "scam",
+      "alerted": true,
+      "alert_t": 7.9,
+      "first_cue_s": 0.4,
+      "max_score": 100,
+      "max_level": "danger",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "यह दूरसंचार विभाग से कॉल है। आपके नंबर से अवैध गतिविधि हुई है।"
+        },
+        {
+          "t": 1.9,
+          "text": "मेरे नंबर से? ऐसा नहीं हो सकता।"
+        },
+        {
+          "t": 3.4,
+          "text": "इसलिए आपका नंबर कुछ ही देर में बंद कर दिया जाएगा।"
+        },
+        {
+          "t": 4.9,
+          "text": "एक सीनियर अफसर आपसे बात करेंगे, कृपया लाइन पर बने रहिए।"
+        },
+        {
+          "t": 6.4,
+          "text": "ठीक है।"
+        },
+        {
+          "t": 7.9,
+          "text": "आपके खिलाफ कानूनी कार्रवाई होगी, पैसे भेजकर जाँच पूरी कराइए।"
+        }
+      ]
+    },
+    {
+      "id": "T03_job_fee",
+      "split": "test",
+      "label": "scam",
+      "alerted": true,
+      "alert_t": 7.9,
+      "first_cue_s": 0.4,
+      "max_score": 78,
+      "max_level": "danger",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, आपका रिज़्यूमे हमारी कंपनी में चुना गया है, घर बैठे काम मिलेगा।"
+        },
+        {
+          "t": 1.9,
+          "text": "अच्छा, कितनी तनख्वाह मिलेगी?"
+        },
+        {
+          "t": 3.4,
+          "text": "महीने के चालीस हज़ार। बस रजिस्ट्रेशन फीस जमा करनी होगी।"
+        },
+        {
+          "t": 4.9,
+          "text": "कितनी फीस है?"
+        },
+        {
+          "t": 6.4,
+          "text": "सिर्फ दो हज़ार रुपये, आज ही यूपीआई से भेज दीजिए।"
+        },
+        {
+          "t": 7.9,
+          "text": "यह नौकरी की बात अभी घर वालों को मत बताइए, पहले पैसे जमा कीजिए।"
+        }
+      ]
+    },
+    {
+      "id": "T04_relative_emergency",
+      "split": "test",
+      "label": "scam",
+      "alerted": true,
+      "alert_t": 6.4,
+      "first_cue_s": 0.4,
+      "max_score": 84,
+      "max_level": "danger",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "हैलो, मौसी जी, मैं बोल रहा हूँ। मेरा एक्सीडेंट हो गया है।"
+        },
+        {
+          "t": 1.9,
+          "text": "अरे! कौन बोल रहा है? तुम ठीक हो?"
+        },
+        {
+          "t": 3.4,
+          "text": "मैं पुलिस थाने में हूँ। अभी बीस हज़ार रुपये भेजो वरना मुझे जेल हो जाएगी।"
+        },
+        {
+          "t": 4.9,
+          "text": "कितने?"
+        },
+        {
+          "t": 6.4,
+          "text": "बीस हज़ार, जल्दी भेजो। और घर में किसी से बात मत करना।"
+        }
+      ]
+    },
+    {
+      "id": "T05_card_pin",
+      "split": "test",
+      "label": "scam",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": 0.4,
+      "max_score": 43,
+      "max_level": "careful",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, मैं कार्ड सुरक्षा विभाग से बोल रहा हूँ। आपका डेबिट कार्ड बंद होने वाला है।"
+        },
+        {
+          "t": 1.9,
+          "text": "क्यों? क्या हुआ?"
+        },
+        {
+          "t": 3.4,
+          "text": "इसे चालू रखने के लिए आपको अपना पिन बताना होगा।"
+        },
+        {
+          "t": 4.9,
+          "text": "पिन तो मैं नहीं बताता।"
+        },
+        {
+          "t": 6.4,
+          "text": "बस सीवीवी और कार्ड नंबर बताइए, पाँच मिनट में काम हो जाएगा।"
+        },
+        {
+          "t": 7.9,
+          "text": "जल्दी कीजिए, वरना कार्ड हमेशा के लिए बंद हो जाएगा।"
+        }
+      ]
+    },
+    {
+      "id": "T06_electricity_bill",
+      "split": "test",
+      "label": "legit",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": null,
+      "max_score": 0,
+      "max_level": "calm",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, बिजली विभाग से बोल रहा हूँ। आपका इस महीने का बिल तैयार हो गया है।"
+        },
+        {
+          "t": 1.9,
+          "text": "जी, कितना आया है?"
+        },
+        {
+          "t": 3.4,
+          "text": "पंद्रह सौ रुपये। आख़िरी तारीख पच्चीस है, ऐप से भुगतान कर सकते हैं।"
+        },
+        {
+          "t": 4.9,
+          "text": "ठीक है, कर दूँगा।"
+        }
+      ]
+    },
+    {
+      "id": "T07_passport_verification",
+      "split": "test",
+      "label": "legit",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": null,
+      "max_score": 10,
+      "max_level": "calm",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, मैं थाने से बोल रहा हूँ। आपके पासपोर्ट का पुलिस वेरिफिकेशन है।"
+        },
+        {
+          "t": 1.9,
+          "text": "जी, कब आना होगा?"
+        },
+        {
+          "t": 3.4,
+          "text": "आप शुक्रवार को दस बजे अपने दस्तावेज़ लेकर थाने आ जाइए।"
+        },
+        {
+          "t": 4.9,
+          "text": "ठीक है, मैं पहुँच जाऊँगा।"
+        }
+      ]
+    },
+    {
+      "id": "T08_friend_news",
+      "split": "test",
+      "label": "legit",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": null,
+      "max_score": 45,
+      "max_level": "careful",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "कल खबर देखी? एक आदमी को नकली कॉल के मामले में गिरफ्तार किया गया।"
+        },
+        {
+          "t": 1.9,
+          "text": "हाँ, पुलिस ने बताया कि वह लोगों को डराता था।"
+        },
+        {
+          "t": 3.4,
+          "text": "इसलिए हमें भी सावधान रहना चाहिए।"
+        },
+        {
+          "t": 4.9,
+          "text": "बिल्कुल।"
+        }
+      ]
+    },
+    {
+      "id": "T09_courier_otp",
+      "split": "test",
+      "label": "legit",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": null,
+      "max_score": 46,
+      "max_level": "careful",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, कूरियर कंपनी से बोल रहा हूँ। आपका पार्सल आज पहुँचेगा।"
+        },
+        {
+          "t": 1.9,
+          "text": "अच्छा, कब तक?"
+        },
+        {
+          "t": 3.4,
+          "text": "शाम तक। अभी नहीं, दरवाज़े पर मिलकर ओटीपी दे दीजिएगा।"
+        },
+        {
+          "t": 4.9,
+          "text": "ठीक है, मैं घर पर रहूँगा।"
+        }
+      ]
+    },
+    {
+      "id": "T10_customer_care",
+      "split": "test",
+      "label": "legit",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": null,
+      "max_score": 0,
+      "max_level": "calm",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, ग्राहक सेवा से बोल रही हूँ। आपने कल शिकायत दर्ज कराई थी।"
+        },
+        {
+          "t": 1.9,
+          "text": "हाँ, मेरा रिफंड नहीं आया।"
+        },
+        {
+          "t": 3.4,
+          "text": "हम आपकी शिकायत पर काम कर रहे हैं, तीन दिन में रिफंड प्रोसेस हो जाएगा।"
+        },
+        {
+          "t": 4.9,
+          "text": "ठीक है, धन्यवाद।"
+        }
+      ]
+    }
+  ],
+  "test_scoring": {
+    "times_scored": 1,
+    "rules_changed_since_first": false
+  },
+  "limitations": [
+    "The same author wrote the rules and the evaluation call scripts.",
+    "The calls use synthetic TTS voices rather than real-world human phone recordings.",
+    "The evaluation sets are small (10 calls per split), so confidence intervals are wide.",
+    "The frozen test split was scored 1 time(s).",
+    "WER comparison: digits vs spelled-out words and Devanagari vs Roman spelling count as errors, making WER an upper bound.",
+    "T05 is an expected miss"
+  ]
+}
