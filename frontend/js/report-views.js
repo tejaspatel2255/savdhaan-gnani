@@ -9,6 +9,19 @@ export function el(tag, className, text) {
   return elem;
 }
 
+/** Element with English text first and a smaller Hindi secondary span. */
+export function elLoc(tag, className, en, hi) {
+  const elem = el(tag, className, en);
+  if (hi) {
+    const sub = document.createElement("span");
+    sub.className = "t-loc";
+    sub.setAttribute("lang", "hi");
+    sub.textContent = hi;
+    elem.appendChild(sub);
+  }
+  return elem;
+}
+
 export function renderPencilBar(svg, pct) {
   svg.setAttribute("viewBox", "0 0 100 16");
   svg.setAttribute("preserveAspectRatio", "none");

@@ -1,8 +1,15 @@
 import { t } from "./strings.js";
+import { fill, getLocal } from "./i18n.js";
+import { getGloss } from "./api.js";
 
 let dom = null;
 let userScrolledUp = false;
 const segmentSlips = new Map();
+let gloss = {};
+
+function localLabel(h) {
+  return getLocal() === "gu" && h.label_gu ? h.label_gu : (h.label_hi || "");
+}
 
 export function init(rootEl) {
   dom = {
@@ -12,7 +19,8 @@ export function init(rootEl) {
     btnJump: rootEl.querySelector("#btn-jump-latest"),
   };
 
-  if (dom.empty) dom.empty.textContent = t("tape_empty");
+  if (dom.empty) fill(dom.empty, "tape_empty");
+  getGloss().then((g) => { gloss = g || {}; });
   if (dom.btnJump) {
     dom.btnJump.textContent = t("tape_jump_latest");
     dom.btnJump.addEventListener("click", () => {
@@ -129,6 +137,14 @@ export function handle(msg, state) {
     textEl.textContent = msg.text;
     slip.appendChild(textEl);
 
+    const english = gloss[msg.text];
+    if (english) {
+      const glossEl = document.createElement("div");
+      glossEl.className = "slip-gloss";
+      glossEl.textContent = `English: ${english}`;
+      slip.appendChild(glossEl);
+    }
+
     const chipsEl = document.createElement("div");
     chipsEl.className = "slip-chips";
     slip.appendChild(chipsEl);
@@ -150,15 +166,16 @@ export function handle(msg, state) {
         const chip = document.createElement("span");
         chip.className = "slip-chip";
 
-        const labelHi = document.createElement("span");
-        labelHi.className = "chip-label-hi";
-        labelHi.textContent = h.label_hi || "";
-        chip.appendChild(labelHi);
-
         const labelEn = document.createElement("span");
         labelEn.className = "chip-label-en";
-        labelEn.textContent = h.label_en || "";
+        labelEn.textContent = h.label_en || h.category || "";
         chip.appendChild(labelEn);
+
+        const labelLoc = document.createElement("span");
+        labelLoc.className = "chip-label-loc";
+        labelLoc.setAttribute("lang", getLocal());
+        labelLoc.textContent = localLabel(h);
+        chip.appendChild(labelLoc);
 
         const weight = document.createElement("span");
         const pol = h.polarity === "dampen" ? "dampen" : "raise";

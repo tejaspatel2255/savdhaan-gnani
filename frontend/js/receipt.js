@@ -1,4 +1,5 @@
 import { t } from "./strings.js";
+import { fill } from "./i18n.js";
 
 let root = null;
 let replayCallback = null;
@@ -64,16 +65,15 @@ export function handle(msg, state) {
     dialog.setAttribute("aria-modal", "true");
     dialog.setAttribute("aria-label", t("receipt_title"));
 
-    const title = document.createElement("div");
-    title.className = "receipt-title";
-    title.textContent = t("receipt_title");
+    const title = fill(document.createElement("div"), "receipt_title");
+    title.className = "receipt-title on-paper";
     dialog.appendChild(title);
 
     const table = document.createElement("div");
     table.className = "receipt-table";
 
     table.appendChild(createRow("Mode", msg.mode || state.mode));
-    table.appendChild(createRow("Synthetic", msg.synthetic ? "Yes (सिंथेटिक)" : "No"));
+    table.appendChild(createRow("Synthetic", msg.synthetic ? "Yes" : "No"));
     table.appendChild(createRow("Duration", formatTime(msg.duration_s)));
     table.appendChild(createRow("Segments", msg.segments));
     table.appendChild(createRow("Time to alert", formatTime(msg.time_to_alert_s)));
@@ -89,28 +89,25 @@ export function handle(msg, state) {
     dialog.appendChild(table);
 
     // Verdict stamp
-    const verdict = document.createElement("div");
     const isScam = msg.time_to_alert_s !== null || msg.final_level === "danger";
-    verdict.className = `receipt-verdict ${isScam ? "scam" : "safe"}`;
-    verdict.textContent = isScam ? t("receipt_scam") : t("receipt_safe");
+    const verdict = fill(document.createElement("div"), isScam ? "receipt_scam" : "receipt_safe");
+    verdict.className = `receipt-verdict on-paper ${isScam ? "scam" : "safe"}`;
     dialog.appendChild(verdict);
 
     // Action buttons
     const actions = document.createElement("div");
     actions.className = "receipt-actions";
 
-    const btnReplay = document.createElement("button");
+    const btnReplay = fill(document.createElement("button"), "btn_replay", { enOnly: true });
     btnReplay.className = "btn-receipt btn-receipt-replay";
-    btnReplay.textContent = t("btn_replay");
     btnReplay.addEventListener("click", () => {
       closeReceipt();
       if (replayCallback) replayCallback();
     });
     actions.appendChild(btnReplay);
 
-    const btnClose = document.createElement("button");
+    const btnClose = fill(document.createElement("button"), "btn_close", { enOnly: true });
     btnClose.className = "btn-receipt btn-receipt-close";
-    btnClose.textContent = t("btn_close");
     btnClose.addEventListener("click", closeReceipt);
     actions.appendChild(btnClose);
 

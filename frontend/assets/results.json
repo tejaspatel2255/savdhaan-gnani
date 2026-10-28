@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T06:06:52Z",
+  "generated_at": "2026-10-28T06:55:17Z",
   "rules_sha256": "477cca5dd0ad163cab2ca14a55c0f32d810d3c614686def2ae2f7b1ecb2ed8c3",
   "rules_pack": "hi_en",
   "thresholds": {
@@ -766,14 +766,14 @@
     }
   ],
   "test_scoring": {
-    "times_scored": 1,
+    "times_scored": 2,
     "rules_changed_since_first": false
   },
   "limitations": [
     "The same author wrote the rules and the evaluation call scripts.",
     "The calls use synthetic TTS voices rather than real-world human phone recordings.",
     "The evaluation sets are small (10 calls per split), so confidence intervals are wide.",
-    "The frozen test split was scored 1 time(s).",
+    "The frozen test split was scored 2 time(s).",
     "WER comparison: digits vs spelled-out words and Devanagari vs Roman spelling count as errors, making WER an upper bound.",
     "T05 is an expected miss"
   ]

@@ -201,12 +201,15 @@ def build_family_alert_event(
     emitter: Emitter,
     message: str,
     t: Optional[float] = None,
+    message_en: Optional[str] = None,
 ) -> Dict[str, Any]:
+    """`message` is in the listener's language; `message_en` is the English version shown first in the UI."""
     return emitter.emit(
         "family_alert",
         t=t,
         contact_label="Trusted contact (simulated)",
         message=message,
+        message_en=message_en or message,
         simulated=True,
     )
 

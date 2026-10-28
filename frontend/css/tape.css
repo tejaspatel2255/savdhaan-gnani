@@ -146,14 +146,23 @@ mark.hit-dampen {
   font-size: 11px;
 }
 
-.chip-label-hi {
+.chip-label-en {
   font-weight: 600;
   color: var(--ink);
 }
 
-.chip-label-en {
+.chip-label-loc {
   font-size: 10px;
   color: var(--ink);
+}
+
+.slip-gloss {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink);
+  border-left: 3px solid var(--careful);
+  padding-left: var(--sp-8);
 }
 
 .chip-weight {

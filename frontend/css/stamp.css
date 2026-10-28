@@ -43,6 +43,13 @@
   color: var(--danger);
 }
 
+.stamp-loc {
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--danger-text);
+  margin-top: var(--sp-4);
+}
+
 .stamp-sub {
   font-family: var(--font-mono);
   font-size: 16px;

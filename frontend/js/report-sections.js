@@ -2,7 +2,7 @@
  * Section A through C builders for Savdhaan Evaluation Khata.
  */
 
-import { el, renderPencilBar } from "./report-views.js";
+import { el, elLoc, renderPencilBar } from "./report-views.js";
 
 function renderMetricBlock(parent, title, sub, dataObj, emptyCommand) {
   const block = el("div", "headline-block");
@@ -13,7 +13,7 @@ function renderMetricBlock(parent, title, sub, dataObj, emptyCommand) {
 
   if (!dataObj || dataObj.tp === null || dataObj.tp === undefined) {
     const unmeasured = el("div", "unmeasured-box");
-    unmeasured.appendChild(el("span", "unmeasured-tag", "not measured yet"));
+    unmeasured.appendChild(el("div", "unmeasured-tag", "not measured yet"));
     if (emptyCommand) {
       unmeasured.appendChild(el("code", "unmeasured-cmd", emptyCommand));
     }
@@ -26,7 +26,7 @@ function renderMetricBlock(parent, title, sub, dataObj, emptyCommand) {
 
   // Recall card
   const cRecall = el("div", "ledger-card");
-  cRecall.appendChild(el("div", "card-label", "धोखा पहचान दर · RECALL"));
+  cRecall.appendChild(elLoc("div", "card-label", "RECALL", "धोखा पहचान दर"));
   const r1 = el("div", "card-stat-row");
   const tp = dataObj.tp ?? 0;
   const fn = dataObj.fn ?? 0;
@@ -41,7 +41,7 @@ function renderMetricBlock(parent, title, sub, dataObj, emptyCommand) {
 
   // False Alarm card
   const cFar = el("div", "ledger-card danger-card");
-  cFar.appendChild(el("div", "card-label", "झूठा अलार्म · FALSE ALARM RATE"));
+  cFar.appendChild(elLoc("div", "card-label", "FALSE ALARM RATE", "झूठा अलार्म"));
   const r2 = el("div", "card-stat-row");
   const fp = dataObj.fp ?? 0;
   const tn = dataObj.tn ?? 0;
@@ -62,8 +62,8 @@ export function renderSectionsAtoC(root, data, devSplit, testSplit) {
   // SECTION A: Headline Ledger (Separated into Real vs Perfect Transcripts)
   const secA = el("section", "khata-section");
   const headA = el("div", "section-head");
-  headA.appendChild(el("h2", null, "मुख्य आँकड़े (टेस्ट सेट)"));
-  headA.appendChild(el("span", "sub", "Section A · Headline Performance on Frozen Test Split"));
+  headA.appendChild(elLoc("h2", null, "Headline performance (frozen test split)", "मुख्य आँकड़े (टेस्ट सेट)"));
+  headA.appendChild(el("span", "sub", "Section A"));
   secA.appendChild(headA);
 
   // Block 1: Real Prisma
@@ -89,8 +89,8 @@ export function renderSectionsAtoC(root, data, devSplit, testSplit) {
   // SECTION B: Comparison Table
   const secB = el("section", "khata-section");
   const headB = el("div", "section-head");
-  headB.appendChild(el("h2", null, "पहचान तुलना"));
-  headB.appendChild(el("span", "sub", "Section B · Perfect Transcripts vs Real Prisma Recognition"));
+  headB.appendChild(elLoc("h2", null, "Perfect transcripts vs real Prisma recognition", "पहचान तुलना"));
+  headB.appendChild(el("span", "sub", "Section B"));
   secB.appendChild(headB);
 
   const wrapB = el("div", "table-wrapper");
@@ -139,8 +139,8 @@ export function renderSectionsAtoC(root, data, devSplit, testSplit) {
   // SECTION C: Timing
   const secC = el("section", "khata-section");
   const headC = el("div", "section-head");
-  headC.appendChild(el("h2", null, "चेतावनी का समय (सेकंड)"));
-  headC.appendChild(el("span", "sub", "Section C · Alert Latency & Detection Timings"));
+  headC.appendChild(elLoc("h2", null, "Alert latency and detection timings", "चेतावनी का समय (सेकंड)"));
+  headC.appendChild(el("span", "sub", "Section C"));
   secC.appendChild(headC);
 
   const tta = testSplit.time_to_alert_s || testSplit.ceiling?.time_to_alert_s;
@@ -148,13 +148,13 @@ export function renderSectionsAtoC(root, data, devSplit, testSplit) {
 
   const gridC = el("div", "timing-grid");
   const boxTTA = el("div", "timing-box");
-  boxTTA.appendChild(el("div", "timing-label", "कॉल शुरू से चेतावनी · TIME TO ALERT (TTA)"));
+  boxTTA.appendChild(elLoc("div", "timing-label", "TIME TO ALERT (TTA)", "कॉल शुरू से चेतावनी"));
   boxTTA.appendChild(el("div", "timing-val", tta?.median ? `${tta.median.toFixed(1)}s` : "-"));
   boxTTA.appendChild(el("div", "timing-sub", `Median ${tta?.median ?? "-"}s | Mean ${tta?.mean ?? "-"}s | Max ${tta?.max ?? "-"}s`));
   gridC.appendChild(boxTTA);
 
   const boxTFC = el("div", "timing-box");
-  boxTFC.appendChild(el("div", "timing-label", "धोखे के इशारे से चेतावनी · TIME FROM CUE (TFC)"));
+  boxTFC.appendChild(elLoc("div", "timing-label", "TIME FROM CUE (TFC)", "धोखे के इशारे से चेतावनी"));
   boxTFC.appendChild(el("div", "timing-val", tfc?.median ? `${tfc.median.toFixed(1)}s` : "-"));
   boxTFC.appendChild(el("div", "timing-sub", `Median ${tfc?.median ?? "-"}s | Mean ${tfc?.mean ?? "-"}s | Max ${tfc?.max ?? "-"}s`));
   gridC.appendChild(boxTFC);

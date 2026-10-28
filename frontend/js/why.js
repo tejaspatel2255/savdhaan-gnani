@@ -1,4 +1,6 @@
-import { t } from "./strings.js";
+import { fill, getLocal } from "./i18n.js";
+
+const FOOTER_NAMES = { threat: "Threat", secrecy: "Secrecy", urgency: "Urgency", payment: "Payment", credentials: "OTP / PIN", remote_app: "Remote app" };
 
 let dom = null;
 const allHits = [];
@@ -24,7 +26,7 @@ export function init(rootEl) {
     empty: rootEl.querySelector(".why-empty"),
     footer: rootEl.querySelector(".why-footer"),
   };
-  if (dom.empty) dom.empty.textContent = t("why_empty");
+  if (dom.empty) fill(dom.empty, "why_empty");
   renderFooter();
 }
 
@@ -58,7 +60,7 @@ function renderFooter() {
     group.className = "meter-group";
 
     const nameSpan = document.createElement("span");
-    nameSpan.textContent = c.slice(0, 4);
+    nameSpan.textContent = FOOTER_NAMES[c] || c;
     group.appendChild(nameSpan);
 
     const dotsSpan = document.createElement("span");
@@ -98,16 +100,16 @@ export function handle(msg, state) {
       const labels = document.createElement("div");
       labels.className = "why-labels";
 
-      const labelLocal = document.createElement("span");
-      labelLocal.className = "why-label-hi";
-      const userLang = (state && state.lang) || "hi";
-      labelLocal.textContent = (userLang.startsWith("gu") && h.label_gu) ? h.label_gu : (h.label_hi || "");
-      labels.appendChild(labelLocal);
-
       const labelEn = document.createElement("span");
-      labelEn.className = "why-label-en";
+      labelEn.className = "why-label-main";
       labelEn.textContent = h.label_en || h.category;
       labels.appendChild(labelEn);
+
+      const labelLocal = document.createElement("span");
+      labelLocal.className = "why-label-sub";
+      labelLocal.setAttribute("lang", getLocal());
+      labelLocal.textContent = (getLocal() === "gu" && h.label_gu) ? h.label_gu : (h.label_hi || "");
+      labels.appendChild(labelLocal);
 
       left.appendChild(labels);
       row.appendChild(left);

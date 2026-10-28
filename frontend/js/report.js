@@ -4,7 +4,7 @@
  */
 
 import { getEval } from "./api.js";
-import { el } from "./report-views.js";
+import { el, elLoc } from "./report-views.js";
 import { renderSectionsAtoC } from "./report-sections.js";
 import { renderSectionsDtoG } from "./report-audit.js";
 
@@ -14,7 +14,7 @@ function renderCardView(root, data) {
 
   const card = el("div", "social-card");
   const top = el("div", "social-card-top");
-  top.appendChild(el("h1", "social-card-title", "हिसाब-किताब"));
+  top.appendChild(elLoc("h1", "social-card-title", "EVALUATION KHATA", "हिसाब-किताब"));
   top.appendChild(el("div", "social-card-sub", "SAVDHAAN EVALUATION · FROZEN TEST SPLIT"));
   card.appendChild(top);
 
@@ -30,7 +30,7 @@ function renderCardView(root, data) {
 
   // Recall box
   const box1 = el("div", "social-stat-box");
-  box1.appendChild(el("div", "card-label", "धोखा पहचान दर · RECALL (SCAM)"));
+  box1.appendChild(elLoc("div", "card-label", "RECALL (SCAM)", "धोखा पहचान दर"));
   const row1 = el("div", "card-stat-row");
   const recPct = targetObj.recall !== null && targetObj.recall !== undefined ? `${Math.round(targetObj.recall * 100)}%` : "N/A";
   row1.appendChild(el("span", "card-num", recPct));
@@ -46,7 +46,7 @@ function renderCardView(root, data) {
 
   // False Alarm box
   const box2 = el("div", "social-stat-box");
-  box2.appendChild(el("div", "card-label", "झूठा अलार्म · FALSE ALARM RATE"));
+  box2.appendChild(elLoc("div", "card-label", "FALSE ALARM RATE", "झूठा अलार्म"));
   const row2 = el("div", "card-stat-row");
   const farPct = targetObj.false_alarm_rate !== null && targetObj.false_alarm_rate !== undefined ? `${Math.round(targetObj.false_alarm_rate * 100)}%` : "N/A";
   row2.appendChild(el("span", "card-num", farPct));
@@ -72,7 +72,7 @@ function renderFullReport(root, data) {
   root.textContent = "";
 
   const header = el("header", "khata-header");
-  header.appendChild(el("h1", "khata-title", "हिसाब-किताब · EVALUATION KHATA"));
+  header.appendChild(elLoc("h1", "khata-title", "EVALUATION KHATA", "हिसाब-किताब"));
   header.appendChild(el("p", "khata-subtitle", "synthetic calls only, measured not estimated"));
   root.appendChild(header);
 
@@ -83,7 +83,7 @@ function renderFullReport(root, data) {
   renderSectionsDtoG(root, data);
 
   const nav = el("div", "back-nav");
-  const back = el("a", "back-link", "← मुख्य नियंत्रण कक्ष · Back to Nazar Control Room");
+  const back = elLoc("a", "back-link", "← Back to the Nazar control room", "मुख्य नियंत्रण कक्ष");
   back.href = "/";
   nav.appendChild(back);
   root.appendChild(nav);
@@ -92,7 +92,7 @@ function renderFullReport(root, data) {
 function renderEmptyState(root) {
   root.textContent = "";
   const box = el("div", "empty-notice");
-  box.appendChild(el("div", null, "अभी आँकड़े नहीं · Run the evaluation first"));
+  box.appendChild(elLoc("div", null, "No figures yet · Run the evaluation first", "अभी आँकड़े नहीं"));
   box.appendChild(el("p", null, "To generate evaluation results, run:"));
   box.appendChild(el("div", "empty-cmd", "python scripts/run_eval.py score --split dev --ceiling"));
   root.appendChild(box);

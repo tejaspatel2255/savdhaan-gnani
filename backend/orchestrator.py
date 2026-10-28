@@ -378,7 +378,7 @@ class SessionManager:
 
                     # (2) family_alert
                     fam_msg = family_message(req.lang, up.reasons)
-                    build_family_alert_event(emitter, message=fam_msg, t=ev.t)
+                    build_family_alert_event(emitter, message=fam_msg, t=ev.t, message_en=family_message("en-IN", up.reasons))
 
                     # (3) launch get_warning background task
                     warning_task = asyncio.create_task(

@@ -2,6 +2,7 @@
  * Main application entrypoint for Savdhaan.
  */
 import { t, LANGS } from "./strings.js";
+import { fill, setLocal, applyLabels } from "./i18n.js";
 import { getCalls, getHealth, startSession, stopSession, detectBackend, ApiError } from "./api.js";
 import { connect } from "./ws.js";
 import { startMic, stopMic, MicError } from "./mic.js";
@@ -15,7 +16,7 @@ import * as receipt from "./receipt.js";
 import { playSample } from "./devfeed.js";
 
 export const FEATURES = { mic: true };
-export const state = { sessionId: null, mode: "mock", modeLabel: "MOCK", lang: "hi-IN", level: "calm", score: 0, alertFired: false, isStatic: false };
+export const state = { sessionId: null, mode: "mock", modeLabel: "MOCK", lang: "hi-IN", level: "calm", score: 0, alertFired: false, isStatic: false, isSample: false };
 
 let audioCtx = null, callsList = [];
 const handledMessages = new Set();
@@ -33,8 +34,8 @@ export async function init() {
     btnDemoScam: get("btn-demo-scam"), btnDemoNormal: get("btn-demo-normal"),
   };
 
-  if (el.btnDemoScam) el.btnDemoScam.addEventListener("click", () => { unlockAudio(); resetAll(); playSample("/assets/sample_run.jsonl", dispatch, { speed: 1.0 }); });
-  if (el.btnDemoNormal) el.btnDemoNormal.addEventListener("click", () => { unlockAudio(); resetAll(); playSample("/assets/sample_legit.jsonl", dispatch, { speed: 1.0 }); });
+  if (el.btnDemoScam) el.btnDemoScam.addEventListener("click", () => { unlockAudio(); resetAll(); state.isSample = true; playSample("/assets/sample_run.jsonl", dispatch, { speed: 1.0 }); });
+  if (el.btnDemoNormal) el.btnDemoNormal.addEventListener("click", () => { unlockAudio(); resetAll(); state.isSample = true; playSample("/assets/sample_legit.jsonl", dispatch, { speed: 1.0 }); });
   el.banner.querySelector(".banner-close").addEventListener("click", () => el.banner.classList.add("hidden"));
   el.btnStart.addEventListener("click", handleStart);
   el.btnStop.addEventListener("click", handleStop);
@@ -47,11 +48,16 @@ export async function init() {
   for (const l of LANGS) {
     const o = document.createElement("option"); o.value = l.code; o.textContent = l.label; el.langSel.appendChild(o);
   }
+  setLocal(el.langSel.value);
+  applyLabels();
+  el.langSel.addEventListener("change", () => { setLocal(el.langSel.value); applyLabels(); });
 
   const hasBackend = await detectBackend();
   if (!hasBackend) {
     state.isStatic = true;
-    if (el.badge) { el.badge.textContent = t("badge_static", state.lang); el.badge.className = "badge-pill mode-mock"; el.badge.classList.remove("hidden"); }
+    if (el.badge) { el.badge.textContent = t("badge_static"); el.badge.className = "badge-pill mode-mock"; el.badge.classList.remove("hidden"); }
+    const ft = document.querySelector("#foot .footer-text");
+    if (ft) ft.textContent += ` · ${t("static_footer_note")}`;
     [el.callSel, el.modeSel, el.btnStart, el.btnStop].forEach((node) => { if (node) node.style.display = "none"; });
     return;
   }
@@ -59,7 +65,7 @@ export async function init() {
   await fetchCalls();
   try {
     const h = await getHealth();
-    if (h.demo && el.badge) { el.badge.textContent = "DEMO · recorded"; el.badge.className = "badge-pill mode-mock"; el.badge.classList.remove("hidden"); }
+    if (h.demo && el.badge) { el.badge.textContent = t("badge_demo"); el.badge.className = "badge-pill mode-mock"; el.badge.classList.remove("hidden"); }
   } catch (_) {}
 
   const p = new URLSearchParams(window.location.search);
@@ -105,6 +111,7 @@ function unlockAudio() {
 }
 
 async function handleStart() {
+  state.isSample = false;
   unlockAudio();
   el.banner.classList.add("hidden");
   el.btnStart.disabled = true; el.btnStop.disabled = false;
@@ -137,7 +144,7 @@ async function handleStop() {
 }
 
 function showBanner(code, msg = "") {
-  el.bannerMsg.textContent = t(code) || code;
+  if (t(code) === code) el.bannerMsg.textContent = code; else fill(el.bannerMsg, code);
   el.bannerServer.textContent = msg ? `Detail: ${msg}` : "";
   el.banner.classList.remove("hidden");
 }
@@ -163,7 +170,7 @@ export function dispatch(msg) {
   try {
     if (msg.type === "session") {
       state.mode = msg.mode || state.mode; state.modeLabel = msg.mode_label || state.modeLabel; state.lang = msg.lang || state.lang;
-      if (el.badge) { el.badge.textContent = state.modeLabel; el.badge.className = `badge-pill mode-${state.mode}`; el.badge.classList.remove("hidden"); }
+      if (el.badge) { el.badge.textContent = state.isStatic ? t("badge_static") : state.modeLabel; el.badge.className = `badge-pill mode-${state.mode}`; el.badge.classList.remove("hidden"); }
       if (el.synthetic) el.synthetic.classList.toggle("hidden", !msg.synthetic);
       const running = (msg.state === "listening" || msg.state === "starting");
       if (!running) stopMic();

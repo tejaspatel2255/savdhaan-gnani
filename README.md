@@ -58,6 +58,12 @@ All figures come directly from `data/eval/results.json` (`/report.html`):
 - **Simulated Family Alerts**: All SMS and notification dispatches are strictly simulated.
 - **Clear Demarcation**: UI displays `LIVE MIC`, `FILE`, `REPLAY`, or `DEMO · recorded` badges at all times.
 - **Not a Helpline Replacement**: Intended as a personal safeguard, not a substitute for national cybercrime reporting (1930) or banking helplines.
+- **Language Policy**: English is the primary language across all interfaces; see [LANGUAGE_RULE.md](docs/LANGUAGE_RULE.md).
+
+## Submission
+
+- **Challenge**: Great Indian AI Internship Challenge by Gnani AI
+- **Tags**: #GnaniAI #GreatIndianAIInternshipChallenge
 
 ## License
 

@@ -1,10 +1,17 @@
 import { t } from "./strings.js";
+import { fill } from "./i18n.js";
 import { playTwoToneBeep } from "./beep.js";
 
 let dom = null;
 let currentScreen = "calm";
 let audioElement = null;
 let playedSessions = new Set();
+
+function mk(cls) {
+  const d = document.createElement("div");
+  d.className = cls;
+  return d;
+}
 
 export function init(rootEl) {
   dom = {
@@ -36,60 +43,25 @@ function renderScreen(stateName) {
   currentScreen = stateName;
 
   if (stateName === "calm") {
-    const title = document.createElement("div");
-    title.className = "phone-calm-title";
-    title.textContent = t("phone_calm_title");
-    dom.screen.appendChild(title);
-
-    const sub = document.createElement("div");
-    sub.className = "phone-calm-sub";
-    sub.textContent = t("phone_calm_sub");
-    dom.screen.appendChild(sub);
+    dom.screen.appendChild(fill(mk("phone-calm-title t-stack"), "phone_calm_title"));
+    dom.screen.appendChild(fill(mk("phone-calm-sub t-stack"), "phone_calm_sub"));
   } else if (stateName === "careful") {
-    const banner = document.createElement("div");
-    banner.className = "phone-careful-banner";
-    banner.textContent = t("phone_careful");
-    dom.screen.appendChild(banner);
+    dom.screen.appendChild(fill(mk("phone-careful-banner"), "phone_careful"));
   } else if (stateName === "danger") {
-    const title = document.createElement("div");
-    title.className = "danger-card-title";
-    title.textContent = t("phone_danger_title");
-    dom.screen.appendChild(title);
+    dom.screen.appendChild(fill(mk("danger-card-title t-stack on-danger"), "phone_danger_title"));
 
     const lines = document.createElement("div");
     lines.className = "danger-lines";
 
-    const linesData = [
-      { hi: t("phone_danger_line1_hi"), en: t("phone_danger_line1_en") },
-      { hi: t("phone_danger_line2_hi"), en: t("phone_danger_line2_en") },
-      { hi: t("phone_danger_line3_hi"), en: t("phone_danger_line3_en") },
-    ];
-
-    for (const l of linesData) {
-      const box = document.createElement("div");
-      const hiSpan = document.createElement("div");
-      hiSpan.className = "danger-line-hi";
-      hiSpan.textContent = l.hi;
-      box.appendChild(hiSpan);
-
-      const enSpan = document.createElement("div");
-      enSpan.className = "danger-line-en";
-      enSpan.textContent = l.en;
-      box.appendChild(enSpan);
-      lines.appendChild(box);
-    }
+    for (const n of [1, 2, 3]) lines.appendChild(fill(mk("t-stack on-danger"), `phone_danger_line${n}`));
     dom.screen.appendChild(lines);
 
-    const btn = document.createElement("button");
+    const btn = fill(document.createElement("button"), "phone_hangup_btn");
     btn.className = "btn-hangup";
-    btn.textContent = t("phone_hangup_btn");
     btn.addEventListener("click", () => renderScreen("safe"));
     dom.screen.appendChild(btn);
   } else if (stateName === "safe") {
-    const safeTag = document.createElement("div");
-    safeTag.className = "phone-ended-safe";
-    safeTag.textContent = t("phone_ended_safe");
-    dom.screen.appendChild(safeTag);
+    dom.screen.appendChild(fill(mk("phone-ended-safe"), "phone_ended_safe"));
   }
 }
 
@@ -138,11 +110,10 @@ function handleWarningAudio(msg, state) {
       barsBox.appendChild(tapBtn);
     });
   } else if (!msg.audio_url && msg.reason) {
-    playTwoToneBeep();
-    const reasonSpan = document.createElement("div");
-    reasonSpan.className = "warning-reason";
-    reasonSpan.textContent = t("tts_failed");
-    barsBox.appendChild(reasonSpan);
+    const switchedOff = msg.reason === "speaking_off" && !state.isStatic && !state.isSample;
+    if (!switchedOff) playTwoToneBeep();
+    const reasonKey = switchedOff ? "voice_off" : (state.isStatic || msg.reason === "no_audio_yet" ? "voice_missing" : (msg.reason === "tts_over_cap" ? "tts_over_cap" : "tts_failed"));
+    barsBox.appendChild(fill(mk("warning-reason t-stack on-danger"), reasonKey));
   }
 
   const existingHangup = dom.screen.querySelector(".btn-hangup");
@@ -165,9 +136,7 @@ function handleFamilyAlert(msg) {
   const hdr = document.createElement("div");
   hdr.className = "family-card-hdr";
 
-  const titleSpan = document.createElement("span");
-  titleSpan.textContent = "परिवार को सूचना";
-  hdr.appendChild(titleSpan);
+  hdr.appendChild(fill(document.createElement("span"), "family_title"));
 
   const tag = document.createElement("span");
   tag.className = "simulated-tag";
@@ -177,8 +146,14 @@ function handleFamilyAlert(msg) {
 
   const msgDiv = document.createElement("div");
   msgDiv.className = "family-card-msg";
-  msgDiv.textContent = msg.message;
+  msgDiv.textContent = msg.message_en || msg.message;
   card.appendChild(msgDiv);
+  if (msg.message_en && msg.message && msg.message !== msg.message_en) {
+    const locDiv = document.createElement("div");
+    locDiv.className = "family-card-loc";
+    locDiv.textContent = msg.message;
+    card.appendChild(locDiv);
+  }
 
   dom.familyContainer.appendChild(card);
 }

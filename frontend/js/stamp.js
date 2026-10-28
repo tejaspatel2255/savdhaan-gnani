@@ -1,4 +1,5 @@
 import { t } from "./strings.js";
+import { fill, textLoc, getLocal } from "./i18n.js";
 
 let root = null;
 let currentStampEl = null;
@@ -50,9 +51,7 @@ function dismissBigStamp(alertTime = null) {
     pinnedEl = document.createElement("div");
     pinnedEl.className = "pinned-stamp";
 
-    const titleSpan = document.createElement("span");
-    titleSpan.textContent = t("stamp_pinned_prefix");
-    pinnedEl.appendChild(titleSpan);
+    pinnedEl.appendChild(fill(document.createElement("span"), "stamp_pinned_prefix"));
 
     const timeSpan = document.createElement("span");
     timeSpan.className = "pinned-stamp-mono";
@@ -93,6 +92,12 @@ export function handle(msg, state) {
     sub.className = "stamp-sub";
     sub.textContent = t("stamp_sub");
     stamp.appendChild(sub);
+
+    const loc = document.createElement("div");
+    loc.className = "stamp-loc";
+    loc.setAttribute("lang", getLocal());
+    loc.textContent = `${textLoc("stamp_title")} · ${textLoc("stamp_sub")}`;
+    stamp.appendChild(loc);
 
     const alertTime = msg.t || 0;
     stamp.addEventListener("click", () => dismissBigStamp(alertTime));

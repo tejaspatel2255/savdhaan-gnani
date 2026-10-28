@@ -1,0 +1,54 @@
+/* Bilingual text: English leads, the local language is a smaller second voice. */
+.t-loc {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.82em;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--muted);
+  margin-left: 0.6em;
+}
+
+/* Stacked: local text sits on its own line under the English. */
+.t-stack .t-en,
+.t-stack .t-loc {
+  display: block;
+}
+
+.t-stack .t-loc {
+  margin-left: 0;
+  margin-top: 2px;
+}
+
+/* On paper (tape slips, receipt) the secondary text uses ink, not the night-theme grey. */
+.on-paper .t-loc {
+  color: var(--ink);
+}
+
+/* On the red danger phone screen. */
+.on-danger .t-loc {
+  color: var(--paper-2);
+}
+
+/* Phone screen */
+.phone-calm-title .t-en { font-size: 20px; font-weight: 600; }
+.phone-calm-sub .t-en { font-size: 16px; }
+.danger-card-title .t-en { font-size: 56px; line-height: 1; }
+.danger-card-title .t-loc { font-size: 22px; margin-top: var(--sp-4); }
+.btn-hangup .t-loc { color: var(--danger-deep); margin-left: 0.5em; }
+.warning-reason { font-size: 12px; color: var(--paper); }
+.warning-reason .t-loc { font-size: 11px; }
+.family-card-loc { font-family: var(--font-body); font-size: 13px; color: var(--muted); margin-top: var(--sp-4); }
+
+/* Stamp and level badge */
+.level-badge .t-loc { font-size: 0.9em; }
+.state-line .t-loc { font-size: 1.1em; }
+.footer-text { white-space: normal; }
+
+/* Receipt */
+.receipt-title .t-loc,
+.receipt-verdict .t-loc { display: block; margin: 2px 0 0; font-size: 13px; text-transform: none; letter-spacing: 0; }
+
+/* Report page (cream paper): secondary text in ink for contrast */
+.khata-body .t-loc,
+.social-card .t-loc { color: var(--ink); }

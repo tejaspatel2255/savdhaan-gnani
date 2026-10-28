@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>सावधान · SAVDHAAN</title>
+  <title>SAVDHAAN · Live Scam-Call Shield</title>
   <!-- Google Fonts: Display, Body, Mono (page still works if offline) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,11 +19,12 @@
   <link rel="stylesheet" href="css/stamp.css">
   <link rel="stylesheet" href="css/receipt.css">
   <link rel="stylesheet" href="css/awaaz.css">
+  <link rel="stylesheet" href="css/i18n.css">
 </head>
 <body data-level="calm">
   <noscript>
     <div style="padding: 20px; background: #A82A14; color: #F3E9D2; font-family: monospace;">
-      सावधान को चलाने के लिए जावास्क्रिप्ट सक्षम करें · Please enable JavaScript to run Savdhaan.
+      Please enable JavaScript to run Savdhaan.
     </div>
   </noscript>
 
@@ -45,7 +46,7 @@
   <div id="vignette-overlay" aria-hidden="true"></div>
 
   <!-- Reconnect Indicator Chip -->
-  <div id="reconnect-chip" class="hidden" role="status">पुनः संपर्क जोड़ रहे हैं... Reconnecting...</div>
+  <div id="reconnect-chip" class="hidden" role="status" data-i18n="reconnecting">Reconnecting...</div>
 
   <!-- Error Banner -->
   <div id="banner" class="hidden" role="alert">
@@ -53,7 +54,7 @@
       <span class="banner-msg"></span>
       <div class="banner-server-msg"></div>
     </div>
-    <button class="banner-close" aria-label="Dismiss banner">बंद करें · Close</button>
+    <button class="banner-close" aria-label="Dismiss banner">Close</button>
   </div>
 
   <div class="app-shell">
@@ -67,9 +68,9 @@
           <circle cx="12" cy="12" r="2.5" fill="var(--pupil)"/>
         </svg>
         <div class="logo-brand">
-          <h1 class="brand-hi" lang="hi">सावधान</h1>
-          <span class="brand-en">SAVDHAAN</span>
-          <span class="brand-tagline" lang="hi">हर कॉल पर नज़र</span>
+          <h1 class="brand-en">SAVDHAAN</h1>
+          <span class="brand-hi" lang="hi" aria-hidden="true">सावधान</span>
+          <span class="brand-tagline">Guardian Eye on every call</span>
         </div>
       </div>
 
@@ -80,16 +81,16 @@
 
       <div id="controls" role="toolbar" aria-label="Call controls">
         <select id="call-select" class="select-ctrl" aria-label="Select call"></select>
-        <select id="lang-select" class="select-ctrl" aria-label="Select language"></select>
+        <select id="lang-select" class="select-ctrl" aria-label="Warning language"></select>
         <select id="mode-select" class="select-ctrl" aria-label="Select mode"></select>
 
         <label class="cb-label" for="speak-warning-cb">
           <input type="checkbox" id="speak-warning-cb" checked>
-          <span class="cb-text">बोलकर चेतावनी</span>
+          <span class="cb-text">Speak the warning</span>
         </label>
 
-        <button id="btn-start" class="btn-ctrl btn-start">कॉल शुरू करें · Start call</button>
-        <button id="btn-stop" class="btn-ctrl btn-stop" disabled>कॉल रोकें · Stop call</button>
+        <button id="btn-start" class="btn-ctrl btn-start">Start call</button>
+        <button id="btn-stop" class="btn-ctrl btn-stop" disabled>Stop call</button>
       </div>
     </header>
 
@@ -98,15 +99,12 @@
       <!-- Left Column: The Tape -->
       <section id="col-tape" class="panel" aria-label="Transcript Tape" role="region">
         <div class="panel-header">
-          <h2>
-            <span class="title-hi" lang="hi">कान · पर्ची</span>
-            <span class="title-en">THE TAPE</span>
-          </h2>
+          <h2 data-i18n="tape_title"><span class="t-en">THE TAPE</span></h2>
         </div>
         <div class="tape-scroll" role="log" aria-live="off">
-          <div class="tape-empty">पर्ची यहाँ छपेगी... Slips print here once a call starts.</div>
+          <div class="tape-empty t-stack" data-i18n="tape_empty"><span class="t-en">Slips print here once a call starts.</span></div>
         </div>
-        <button id="btn-jump-latest" aria-label="Jump to latest slip">नीचे · jump to latest</button>
+        <button id="btn-jump-latest" aria-label="Jump to latest slip" data-i18n="tape_jump_latest" data-en-only="1">Jump to latest</button>
       </section>
 
       <!-- Centre Column: The Eye -->
@@ -171,11 +169,11 @@
           <!-- Level Badge -->
           <div class="level-badge" data-level="calm">
             <svg class="level-icon" viewBox="0 0 16 16" aria-hidden="true"></svg>
-            <span class="level-text">शांत · CALM</span>
+            <span class="level-text" data-i18n="level_calm"><span class="t-en">CALM</span></span>
           </div>
 
           <!-- State Line -->
-          <div class="state-line">कॉल शुरू करें · Start a call</div>
+          <div class="state-line" data-i18n="state_idle"><span class="t-en">Start a call</span></div>
 
           <!-- Demo Quick Sample Actions -->
           <div id="demo-actions" class="demo-actions-box">
@@ -189,13 +187,10 @@
       <div class="right-stack">
         <section id="col-why" class="panel" aria-label="Evidence and Signals" role="region">
           <div class="panel-header">
-            <h2>
-              <span class="title-hi" lang="hi">चौकीदार · संकेत</span>
-              <span class="title-en">WHY THIS SCORE</span>
-            </h2>
+            <h2 data-i18n="why_title"><span class="t-en">WHY THIS SCORE</span></h2>
           </div>
           <div class="why-list">
-            <div class="why-empty">अभी कोई संकेत नहीं · No signals yet</div>
+            <div class="why-empty" data-i18n="why_empty"><span class="t-en">No signals yet · Clean call</span></div>
           </div>
           <div class="why-footer"></div>
         </section>
@@ -203,10 +198,7 @@
         <!-- Phone Slot -->
         <section id="phone-slot" aria-label="Phone slot" role="region">
           <div class="panel-header">
-            <h2>
-              <span class="title-hi" lang="hi">सामने वाले का फ़ोन</span>
-              <span class="title-en">LISTENER'S PHONE</span>
-            </h2>
+            <h2 data-i18n="phone_title"><span class="t-en">LISTENER'S PHONE</span></h2>
           </div>
           <div class="phone-frame">
             <div class="phone-notch"></div>
@@ -220,7 +212,7 @@
     <!-- Bottom Audio Strip -->
     <div id="awaaz" aria-label="Audio Waveform" role="region">
       <div class="awaaz-header">
-        <span lang="hi">आवाज़</span>
+        <span data-i18n="awaaz_title"><span class="t-en">AUDIO WAVEFORM</span></span>
         <span class="awaaz-mode-tag">MOCK</span>
       </div>
       <svg class="waveform-svg" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
@@ -230,9 +222,9 @@
 
     <!-- Footer Line -->
     <footer id="foot" role="contentinfo">
-      <span>सुनता है: Gnani Prisma v2.5 · बोलता है: Gnani Timbre v3.0 · SYNTHETIC DEMO, no real calls</span>
+      <span class="footer-text">STT: Gnani Prisma v2.5 · TTS: Gnani Timbre v3.0 · Synthetic demo, no real calls</span>
       <span class="footer-sep">·</span>
-      <a href="/report.html" class="eval-link">हिसाब-किताब · Evaluation</a>
+      <a href="report.html" class="eval-link" data-i18n="footer_eval_link"><span class="t-en">Evaluation Khata</span></a>
     </footer>
   </div>
 

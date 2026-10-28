@@ -102,3 +102,16 @@ export async function fetchSampleRun(url) {
   if (!res.ok) throw new ApiError(res.status, `Failed to load sample run: ${res.statusText}`);
   return res.text();
 }
+
+/** English translations of the recorded demo transcripts (optional; {} when unavailable). */
+let glossCache = null;
+export async function getGloss() {
+  if (glossCache) return glossCache;
+  try {
+    const res = await fetch("/assets/gloss.json");
+    glossCache = res.ok ? await res.json() : {};
+  } catch (_) {
+    glossCache = {};
+  }
+  return glossCache;
+}

@@ -1,4 +1,4 @@
-import { t } from "./strings.js";
+import { fill } from "./i18n.js";
 
 let dom = null;
 let currentScore = 0;
@@ -40,16 +40,18 @@ export function reset() {
 
 function renderTicks() {
   if (!dom.ticksGroup) return;
-  let html = "";
+  while (dom.ticksGroup.firstChild) dom.ticksGroup.removeChild(dom.ticksGroup.firstChild);
+  const svgNS = "http://www.w3.org/2000/svg";
   for (let i = 0; i < 60; i++) {
     const angle = (i * 6 - 90) * (Math.PI / 180);
-    const x1 = Math.round(200 + 186 * Math.cos(angle));
-    const y1 = Math.round(200 + 186 * Math.sin(angle));
-    const x2 = Math.round(200 + 196 * Math.cos(angle));
-    const y2 = Math.round(200 + 196 * Math.sin(angle));
-    html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" data-idx="${i}" />`;
+    const line = document.createElementNS(svgNS, "line");
+    line.setAttribute("x1", Math.round(200 + 186 * Math.cos(angle)));
+    line.setAttribute("y1", Math.round(200 + 186 * Math.sin(angle)));
+    line.setAttribute("x2", Math.round(200 + 196 * Math.cos(angle)));
+    line.setAttribute("y2", Math.round(200 + 196 * Math.sin(angle)));
+    line.setAttribute("data-idx", String(i));
+    dom.ticksGroup.appendChild(line);
   }
-  dom.ticksGroup.innerHTML = html;
 }
 
 function updateTicks(score) {
@@ -92,10 +94,10 @@ function setEyeState(state) {
   dom.svg.setAttribute("data-state", state);
   if (state === "idle") {
     basePupilRadius = 46;
-    dom.stateLine.textContent = t("state_idle");
+    fill(dom.stateLine, "state_idle");
   } else if (state === "listening") {
     basePupilRadius = 46;
-    dom.stateLine.textContent = t("state_listening");
+    fill(dom.stateLine, "state_listening");
   } else if (state === "careful") {
     basePupilRadius = 42;
   } else if (state === "danger") {
@@ -105,20 +107,43 @@ function setEyeState(state) {
       setTimeout(() => dom.vignette.classList.remove("active"), 350);
     }
   } else if (state === "ended") {
-    dom.stateLine.textContent = t("state_ended");
+    fill(dom.stateLine, "state_ended");
   }
   dom.pupil.setAttribute("r", String(basePupilRadius));
 }
 
 function updateLevelUI(level, score) {
   dom.levelBadge.setAttribute("data-level", level);
-  const icons = {
-    calm: '<circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2" fill="var(--night-3)"/>',
-    careful: '<polygon points="8,1 15,15 1,15"/><circle cx="8" cy="11" r="1" fill="var(--night-3)"/>',
-    danger: '<polygon points="5,1 11,1 15,5 15,11 11,15 5,15 1,11 1,5"/>',
-  };
-  dom.levelIcon.innerHTML = icons[level] || icons.calm;
-  dom.levelText.textContent = t(`level_${level}`);
+  const svgNS = "http://www.w3.org/2000/svg";
+  while (dom.levelIcon.firstChild) dom.levelIcon.removeChild(dom.levelIcon.firstChild);
+  if (level === "careful") {
+    const poly = document.createElementNS(svgNS, "polygon");
+    poly.setAttribute("points", "8,1 15,15 1,15");
+    const dot = document.createElementNS(svgNS, "circle");
+    dot.setAttribute("cx", "8");
+    dot.setAttribute("cy", "11");
+    dot.setAttribute("r", "1");
+    dot.setAttribute("fill", "var(--night-3)");
+    dom.levelIcon.appendChild(poly);
+    dom.levelIcon.appendChild(dot);
+  } else if (level === "danger") {
+    const oct = document.createElementNS(svgNS, "polygon");
+    oct.setAttribute("points", "5,1 11,1 15,5 15,11 11,15 5,15 1,11 1,5");
+    dom.levelIcon.appendChild(oct);
+  } else {
+    const c1 = document.createElementNS(svgNS, "circle");
+    c1.setAttribute("cx", "8");
+    c1.setAttribute("cy", "8");
+    c1.setAttribute("r", "6");
+    const c2 = document.createElementNS(svgNS, "circle");
+    c2.setAttribute("cx", "8");
+    c2.setAttribute("cy", "8");
+    c2.setAttribute("r", "2");
+    c2.setAttribute("fill", "var(--night-3)");
+    dom.levelIcon.appendChild(c1);
+    dom.levelIcon.appendChild(c2);
+  }
+  fill(dom.levelText, `level_${level}`);
 }
 
 export function handle(msg, state) {

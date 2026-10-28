@@ -83,13 +83,18 @@
 /* Verdict stamp */
 .receipt-verdict {
   margin: var(--sp-8) auto;
-  padding: var(--sp-6) var(--sp-24);
-  border-radius: var(--radius-pill);
+  padding: 6px 24px 8px;
+  border-radius: 14px;
+  text-align: center;
   font-family: var(--font-display);
   font-size: 22px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   transform: rotate(-4deg);
+  width: fit-content;
+  max-width: 92%;
+  box-sizing: border-box;
+  line-height: 1.2;
 }
 
 .receipt-verdict.safe {
