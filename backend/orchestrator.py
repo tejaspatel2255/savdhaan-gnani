@@ -20,6 +20,7 @@ from backend.events import (
     build_session_event,
     build_summary_event,
     build_transcript_event,
+    build_usage_tick_event,
     build_warning_audio_event,
 )
 from backend.gnani_errors import GnaniError
@@ -318,6 +319,14 @@ class SessionManager:
 
             elif ev.kind == "processing":
                 build_segment_processing_event(emitter, t=ev.t)
+
+            elif ev.kind == "usage_tick":
+                build_usage_tick_event(
+                    emitter,
+                    stt_seconds_used=ev.data.get("stt_seconds_used", 0.0),
+                    stt_seconds_cap=ev.data.get("stt_seconds_cap", float(self.settings.max_stt_seconds_per_run)),
+                    t=ev.t,
+                )
 
             elif ev.kind == "transcript":
                 segments_count += 1

@@ -36,6 +36,7 @@ WARNINGS: Dict[str, Dict[str, str]] = {
 }
 
 CACHE_DIR = Path("data/cache/warnings")
+COMMITTED_AUDIO_DIR = Path("frontend/assets/audio")
 
 
 @dataclass
@@ -106,10 +107,16 @@ async def get_warning(
 
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
+    # 1. Check data/cache/warnings or committed frontend/assets/audio
+    existing_path = None
     if file_path.exists():
-        # Read duration from WAV
+        existing_path = file_path
+    elif (COMMITTED_AUDIO_DIR / f"{name}.wav").exists():
+        existing_path = COMMITTED_AUDIO_DIR / f"{name}.wav"
+
+    if existing_path is not None:
         try:
-            with wave.open(str(file_path), "rb") as wf:
+            with wave.open(str(existing_path), "rb") as wf:
                 duration_s = round(wf.getnframes() / float(wf.getframerate()), 2)
         except Exception:
             duration_s = 3.0

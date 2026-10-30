@@ -25,6 +25,7 @@ warning_audio: {audio_url:str|null, duration_s:float|null, text:str, cached:bool
 family_alert: {contact_label:"Trusted contact (simulated)", message:str (listener language), message_en:str (English, shown first in the UI), simulated:true} sent once, right after alert. Nothing is ever sent to a real phone.
 error: {code:"no_key"|"auth"|"rate_limited"|"credits"|"network"|"stt_closed"|"tts_failed"|"cap_reached"|"bad_request"|"internal", message:str, recoverable:bool}
 summary: {duration_s:float, segments:int, time_to_alert_s:float|null, max_score:int, final_level:str, categories:{category:count}, stt_latency_ms:{p50:int|null,p95:int|null}, credits_used:{stt_seconds:float, tts_chars:int}, mode:str, synthetic:bool}
+usage_tick: {stt_seconds_used:float, stt_seconds_cap:float} sent every 5 seconds in mic mode to update the live usage meter.
 
 ORDER: session(starting) -> session(listening) -> any number of [audio_level, segment_processing, transcript, risk] -> at most one [alert, family_alert, warning_audio] -> session(ended) -> summary. After a fatal error: error -> session(error) -> summary with partial data. summary is always last.
 

@@ -230,6 +230,20 @@ def build_error_event(
     )
 
 
+def build_usage_tick_event(
+    emitter: Emitter,
+    stt_seconds_used: float,
+    stt_seconds_cap: float,
+    t: Optional[float] = None,
+) -> Dict[str, Any]:
+    return emitter.emit(
+        "usage_tick",
+        t=t,
+        stt_seconds_used=round(stt_seconds_used, 1),
+        stt_seconds_cap=round(stt_seconds_cap, 1),
+    )
+
+
 def build_summary_event(
     emitter: Emitter,
     duration_s: float,

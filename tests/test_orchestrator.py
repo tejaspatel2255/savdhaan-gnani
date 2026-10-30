@@ -85,82 +85,91 @@ def test_emitter_queue_overflow_and_monotonic_t():
 
 # --- Orchestrator & Mock Session Tests ---
 
-def test_mock_session_complete_flow_and_order():
+def test_mock_session_complete_flow_and_order(tmp_path):
     # Ensure cached warning audio doesn't bypass TTS call for this test
     cache_file = Path("data/cache/warnings/warn_hi_in_arrest_shivani.wav")
     if cache_file.exists():
         cache_file.unlink()
 
-    dummy_settings = Settings(api_key="mock", max_tts_chars_per_run=600)
-    tts_called = 0
+    # Also redirect the committed audio dir to an empty tmp dir so fallback doesn't fire
+    import backend.warning as w_mod
+    orig_committed = w_mod.COMMITTED_AUDIO_DIR
+    w_mod.COMMITTED_AUDIO_DIR = tmp_path / "no_committed_audio"
+    w_mod.COMMITTED_AUDIO_DIR.mkdir()
 
-    async def fake_tts(*args, **kwargs):
-        nonlocal tts_called
-        tts_called += 1
-        return TtsResult(audio=make_dummy_wav_bytes(2.5), cached=False, chars=40, elapsed_ms=10)
+    try:
+        dummy_settings = Settings(api_key="mock", max_tts_chars_per_run=600)
+        tts_called = 0
 
-    mgr = SessionManager(dummy_settings, data_dir="data", tts=fake_tts)
+        async def fake_tts(*args, **kwargs):
+            nonlocal tts_called
+            tts_called += 1
+            return TtsResult(audio=make_dummy_wav_bytes(2.5), cached=False, chars=40, elapsed_ms=10)
 
-    async def run():
-        req = StartSessionRequest(mode="mock", speed=200.0, speak_warning=True)
-        sess_id = await mgr.start(req)
+        mgr = SessionManager(dummy_settings, data_dir="data", tts=fake_tts)
 
-        while mgr.is_busy():
-            await asyncio.sleep(0.01)
+        async def run():
+            req = StartSessionRequest(mode="mock", speed=200.0, speak_warning=True)
+            sess_id = await mgr.start(req)
 
-        history = mgr.history()
-        types = [m["type"] for m in history]
+            while mgr.is_busy():
+                await asyncio.sleep(0.01)
 
-        assert types[0] == "session"
-        assert history[0]["state"] == "starting"
-        assert types[1] == "session"
-        assert history[1]["state"] == "listening"
+            history = mgr.history()
+            types = [m["type"] for m in history]
 
-        seqs = [m["seq"] for m in history]
-        assert seqs == list(range(len(history)))
+            assert types[0] == "session"
+            assert history[0]["state"] == "starting"
+            assert types[1] == "session"
+            assert history[1]["state"] == "listening"
 
-        ts = [m["t"] for m in history]
-        assert all(ts[i] <= ts[i + 1] for i in range(len(ts) - 1))
+            seqs = [m["seq"] for m in history]
+            assert seqs == list(range(len(history)))
 
-        transcripts = [m for m in history if m["type"] == "transcript"]
-        risks = [m for m in history if m["type"] == "risk"]
-        assert len(transcripts) == 7
-        assert len(risks) == 7
+            ts = [m["t"] for m in history]
+            assert all(ts[i] <= ts[i + 1] for i in range(len(ts) - 1))
 
-        alerts = [m for m in history if m["type"] == "alert"]
-        assert len(alerts) == 1
-        alert_msg = alerts[0]
-        alert_seq = alert_msg["seq"]
+            transcripts = [m for m in history if m["type"] == "transcript"]
+            risks = [m for m in history if m["type"] == "risk"]
+            assert len(transcripts) == 7
+            assert len(risks) == 7
 
-        t3 = [m for m in history if m["type"] == "transcript" and m["segment_index"] == 3][0]
-        r3 = [m for m in history if m["type"] == "risk" and m["segment_index"] == 3][0]
-        assert t3["seq"] < r3["seq"] < alert_seq
+            alerts = [m for m in history if m["type"] == "alert"]
+            assert len(alerts) == 1
+            alert_msg = alerts[0]
+            alert_seq = alert_msg["seq"]
 
-        fam_alerts = [m for m in history if m["type"] == "family_alert"]
-        assert len(fam_alerts) == 1
-        assert fam_alerts[0]["seq"] == alert_seq + 1
+            t3 = [m for m in history if m["type"] == "transcript" and m["segment_index"] == 3][0]
+            r3 = [m for m in history if m["type"] == "risk" and m["segment_index"] == 3][0]
+            assert t3["seq"] < r3["seq"] < alert_seq
 
-        warn_audios = [m for m in history if m["type"] == "warning_audio"]
-        assert len(warn_audios) == 1
-        warn_audio = warn_audios[0]
+            fam_alerts = [m for m in history if m["type"] == "family_alert"]
+            assert len(fam_alerts) == 1
+            assert fam_alerts[0]["seq"] == alert_seq + 1
 
-        end_session_idx = [i for i, m in enumerate(history) if m["type"] == "session" and m["state"] == "ended"][0]
-        warn_audio_idx = history.index(warn_audio)
-        assert warn_audio_idx < end_session_idx
+            warn_audios = [m for m in history if m["type"] == "warning_audio"]
+            assert len(warn_audios) == 1
+            warn_audio = warn_audios[0]
 
-        assert types[-1] == "summary"
-        summary = history[-1]
-        assert summary["time_to_alert_s"] == 24.6
-        assert summary["max_score"] == 100
-        assert summary["final_level"] == "danger"
-        assert summary["stt_latency_ms"]["p50"] is None
-        assert summary["mode"] == "mock"
-        assert summary["synthetic"] is True
+            end_session_idx = [i for i, m in enumerate(history) if m["type"] == "session" and m["state"] == "ended"][0]
+            warn_audio_idx = history.index(warn_audio)
+            assert warn_audio_idx < end_session_idx
 
-        assert tts_called == 1
-        assert "/api/audio/" in warn_audio["audio_url"]
+            assert types[-1] == "summary"
+            summary = history[-1]
+            assert summary["time_to_alert_s"] == 24.6
+            assert summary["max_score"] == 100
+            assert summary["final_level"] == "danger"
+            assert summary["stt_latency_ms"]["p50"] is None
+            assert summary["mode"] == "mock"
+            assert summary["synthetic"] is True
 
-    asyncio.run(run())
+            assert tts_called == 1
+            assert "/api/audio/" in warn_audio["audio_url"]
+
+        asyncio.run(run())
+    finally:
+        w_mod.COMMITTED_AUDIO_DIR = orig_committed
 
 
 def test_speak_warning_false_skips_tts():
@@ -187,36 +196,45 @@ def test_speak_warning_false_skips_tts():
     asyncio.run(run())
 
 
-def test_fake_tts_failure_emits_recoverable_error():
+def test_fake_tts_failure_emits_recoverable_error(tmp_path):
     # Ensure cached warning audio doesn't bypass broken_tts call
     cache_file = Path("data/cache/warnings/warn_hi_in_arrest_shivani.wav")
     if cache_file.exists():
         cache_file.unlink()
 
-    dummy_settings = Settings(api_key="mock")
+    # Also redirect committed audio dir to empty tmp dir
+    import backend.warning as w_mod
+    orig_committed = w_mod.COMMITTED_AUDIO_DIR
+    w_mod.COMMITTED_AUDIO_DIR = tmp_path / "no_committed_audio"
+    w_mod.COMMITTED_AUDIO_DIR.mkdir()
 
-    async def broken_tts(*args, **kwargs):
-        raise GnaniError("TTS server down", code="tts_failed", recoverable=True)
+    try:
+        dummy_settings = Settings(api_key="mock")
 
-    mgr = SessionManager(dummy_settings, data_dir="data", tts=broken_tts)
+        async def broken_tts(*args, **kwargs):
+            raise GnaniError("TTS server down", code="tts_failed", recoverable=True)
 
-    async def run():
-        req = StartSessionRequest(mode="mock", speed=200.0, speak_warning=True)
-        await mgr.start(req)
+        mgr = SessionManager(dummy_settings, data_dir="data", tts=broken_tts)
 
-        while mgr.is_busy():
-            await asyncio.sleep(0.01)
+        async def run():
+            req = StartSessionRequest(mode="mock", speed=200.0, speak_warning=True)
+            await mgr.start(req)
 
-        history = mgr.history()
-        warn_audio = [m for m in history if m["type"] == "warning_audio"][0]
-        assert warn_audio["audio_url"] is None
-        assert warn_audio["reason"] == "tts_failed"
+            while mgr.is_busy():
+                await asyncio.sleep(0.01)
 
-        errors = [m for m in history if m["type"] == "error"]
-        assert any(e["code"] == "tts_failed" and e["recoverable"] is True for e in errors)
-        assert history[-1]["type"] == "summary"
+            history = mgr.history()
+            warn_audio = [m for m in history if m["type"] == "warning_audio"][0]
+            assert warn_audio["audio_url"] is None
+            assert warn_audio["reason"] == "tts_failed"
 
-    asyncio.run(run())
+            errors = [m for m in history if m["type"] == "error"]
+            assert any(e["code"] == "tts_failed" and e["recoverable"] is True for e in errors)
+            assert history[-1]["type"] == "summary"
+
+        asyncio.run(run())
+    finally:
+        w_mod.COMMITTED_AUDIO_DIR = orig_committed
 
 
 def test_session_busy_409_and_stop():

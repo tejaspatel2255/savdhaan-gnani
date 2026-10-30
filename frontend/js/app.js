@@ -13,6 +13,8 @@ import * as waveform from "./waveform.js";
 import * as stamp from "./stamp.js";
 import * as phone from "./phone.js";
 import * as receipt from "./receipt.js";
+import * as live from "./live.js";
+import * as words from "./words.js";
 import { playSample } from "./devfeed.js";
 
 export const FEATURES = { mic: true };
@@ -44,13 +46,15 @@ export async function init() {
   eye.init(get("col-eye")); tape.init(get("col-tape")); why.init(get("col-why"));
   waveform.init(get("awaaz")); stamp.init(get("stamp-root")); phone.init(get("phone-slot"));
   receipt.init(get("receipt-root"), handleStart);
+  live.init({ onDispatch: dispatch });
+  words.init(el.langSel.value.startsWith("gu") ? "gu" : "hi_en");
 
   for (const l of LANGS) {
     const o = document.createElement("option"); o.value = l.code; o.textContent = l.label; el.langSel.appendChild(o);
   }
   setLocal(el.langSel.value);
   applyLabels();
-  el.langSel.addEventListener("change", () => { setLocal(el.langSel.value); applyLabels(); });
+  el.langSel.addEventListener("change", () => { setLocal(el.langSel.value); applyLabels(); words.setPack(el.langSel.value); });
 
   const hasBackend = await detectBackend();
   if (!hasBackend) {
@@ -188,6 +192,7 @@ export function dispatch(msg) {
     }
     eye.handle(msg, state); tape.handle(msg, state); why.handle(msg, state);
     waveform.handle(msg, state); stamp.handle(msg, state); phone.handle(msg, state); receipt.handle(msg, state);
+    live.handle(msg);
   } catch (err) { console.error("Event error:", err, msg); }
 }
 

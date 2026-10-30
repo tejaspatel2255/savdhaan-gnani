@@ -105,6 +105,10 @@ warnings all work. **Requires your `GNANI_API_KEY`.**
    - Start a session in FILE mode with one of the sample scripts to confirm
      Gnani Prisma responds.
 
+### Note on Live Mic Access (ALLOW_REMOTE_LIVE)
+By default, \POST /api/session/start\ and \/ws/mic\ only allow loopback connections (W.0.0.1\, \localhost\). If you host the backend on a remote server (e.g. Render) and intend to access the microphone from an external browser, you must set \ALLOW_REMOTE_LIVE=1\ in your environment.
+> **Warning**: Enabling remote live listening on an unauthenticated public URL may expose your Gnani STT API quota to public misuse. Ensure appropriate origin checking and credit guards.
+
 ### Free tier note
 
 Render's free tier **sleeps after 15 minutes of inactivity**.

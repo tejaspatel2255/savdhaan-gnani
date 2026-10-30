@@ -20,6 +20,8 @@
   <link rel="stylesheet" href="css/receipt.css">
   <link rel="stylesheet" href="css/awaaz.css">
   <link rel="stylesheet" href="css/i18n.css">
+  <link rel="stylesheet" href="css/live.css">
+  <link rel="stylesheet" href="css/words.css">
 </head>
 <body data-level="calm">
   <noscript>
@@ -80,19 +82,49 @@
       </div>
 
       <div id="controls" role="toolbar" aria-label="Call controls">
-        <select id="call-select" class="select-ctrl" aria-label="Select call"></select>
-        <select id="lang-select" class="select-ctrl" aria-label="Warning language"></select>
-        <select id="mode-select" class="select-ctrl" aria-label="Select mode"></select>
+        <div class="live-bar">
+          <button id="btn-listen-live" class="btn-ctrl" data-live-state="idle" aria-label="Listen live with microphone">
+            <span class="live-icon" aria-hidden="true"></span>
+            <span class="live-btn-text" data-i18n="btn_listen_live">Listen live</span>
+          </button>
+          <select id="live-lang-sel" class="select-ctrl" aria-label="Microphone language">
+            <option value="hi-IN" lang="hi">Hindi · हिंदी</option>
+            <option value="gu-IN" lang="gu">Gujarati · ગુજરાતી</option>
+            <option value="en-IN">English / Hinglish</option>
+          </select>
+          <button id="btn-live-stop" class="btn-ctrl" style="display:none;" data-i18n="live_btn_stop">Stop</button>
+          <span id="live-disabled-reason"></span>
+        </div>
 
-        <label class="cb-label" for="speak-warning-cb">
-          <input type="checkbox" id="speak-warning-cb" checked>
-          <span class="cb-text">Speak the warning</span>
-        </label>
+        <details id="advanced-controls" class="advanced-disclosure">
+          <summary class="advanced-summary">Advanced</summary>
+          <div class="advanced-body">
+            <select id="call-select" class="select-ctrl" aria-label="Select call"></select>
+            <select id="lang-select" class="select-ctrl" aria-label="Warning language"></select>
+            <select id="mode-select" class="select-ctrl" aria-label="Select mode"></select>
 
-        <button id="btn-start" class="btn-ctrl btn-start">Start call</button>
-        <button id="btn-stop" class="btn-ctrl btn-stop" disabled>Stop call</button>
+            <label class="cb-label" for="speak-warning-cb">
+              <input type="checkbox" id="speak-warning-cb" checked>
+              <span class="cb-text">Speak warning</span>
+            </label>
+
+            <button id="btn-start" class="btn-ctrl btn-start">Start</button>
+            <button id="btn-stop" class="btn-ctrl btn-stop" disabled>Stop</button>
+          </div>
+        </details>
       </div>
     </header>
+
+    <!-- Live Status Strip -->
+    <div id="live-status-strip" role="status">
+      <span id="live-state-badge" class="live-state-badge" data-state="idle">Ready</span>
+      <span id="live-source-label" class="live-source-label">Source: LIVE MIC</span>
+      <div class="live-usage-wrap">
+        <span class="live-usage-label" data-i18n="live_usage_label">STT usage</span>
+        <div class="live-usage-bar-outer"><div id="live-usage-bar-inner" class="live-usage-bar-inner"></div></div>
+        <span id="live-usage-text" class="live-usage-text">0s / 180s</span>
+      </div>
+    </div>
 
     <!-- Main Content 3-Column Grid -->
     <main id="main-grid">
@@ -206,6 +238,35 @@
           </div>
           <div class="family-card-slot"></div>
         </section>
+
+        <!-- Try your own words panel -->
+        <section class="words-panel" id="panel-try-words" aria-label="Try your own words">
+          <div id="words-panel-header" class="words-panel-header">
+            <span class="words-panel-title" data-i18n="words_panel_title">Try your own words</span>
+            <span class="words-panel-chevron" aria-hidden="true">▼</span>
+          </div>
+          <div id="words-panel-body" class="words-panel-body">
+            <textarea id="words-textarea" placeholder="Type or paste any sentence here…" aria-label="Sentence to analyze"></textarea>
+            <div class="words-action-row">
+              <button id="words-btn-analyze" class="words-btn words-btn-analyze" data-i18n="words_btn_analyze">Analyze</button>
+              <button id="words-btn-scam" class="words-btn" data-i18n="words_btn_scam_example">Scam example</button>
+              <button id="words-btn-safe" class="words-btn" data-i18n="words_btn_safe_example">Safe example</button>
+            </div>
+            <div id="words-result" class="words-result"></div>
+          </div>
+        </section>
+
+        <!-- Words we listen for panel -->
+        <section class="words-panel" id="panel-words-listen" aria-label="Words we listen for">
+          <div id="rules-panel-header" class="words-panel-header">
+            <span class="words-panel-title" data-i18n="rules_panel_title">Words we listen for</span>
+            <span class="words-panel-chevron" aria-hidden="true">▼</span>
+          </div>
+          <div id="rules-panel-body" class="words-panel-body">
+            <div class="words-panel-loading" data-i18n="rules_loading">Loading…</div>
+          </div>
+        </section>
+      </div>
       </div>
     </main>
 
@@ -228,9 +289,20 @@
     </footer>
   </div>
 
-  <!-- Overlays Root -->
+    <!-- Overlays Root -->
   <div id="stamp-root" aria-hidden="true"></div>
   <div id="receipt-root" class="hidden" aria-hidden="true"></div>
+
+  <!-- Live Notice Overlay Modal -->
+  <div id="live-notice-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="live-notice-title">
+    <div class="live-notice-box">
+      <div id="live-notice-title" class="live-notice-title" data-i18n="live_notice_title">About Live Mode</div>
+      <div class="live-notice-body" data-i18n="live_notice_body">
+        Audio is sent to Gnani's cloud for transcription. Nothing is saved unless you enable SAVE_LIVE_RUNS.
+      </div>
+      <button id="live-notice-ok" class="live-notice-ok" data-i18n="live_notice_ok">Got it, start</button>
+    </div>
+  </div>
 
   <!-- Entry Script -->
   <script type="module" src="js/app.js"></script>

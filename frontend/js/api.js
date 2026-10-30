@@ -115,3 +115,20 @@ export async function getGloss() {
   }
   return glossCache;
 }
+
+/**
+ * Score text with the rule engine (no Gnani credits).
+ * @param {string} text  Max 2000 chars.
+ * @param {string} pack  "hi_en" | "gu" (default "hi_en").
+ */
+export async function analyzeText(text, pack = "hi_en") {
+  return request("/api/analyze", {
+    method: "POST",
+    body: JSON.stringify({ text, pack }),
+  });
+}
+
+/** Fetch rule-category summaries for the "Words we listen for" panel. */
+export async function getRulesSummary() {
+  return request("/api/rules/summary");
+}

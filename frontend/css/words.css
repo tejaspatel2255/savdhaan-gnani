@@ -1,0 +1,268 @@
+/* words.css — "Try your own words" and "Words we listen for" panels.
+   No framework; plain CSS. Max 300 lines. */
+
+/* ── Shared collapsible panel wrapper ── */
+.words-panel {
+  border: 1px solid var(--border, #d0d8e4);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 12px 0;
+  background: var(--bg-card, #fff);
+}
+
+.words-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--bg-panel-hdr, #f0f4f8);
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.words-panel-header:focus-visible {
+  outline: 3px solid #f8c200;
+  outline-offset: -3px;
+}
+
+.words-panel-header[aria-expanded="true"] {
+  border-bottom-color: var(--border, #d0d8e4);
+}
+
+.words-panel-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text, #222);
+}
+
+.words-panel-chevron {
+  font-size: 0.8rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+
+.words-panel-header[aria-expanded="true"] .words-panel-chevron {
+  transform: rotate(180deg);
+}
+
+.words-panel-body {
+  padding: 14px 16px;
+  display: none;
+}
+
+.words-panel-body.open {
+  display: block;
+}
+
+/* ── Try your own words ── */
+#words-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border, #ccc);
+  font-size: 0.88rem;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+  color: inherit;
+  background: var(--bg-input, #fdfdfd);
+}
+
+#words-textarea:focus {
+  outline: 3px solid #f8c200;
+  border-color: #f8c200;
+}
+
+.words-action-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.words-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border, #ccc);
+  background: #fff;
+  font-size: 0.83rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.words-btn:hover { background: #eef; }
+
+.words-btn:focus-visible {
+  outline: 3px solid #f8c200;
+  outline-offset: 2px;
+}
+
+.words-btn-analyze {
+  background: var(--nazar-deep, #1a3a5c);
+  color: #fff;
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.words-btn-analyze:hover { background: #265080; }
+
+.words-btn-analyze:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Result area */
+.words-result {
+  margin-top: 12px;
+}
+
+.words-result-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.words-score-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: #d4ead4;
+  color: #1a5c1a;
+}
+
+.words-score-badge[data-level="careful"] {
+  background: #fde8a0;
+  color: #7a5000;
+}
+
+.words-score-badge[data-level="danger"] {
+  background: #f5c5ba;
+  color: #8a1a00;
+}
+
+.words-highlighted-text {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  padding: 8px 10px;
+  background: var(--bg-highlight, #f8f8f8);
+  border-radius: 6px;
+  border-left: 3px solid var(--border, #ccc);
+}
+
+.words-highlighted-text mark.hit-raise {
+  background: #ffe0a0;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+.words-highlighted-text mark.hit-high-raise {
+  background: #ffb0a0;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+.words-highlighted-text mark.hit-dampen {
+  background: #b8e8c0;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+.words-detected-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  margin-top: 6px;
+}
+
+.words-detected-label {
+  font-weight: 600;
+  color: #555;
+  white-space: nowrap;
+}
+
+.words-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #e8eef8;
+  font-size: 0.78rem;
+  color: #234;
+}
+
+.words-none-detected {
+  color: #2a7a3b;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* ── Words we listen for ── */
+.rules-category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.rules-category-card {
+  border: 1px solid var(--border, #d0d8e4);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: var(--bg-card, #fff);
+}
+
+.rules-cat-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text, #222);
+  margin-bottom: 4px;
+}
+
+.rules-cat-local {
+  font-size: 0.78rem;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.rules-cat-examples {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rules-cat-examples li {
+  font-size: 0.78rem;
+  color: #555;
+  padding: 1px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rules-cat-examples li::before {
+  content: "· ";
+  color: #aaa;
+}
+
+.rules-logic {
+  font-size: 0.82rem;
+  color: #555;
+  margin-top: 10px;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.words-panel-loading,
+.words-panel-unavailable {
+  font-size: 0.85rem;
+  color: #888;
+  padding: 8px 0;
+}

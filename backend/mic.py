@@ -131,6 +131,14 @@ class MicSource:
                     if now - last_cap_check_t >= CAP_CHECK_INTERVAL:
                         usage.check_stt_cap(seconds_sent)
                         last_cap_check_t = now
+                        await sink(SourceEvent(
+                            kind="usage_tick",
+                            t=seconds_sent,
+                            data={
+                                "stt_seconds_used": seconds_sent,
+                                "stt_seconds_cap": float(self.settings.max_stt_seconds_per_run),
+                            },
+                        ))
 
                     muted = now < self._mute_until
                     buf.extend(bytes(len(chunk)) if muted else chunk)

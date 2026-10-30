@@ -1,7 +1,7 @@
 # Savdhaan (सावधान) · Live Scam-Call Shield
 
 Savdhaan protects citizens from scam calls in real time using explainable speech intelligence.
-It streams live phone audio, scores rolling bilingual transcripts with deterministic rules,
+It listens to incoming phone conversations via browser microphone (e.g. a call on speakerphone), scores rolling bilingual transcripts with deterministic rules,
 and speaks immediate warnings while simulating family alerts before money or credentials are lost.
 
 Built for the **Great Indian AI Internship Challenge** by **Gnani AI** (Deadline: Nov 10, 2026, 11:59 PM IST).
@@ -49,6 +49,12 @@ All figures come directly from `data/eval/results.json` (`/report.html`):
 
 - **Limitations**: Synthetic TTS voices; small sample sizes (10 calls/split); frozen test split scored 1 time.
 - Expected miss noted in test split: `T05_card_pin` (subtle conversational trap without threat keywords).
+
+## Where Does My Audio Go?
+
+When using **Listen live**, microphone audio is streamed securely from your browser over WebSocket to the local backend, and forwarded directly to **Gnani Prisma v2.5** cloud for live speech-to-text. No audio is ever written to disk or recorded unless `SAVE_LIVE_RUNS=true` is explicitly configured in your environment.
+
+When using **Try your own words**, text sentences are evaluated 100% locally on the backend using deterministic rule matching without any network or Gnani API credit usage.
 
 ## Safety, Privacy & Honest Demo
 

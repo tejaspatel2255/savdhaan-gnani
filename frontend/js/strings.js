@@ -6,6 +6,7 @@
 export const LANGS = [
   { code: "hi-IN", label: "Hindi · हिंदी" },
   { code: "gu-IN", label: "Gujarati · ગુજરાતી" },
+  { code: "en-IN", label: "English · Hinglish" },
 ];
 
 export const STRINGS = {
@@ -100,6 +101,40 @@ export const STRINGS = {
   badge_static: { hi: "रिकॉर्डेड डेमो", en: "RECORDED DEMO", gu: "રેકોર્ડેડ ડેમો" },
   badge_demo: { hi: "रिकॉर्डेड डेमो", en: "DEMO · recorded", gu: "રેકોર્ડેડ ડેમો" },
   static_footer_note: { hi: "रिकॉर्ड किया गया डेमो; कोई लाइव कॉल नहीं सुनी जा रही", en: "Recorded demo; no live call is being analysed", gu: "રેકોર્ડ કરેલ ડેમો; કોઈ લાઈવ કોલ સાંભળાતો નથી" },
+
+  /* Live mic mode */
+  btn_listen_live: { hi: "लाइव सुनें", en: "Listen live", gu: "સીધું સાંભળો" },
+  live_notice_title: { hi: "लाइव मोड के बारे में", en: "About Live Mode", gu: "Live Mode વિશે" },
+  live_notice_body: { hi: "ऑडियो Gnani के क्लाउड पर जाती है। कोई रिकॉर्डिंग नहीं होती।", en: "Audio is sent to Gnani's cloud for transcription. Nothing is saved unless you enable SAVE_LIVE_RUNS.", gu: "ઓડિયો Gnani ના ક્લાઉડ પર જાય છે. SAVE_LIVE_RUNS ચાલુ ન હોય ત્યારે કંઈ સેવ નથી થતું." },
+  live_notice_ok: { hi: "समझ गया, शुरू करें", en: "Got it, start", gu: "સમજ્યા, શરૂ કરો" },
+  live_state_idle: { hi: "माइक के लिए तैयार", en: "Ready to listen", gu: "સાંભળવા તૈયાર" },
+  live_state_permission: { hi: "माइक अनुमति माँग रहा हूँ…", en: "Requesting mic permission…", gu: "માઈક મંજૂરી માંગી રહ્યો છું…" },
+  live_state_connecting: { hi: "जोड़ रहा हूँ…", en: "Connecting…", gu: "જોડાઈ રહ્યું છે…" },
+  live_state_listening: { hi: "सुन रहा हूँ — बोलें", en: "Listening — speak now", gu: "સાંભળી રહ્યો છું — બોલો" },
+  live_state_alert: { hi: "खतरा भाँपा — चेतावनी दी", en: "Scam detected — warning given", gu: "ખતરો ભળ્યો — ચેતવણી દઈ" },
+  live_state_stopped: { hi: "सुनना बंद", en: "Stopped", gu: "બંધ" },
+  live_btn_stop: { hi: "सुनना बंद करें", en: "Stop listening", gu: "સાંભળવાનું બંધ કરો" },
+  live_usage_label: { hi: "उपयोग", en: "STT usage", gu: "ઉપયોગ" },
+  live_no_key: { hi: "API कुंजी नहीं — लाइव बंद है", en: "API key missing — live disabled", gu: "API key ગોઠવેલ નથી — live બંધ" },
+  live_demo_mode: { hi: "डेमो मोड — लाइव बंद है", en: "Demo mode — live disabled", gu: "ડેમો મોડ — live બંધ" },
+  live_source_label: { hi: "स्रोत: LIVE MIC", en: "Source: LIVE MIC", gu: "સ્ત્રોત: LIVE MIC" },
+  live_lang_label: { hi: "भाषा चुनें", en: "Language", gu: "ભાષા" },
+
+  /* Try your own words */
+  words_panel_title: { hi: "अपने शब्द आज़माएँ", en: "Try your own words", gu: "તમારા શબ્દ અજમાવો" },
+  words_placeholder: { hi: "कोई वाक्य यहाँ लिखें या चिपकाएँ…", en: "Type or paste any sentence here…", gu: "કોઈ વાક્ય અહીં ટાઈપ કરો અથવા Paste કરો…" },
+  words_btn_analyze: { hi: "विश्लेषण करें", en: "Analyze", gu: "વિશ્લેષણ કરો" },
+  words_btn_scam_example: { hi: "स्कैम उदाहरण", en: "Scam example", gu: "Scam ઉદાહરણ" },
+  words_btn_safe_example: { hi: "सामान्य उदाहरण", en: "Safe example", gu: "સામાન્ય ઉદાહરણ" },
+  words_result_prefix: { hi: "परिणाम:", en: "Result:", gu: "પરિણામ:" },
+  words_detected_prefix: { hi: "मिले:", en: "Detected:", gu: "મળ્યા:" },
+  words_none_detected: { hi: "कोई संदिग्ध शब्द नहीं मिले", en: "Nothing suspicious detected", gu: "કોઈ શંકાસ્પદ શબ્દ મળ્યા નહીં" },
+  words_too_long: { hi: "अधिकतम 2000 अक्षर", en: "Maximum 2000 characters", gu: "મહત્તમ 2000 અક્ષર" },
+
+  /* Words we listen for */
+  rules_panel_title: { hi: "हम किन शब्दों पर ध्यान देते हैं", en: "Words we listen for", gu: "કયા શબ્દ ધ્યાનમાં આવે છે" },
+  rules_loading: { hi: "लोड हो रहा है…", en: "Loading…", gu: "લોડ થઈ રહ્યું છે…" },
+  rules_unavailable: { hi: "नियम उपलब्ध नहीं", en: "Rules unavailable", gu: "નિયમ ઉપલબ્ધ નથી" },
 };
 
 const loggedFallbacks = new Set();
