@@ -1,6 +1,3 @@
-/**
- * Main application entrypoint for Savdhaan.
- */
 import { t, LANGS } from "./strings.js";
 import { fill, setLocal, applyLabels } from "./i18n.js";
 import { getCalls, getHealth, startSession, stopSession, detectBackend, ApiError } from "./api.js";
@@ -20,24 +17,24 @@ import { playSample } from "./devfeed.js";
 export const FEATURES = { mic: true };
 export const state = { sessionId: null, mode: "mock", modeLabel: "MOCK", lang: "hi-IN", level: "calm", score: 0, alertFired: false, isStatic: false, isSample: false };
 
-let audioCtx = null, callsList = [];
+let audioCtx = null, callsList = [], el = {};
 const handledMessages = new Set();
-let el = {};
 
 export async function init() {
   const get = (id) => document.getElementById(id);
+  const banner = get("banner");
   el = {
     polite: get("live-polite"), assertive: get("live-assertive"),
     badge: get("mode-badge"), synthetic: get("synthetic-pill"), reconnect: get("reconnect-chip"),
-    banner: get("banner"), bannerMsg: get("banner").querySelector(".banner-msg"),
-    bannerServer: get("banner").querySelector(".banner-server-msg"),
+    banner, bannerMsg: banner.querySelector(".banner-msg"),
+    bannerServer: banner.querySelector(".banner-server-msg"),
     callSel: get("call-select"), langSel: get("lang-select"), modeSel: get("mode-select"),
     speakCb: get("speak-warning-cb"), btnStart: get("btn-start"), btnStop: get("btn-stop"),
     btnDemoScam: get("btn-demo-scam"), btnDemoNormal: get("btn-demo-normal"),
   };
 
-  if (el.btnDemoScam) el.btnDemoScam.addEventListener("click", () => { unlockAudio(); resetAll(); state.isSample = true; playSample("/assets/sample_run.jsonl", dispatch, { speed: 1.0 }); });
-  if (el.btnDemoNormal) el.btnDemoNormal.addEventListener("click", () => { unlockAudio(); resetAll(); state.isSample = true; playSample("/assets/sample_legit.jsonl", dispatch, { speed: 1.0 }); });
+  if (el.btnDemoScam) el.btnDemoScam.addEventListener("click", () => startSample("/assets/sample_run.jsonl"));
+  if (el.btnDemoNormal) el.btnDemoNormal.addEventListener("click", () => startSample("/assets/sample_legit.jsonl"));
   el.banner.querySelector(".banner-close").addEventListener("click", () => el.banner.classList.add("hidden"));
   el.btnStart.addEventListener("click", handleStart);
   el.btnStop.addEventListener("click", handleStop);
@@ -45,15 +42,14 @@ export async function init() {
 
   eye.init(get("col-eye")); tape.init(get("col-tape")); why.init(get("col-why"));
   waveform.init(get("awaaz")); stamp.init(get("stamp-root")); phone.init(get("phone-slot"));
-  receipt.init(get("receipt-root"), handleStart);
+  receipt.init(get("receipt-root"), () => (state.isSample ? startSample("/assets/sample_run.jsonl") : handleStart()));
   live.init({ onDispatch: dispatch });
   words.init(el.langSel.value.startsWith("gu") ? "gu" : "hi_en");
 
   for (const l of LANGS) {
     const o = document.createElement("option"); o.value = l.code; o.textContent = l.label; el.langSel.appendChild(o);
   }
-  setLocal(el.langSel.value);
-  applyLabels();
+  setLocal(el.langSel.value); applyLabels();
   el.langSel.addEventListener("change", () => { setLocal(el.langSel.value); applyLabels(); words.setPack(el.langSel.value); });
 
   const hasBackend = await detectBackend();
@@ -63,6 +59,8 @@ export async function init() {
     const ft = document.querySelector("#foot .footer-text");
     if (ft) ft.textContent += ` · ${t("static_footer_note")}`;
     [el.callSel, el.modeSel, el.btnStart, el.btnStop].forEach((node) => { if (node) node.style.display = "none"; });
+    const adv = document.getElementById("advanced-controls");
+    if (adv) adv.style.display = "none";
     return;
   }
 
@@ -106,9 +104,9 @@ function unlockAudio() {
     const Ctx = window.AudioContext || window.webkitAudioContext;
     if (Ctx) {
       audioCtx = new Ctx();
-      const b = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.05, audioCtx.sampleRate);
       const s = audioCtx.createBufferSource();
-      s.buffer = b; s.connect(audioCtx.destination); s.start(0);
+      s.buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.05, audioCtx.sampleRate);
+      s.connect(audioCtx.destination); s.start(0);
     }
   }
   if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
@@ -153,6 +151,10 @@ function showBanner(code, msg = "") {
   el.banner.classList.remove("hidden");
 }
 
+function startSample(url) {
+  unlockAudio(); resetAll(); state.isSample = true; playSample(url, dispatch, { speed: 1.0 });
+}
+
 function resetAll() {
   handledMessages.clear();
   eye.reset(); tape.reset(); why.reset(); waveform.reset();
@@ -190,8 +192,7 @@ export function dispatch(msg) {
       showBanner(msg.code, msg.message);
       if (!msg.recoverable) { el.btnStart.disabled = false; el.btnStop.disabled = true; }
     }
-    eye.handle(msg, state); tape.handle(msg, state); why.handle(msg, state);
-    waveform.handle(msg, state); stamp.handle(msg, state); phone.handle(msg, state); receipt.handle(msg, state);
+    [eye, tape, why, waveform, stamp, phone, receipt].forEach((mod) => mod.handle(msg, state));
     live.handle(msg);
   } catch (err) { console.error("Event error:", err, msg); }
 }
