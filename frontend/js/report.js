@@ -6,11 +6,17 @@
 import { getEval } from "./api.js";
 import { el, elLoc } from "./report-views.js";
 import { renderSectionsAtoC } from "./report-sections.js";
+import { renderWhatChangedSection } from "./report-changed.js";
 import { renderSectionsDtoG } from "./report-audit.js";
 
-function renderCardView(root, data) {
+function renderCardView(root, data, isFixture = false) {
   document.body.className = "card-view";
   root.textContent = "";
+
+  if (isFixture) {
+    const banner = el("div", "fixture-top-banner", "FIXTURE DATA - NOT MEASURED");
+    root.appendChild(banner);
+  }
 
   const card = el("div", "social-card");
   const top = el("div", "social-card-top");
@@ -42,6 +48,7 @@ function renderCardView(root, data) {
   if (targetObj.recall_ci95 && targetObj.recall_ci95[0] !== null) {
     box1.appendChild(el("div", "card-ci", `95% CI: [${targetObj.recall_ci95[0]}, ${targetObj.recall_ci95[1]}]`));
   }
+  box1.appendChild(el("div", "card-small-sample", `n = ${targetObj.n || 10} calls per split, so intervals are wide`));
   stats.appendChild(box1);
 
   // False Alarm box
@@ -58,6 +65,7 @@ function renderCardView(root, data) {
   if (targetObj.false_alarm_ci95 && targetObj.false_alarm_ci95[0] !== null) {
     box2.appendChild(el("div", "card-ci", `95% CI: [${targetObj.false_alarm_ci95[0]}, ${targetObj.false_alarm_ci95[1]}]`));
   }
+  box2.appendChild(el("div", "card-small-sample", `n = ${targetObj.n || 10} calls per split, so intervals are wide`));
   stats.appendChild(box2);
   card.appendChild(stats);
 
@@ -68,8 +76,13 @@ function renderCardView(root, data) {
   root.appendChild(card);
 }
 
-function renderFullReport(root, data) {
+function renderFullReport(root, data, isFixture = false) {
   root.textContent = "";
+
+  if (isFixture) {
+    const banner = el("div", "fixture-top-banner", "FIXTURE DATA - NOT MEASURED");
+    root.appendChild(banner);
+  }
 
   const header = el("header", "khata-header");
   header.appendChild(elLoc("h1", "khata-title", "EVALUATION KHATA", "हिसाब-किताब"));
@@ -78,15 +91,28 @@ function renderFullReport(root, data) {
 
   const testSplit = (data.splits && data.splits.test) || {};
   const devSplit = (data.splits && data.splits.dev) || {};
+  const blindSplit = (data.splits && data.splits.blind) || {};
 
-  renderSectionsAtoC(root, data, devSplit, testSplit);
-  renderSectionsDtoG(root, data);
+  renderSectionsAtoC(root, data, devSplit, testSplit, blindSplit, isFixture);
+  renderWhatChangedSection(root, data, isFixture);
+  renderSectionsDtoG(root, data, isFixture);
+
+  // Footer metadata
+  const foot = el("footer", "khata-footer");
+  const genAt = data.generated_at ? `Generated at: ${data.generated_at}` : "";
+  const sha = data.rules_sha256 ? `Rules SHA: ${data.rules_sha256.substring(0, 12)}` : "";
+  const devScores = data.dev_scoring?.times_scored != null ? `Dev scored: ${data.dev_scoring.times_scored}` : "";
+  const testScores = data.test_scoring?.times_scored != null ? `Test scored: ${data.test_scoring.times_scored}` : "";
+  const blindScores = data.blind_scoring?.times_scored != null ? `Blind scored: ${data.blind_scoring.times_scored}` : "";
+  const metaParts = [genAt, sha, devScores, testScores, blindScores].filter(Boolean);
+  foot.appendChild(el("div", "footer-meta", metaParts.join(" · ")));
 
   const nav = el("div", "back-nav");
   const back = elLoc("a", "back-link", "← Back to the Nazar control room", "मुख्य नियंत्रण कक्ष");
   back.href = "/";
   nav.appendChild(back);
-  root.appendChild(nav);
+  foot.appendChild(nav);
+  root.appendChild(foot);
 }
 
 function renderEmptyState(root) {
@@ -102,9 +128,12 @@ async function init() {
   const root = document.getElementById("khata-root");
   if (!root) return;
 
+  const params = new URLSearchParams(window.location.search);
+  const isFixture = params.get("fixture") === "1";
+
   let data = null;
   try {
-    data = await getEval();
+    data = await getEval(isFixture);
   } catch (err) {}
 
   if (!data || !data.splits) {
@@ -112,11 +141,10 @@ async function init() {
     return;
   }
 
-  const params = new URLSearchParams(window.location.search);
   if (params.get("card") === "1") {
-    renderCardView(root, data);
+    renderCardView(root, data, isFixture);
   } else {
-    renderFullReport(root, data);
+    renderFullReport(root, data, isFixture);
   }
 }
 

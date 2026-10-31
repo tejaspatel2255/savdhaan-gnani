@@ -2,6 +2,18 @@
 
 ## Credit cost per unit (fill after the first calls)
 
+### Instructions on Reading Unit Costs from Dashboard:
+1. Log in to https://app.gnani.ai/voice/usage and record your starting credit balance.
+2. Run the pilot step: `python scripts/gen_corpus.py --split dev --pilot --go` (861 TTS characters).
+3. Check the dashboard balance again:
+   - `TTS cost per 1,000 characters = (Credits Deducted / 861) * 1,000`
+   - Set in `.env`: `TTS_CREDITS_PER_1K_CHARS=<value>`
+4. Run `python scripts/run_eval.py record --split dev --limit 1 --go` (~15 STT seconds).
+5. Check the dashboard balance again:
+   - `STT cost per minute = (Credits Deducted / Seconds) * 60`
+   - Set in `.env`: `STT_CREDITS_PER_MINUTE=<value>`
+6. Run `python scripts/credit_plan.py --balance <Current Balance>` to see the exact credit-safe breakdown.
+
 - STT REST cost per audio second or minute: 3.28 s consumed in smoke test (check dashboard app.gnani.ai/voice/usage to note deducted credits)
 - STT WebSocket streaming cost per minute:
 - TTS REST cost per character: 40 chars consumed in smoke test (check dashboard app.gnani.ai/voice/usage to note deducted credits)

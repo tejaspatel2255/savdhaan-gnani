@@ -2,13 +2,16 @@
  * Section A through C builders for Savdhaan Evaluation Khata.
  */
 
-import { el, elLoc, renderPencilBar } from "./report-views.js";
+import { el, elLoc } from "./report-views.js";
 
-function renderMetricBlock(parent, title, sub, dataObj, emptyCommand) {
+function renderMetricBlock(parent, title, sub, dataObj, emptyCommand, isFixture) {
   const block = el("div", "headline-block");
   const bHead = el("div", "headline-block-head");
   bHead.appendChild(el("h3", "block-title", title));
   bHead.appendChild(el("span", "block-sub", sub));
+  if (isFixture) {
+    bHead.appendChild(el("span", "fixture-section-tag", "FIXTURE DATA - NOT MEASURED"));
+  }
   block.appendChild(bHead);
 
   if (!dataObj || dataObj.tp === null || dataObj.tp === undefined) {
@@ -37,6 +40,7 @@ function renderMetricBlock(parent, title, sub, dataObj, emptyCommand) {
   if (dataObj.recall_ci95 && dataObj.recall_ci95[0] !== null) {
     cRecall.appendChild(el("div", "card-ci", `95% CI: [${dataObj.recall_ci95[0]}, ${dataObj.recall_ci95[1]}]`));
   }
+  cRecall.appendChild(el("div", "card-small-sample", `n = ${dataObj.n || 10} calls per split, so intervals are wide`));
   grid.appendChild(cRecall);
 
   // False Alarm card
@@ -52,17 +56,19 @@ function renderMetricBlock(parent, title, sub, dataObj, emptyCommand) {
   if (dataObj.false_alarm_ci95 && dataObj.false_alarm_ci95[0] !== null) {
     cFar.appendChild(el("div", "card-ci", `95% CI: [${dataObj.false_alarm_ci95[0]}, ${dataObj.false_alarm_ci95[1]}]`));
   }
+  cFar.appendChild(el("div", "card-small-sample", `n = ${dataObj.n || 10} calls per split, so intervals are wide`));
   grid.appendChild(cFar);
 
   block.appendChild(grid);
   parent.appendChild(block);
 }
 
-export function renderSectionsAtoC(root, data, devSplit, testSplit) {
+export function renderSectionsAtoC(root, data, devSplit, testSplit, blindSplit, isFixture) {
   // SECTION A: Headline Ledger (Separated into Real vs Perfect Transcripts)
   const secA = el("section", "khata-section");
   const headA = el("div", "section-head");
   headA.appendChild(elLoc("h2", null, "Headline performance (frozen test split)", "मुख्य आँकड़े (टेस्ट सेट)"));
+  if (isFixture) headA.appendChild(el("span", "fixture-section-tag", "FIXTURE DATA - NOT MEASURED"));
   headA.appendChild(el("span", "sub", "Section A"));
   secA.appendChild(headA);
 
@@ -72,16 +78,18 @@ export function renderSectionsAtoC(root, data, devSplit, testSplit) {
     "Real Prisma speech recognition",
     "Live STT through phone audio with noise",
     testSplit,
-    "python scripts/run_eval.py record --split test --go"
+    "python scripts/run_eval.py record --split test --go",
+    isFixture
   );
 
   // Block 2: Perfect transcripts (Ceiling)
   renderMetricBlock(
     secA,
-    "Perfect transcripts (script text, not real speech recognition)",
+    "Upper bound with perfect transcripts (not real speech recognition)",
     "Deterministic rule-matching ceiling without STT error",
     testSplit.ceiling,
-    null
+    null,
+    isFixture
   );
 
   root.appendChild(secA);
@@ -90,6 +98,7 @@ export function renderSectionsAtoC(root, data, devSplit, testSplit) {
   const secB = el("section", "khata-section");
   const headB = el("div", "section-head");
   headB.appendChild(elLoc("h2", null, "Perfect transcripts vs real Prisma recognition", "पहचान तुलना"));
+  if (isFixture) headB.appendChild(el("span", "fixture-section-tag", "FIXTURE DATA - NOT MEASURED"));
   headB.appendChild(el("span", "sub", "Section B"));
   secB.appendChild(headB);
 
@@ -102,7 +111,15 @@ export function renderSectionsAtoC(root, data, devSplit, testSplit) {
   tB.appendChild(theadB);
 
   const tbodyB = el("tbody");
-  [{ name: "DEV", real: devSplit, ceil: devSplit.ceiling }, { name: "TEST (FROZEN)", real: testSplit, ceil: testSplit.ceiling }].forEach((item) => {
+  const splitItems = [
+    { name: "DEV", real: devSplit, ceil: devSplit.ceiling },
+    { name: "TEST (FROZEN)", real: testSplit, ceil: testSplit.ceiling },
+  ];
+  if (blindSplit && (blindSplit.tp !== undefined || blindSplit.ceiling !== undefined)) {
+    splitItems.push({ name: "BLIND (ONE-SHOT)", real: blindSplit, ceil: blindSplit.ceiling });
+  }
+
+  splitItems.forEach((item) => {
     const trC = el("tr");
     trC.appendChild(el("td", "mono-num", item.name));
     trC.appendChild(el("td", null, "Perfect Scripts (Ceiling)"));
@@ -140,6 +157,7 @@ export function renderSectionsAtoC(root, data, devSplit, testSplit) {
   const secC = el("section", "khata-section");
   const headC = el("div", "section-head");
   headC.appendChild(elLoc("h2", null, "Alert latency and detection timings", "चेतावनी का समय (सेकंड)"));
+  if (isFixture) headC.appendChild(el("span", "fixture-section-tag", "FIXTURE DATA - NOT MEASURED"));
   headC.appendChild(el("span", "sub", "Section C"));
   secC.appendChild(headC);
 

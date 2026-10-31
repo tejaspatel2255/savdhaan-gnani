@@ -1,0 +1,272 @@
+{
+  "generated_at": "2026-10-31T09:00:00Z",
+  "rules_sha256": "477cca5dd0ad163cab2ca14a55c0f32d810d3c614686def2ae2f7b1ecb2ed8c3",
+  "rules_pack": "hi_en",
+  "thresholds": {
+    "careful": 30,
+    "danger": 60
+  },
+  "n_calls": 30,
+  "splits": {
+    "test": {
+      "tp": 4,
+      "fn": 1,
+      "fp": 0,
+      "tn": 5,
+      "precision": 1.0,
+      "recall": 0.8,
+      "f1": 0.8889,
+      "false_alarm_rate": 0.0,
+      "recall_ci95": [0.3755, 0.9638],
+      "false_alarm_ci95": [0.0, 0.4345],
+      "careful_on_legit": 2,
+      "time_to_alert_s": {
+        "n": 4,
+        "median": 7.35,
+        "mean": 7.30,
+        "max": 8.1
+      },
+      "time_from_cue_s": {
+        "n": 4,
+        "median": 6.95,
+        "mean": 6.90,
+        "max": 7.7
+      },
+      "n": 10,
+      "ceiling": {
+        "tp": 4,
+        "fn": 1,
+        "fp": 0,
+        "tn": 5,
+        "precision": 1.0,
+        "recall": 0.8,
+        "f1": 0.8889,
+        "false_alarm_rate": 0.0,
+        "recall_ci95": [0.3755, 0.9638],
+        "false_alarm_ci95": [0.0, 0.4345],
+        "careful_on_legit": 2,
+        "time_to_alert_s": {
+          "n": 4,
+          "median": 7.15,
+          "mean": 7.15,
+          "max": 7.9
+        },
+        "time_from_cue_s": {
+          "n": 4,
+          "median": 6.75,
+          "mean": 6.75,
+          "max": 7.5
+        },
+        "n": 10
+      }
+    },
+    "dev": {
+      "tp": 5,
+      "fn": 0,
+      "fp": 0,
+      "tn": 5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "false_alarm_rate": 0.0,
+      "recall_ci95": [0.5655, 1.0],
+      "false_alarm_ci95": [0.0, 0.4345],
+      "careful_on_legit": 0,
+      "time_to_alert_s": {
+        "n": 5,
+        "median": 6.6,
+        "mean": 6.3,
+        "max": 8.1
+      },
+      "time_from_cue_s": {
+        "n": 5,
+        "median": 6.2,
+        "mean": 5.9,
+        "max": 7.7
+      },
+      "n": 10,
+      "ceiling": {
+        "tp": 5,
+        "fn": 0,
+        "fp": 0,
+        "tn": 5,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "recall_ci95": [0.5655, 1.0],
+        "false_alarm_ci95": [0.0, 0.4345],
+        "careful_on_legit": 0,
+        "time_to_alert_s": {
+          "n": 5,
+          "median": 6.4,
+          "mean": 6.1,
+          "max": 7.9
+        },
+        "time_from_cue_s": {
+          "n": 5,
+          "median": 6.0,
+          "mean": 5.7,
+          "max": 7.5
+        },
+        "n": 10
+      }
+    },
+    "blind": {
+      "tp": 5,
+      "fn": 1,
+      "fp": 0,
+      "tn": 6,
+      "precision": 1.0,
+      "recall": 0.8333,
+      "f1": 0.9091,
+      "false_alarm_rate": 0.0,
+      "recall_ci95": [0.4365, 0.9699],
+      "false_alarm_ci95": [0.0, 0.3903],
+      "careful_on_legit": 1,
+      "time_to_alert_s": {
+        "n": 5,
+        "median": 7.8,
+        "mean": 7.6,
+        "max": 8.9
+      },
+      "time_from_cue_s": {
+        "n": 5,
+        "median": 7.4,
+        "mean": 7.2,
+        "max": 8.5
+      },
+      "n": 12,
+      "ceiling": {
+        "tp": 6,
+        "fn": 0,
+        "fp": 0,
+        "tn": 6,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "recall_ci95": [0.6097, 1.0],
+        "false_alarm_ci95": [0.0, 0.3903],
+        "careful_on_legit": 1,
+        "time_to_alert_s": {
+          "n": 6,
+          "median": 7.1,
+          "mean": 7.0,
+          "max": 8.2
+        },
+        "time_from_cue_s": {
+          "n": 6,
+          "median": 6.7,
+          "mean": 6.6,
+          "max": 7.8
+        },
+        "n": 12
+      }
+    }
+  },
+  "latency_ms": {
+    "p50": 118,
+    "p95": 242,
+    "mean": 134,
+    "n": 85
+  },
+  "wer": {
+    "conditions": {
+      "clean": 0.082,
+      "phone": 0.114,
+      "phone_noise": 0.147,
+      "phone_noise_drops": 0.193
+    },
+    "note": "Digits vs spelled-out numbers and Roman vs Devanagari spellings count as errors; WER values are an upper bound."
+  },
+  "calls": [
+    {
+      "id": "D01_digital_arrest",
+      "split": "dev",
+      "label": "scam",
+      "alerted": true,
+      "alert_t": 6.6,
+      "first_cue_s": 0.4,
+      "max_score": 100,
+      "max_level": "danger",
+      "ceiling_score": 100,
+      "ceiling_level": "danger",
+      "ceiling_alert_t": 6.4,
+      "segments": [
+        {"t": 0.4, "text": "नमस्ते मैं साइबर क्राइम ब्रांच से इंस्पेक्टर बोल रहा हूँ"},
+        {"t": 1.9, "text": "जी कहिए"},
+        {"t": 3.4, "text": "आपके आधार नंबर से भेजे गए पार्सल में नशीला सामान मिला है"},
+        {"t": 4.9, "text": "क्या मैंने तो कोई पार्सल नहीं भेजा"},
+        {"t": 6.6, "text": "आपके खिलाफ गिरफ़्तारी वारंट निकला है आप अभी से डिजिटल अरेस्ट में हैं"}
+      ],
+      "perfect_segments": [
+        {"t": 0.4, "text": "नमस्ते, मैं साइबर क्राइम ब्रांच से इंस्पेक्टर बोल रहा हूँ।"},
+        {"t": 1.9, "text": "जी, कहिए।"},
+        {"t": 3.4, "text": "आपके आधार नंबर से भेजे गए एक पार्सल में नशीला सामान मिला है।"},
+        {"t": 4.9, "text": "क्या? मैंने तो कोई पार्सल नहीं भेजा।"},
+        {"t": 6.4, "text": "आपके खिलाफ गिरफ्तारी वारंट निकला है। आप अभी से डिजिटल अरेस्ट में हैं।"}
+      ]
+    },
+    {
+      "id": "T05_card_pin",
+      "split": "test",
+      "label": "scam",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": 0.4,
+      "max_score": 40,
+      "max_level": "careful",
+      "ceiling_score": 43,
+      "ceiling_level": "careful",
+      "ceiling_alert_t": null,
+      "flag": "missed_on_both",
+      "segments": [
+        {"t": 0.4, "text": "नमस्ते मैं कार्ड सुरक्षा विभाग से बोल रहा हूँ आपका कार्ड बंद होने वाला है"},
+        {"t": 1.9, "text": "क्यों क्या हुआ"},
+        {"t": 3.4, "text": "चालू रखने के लिए पिन बताना होगा"}
+      ],
+      "perfect_segments": [
+        {"t": 0.4, "text": "नमस्ते, मैं कार्ड सुरक्षा विभाग से बोल रहा हूँ। आपका डेबिट कार्ड बंद होने वाला है।"},
+        {"t": 1.9, "text": "क्यों? क्या हुआ?"},
+        {"t": 3.4, "text": "इसे चालू रखने के लिए आपको अपना पिन बताना होगा।"}
+      ]
+    },
+    {
+      "id": "B03_aadhaar_biometric",
+      "split": "blind",
+      "label": "scam",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": 0.4,
+      "max_score": 38,
+      "max_level": "careful",
+      "ceiling_score": 68,
+      "ceiling_level": "danger",
+      "ceiling_alert_t": 7.1,
+      "flag": "caught_only_with_perfect_text",
+      "segments": [
+        {"t": 0.4, "text": "नमस्ते आधार कार्यालय से सत्यापन हेतु कॉल है"},
+        {"t": 3.2, "text": "बायोमेट्रिक लॉक खोलने के लिए सुरक्षा शुल्क जमा करें"}
+      ],
+      "perfect_segments": [
+        {"t": 0.4, "text": "नमस्ते, यूआईडीएआई आधार कार्यालय से सत्यापन हेतु कॉल है।"},
+        {"t": 3.2, "text": "बायोमेट्रिक लॉक खोलने के लिए तत्काल सरकारी सुरक्षा शुल्क ट्रांसफर करें।"}
+      ]
+    }
+  ],
+  "test_scoring": {
+    "times_scored": 2,
+    "rules_changed_since_first": false
+  },
+  "dev_scoring": {
+    "times_scored": 3
+  },
+  "blind_scoring": {
+    "times_scored": 1
+  },
+  "limitations": [
+    "The evaluation sets are small (10-12 calls per split), so intervals are wide.",
+    "Real Prisma STT acoustic latency p50 = 118ms, p95 = 242ms measured over phone-noise channel."
+  ]
+}
