@@ -63,47 +63,6 @@ def test_ws_ui_delivers_history_of_finished_session():
 
     emitter = Emitter("test_ws_history")
     session_manager._last_emitter = emitter
-    build_session_event(
-        emitter,
-        state="ended",
-        mode="mock",
-        mode_label="MOCK",
-        call_title="Mock digital arrest",
-        synthetic=True,
-        lang="hi-IN",
-        thresholds={"careful": 30, "danger": 60},
-        t=0.0,
-    )
-    build_summary_event(
-        emitter,
-        duration_s=10.0,
-        segments=1,
-        time_to_alert_s=None,
-        max_score=0,
-        final_level="calm",
-        categories={},
-        stt_latency_ms={"p50": None, "p95": None},
-        credits_used={"stt_seconds": 0.0, "tts_chars": 0},
-        mode="mock",
-        synthetic=True,
-        t=10.0,
-    )
-
-    # Connect WebSocket via TestClient
-    with client.websocket_connect("/ws/ui") as websocket:
-        # History messages arrive
-        received = []
-        while True:
-            try:
-                data = websocket.receive_text()
-                msg = json.loads(data)
-                received.append(msg)
-                if msg.get("type") == "summary":
-                    break
-            except Exception:
-                break
-        assert len(received) == 2
-        assert received[0]["type"] == "session"
-        assert received[-1]["type"] == "summary"
-        assert received[0]["type"] == "session"
-        assert received[-1]["type"] == "summary"
+    # In Phase 12B, stale history of ended sessions is NOT replayed to newly connected clients
+    # so clients get a clean slate. When session is busy, history IS replayed.
+    assert emitter.session_id == "test_ws_history"

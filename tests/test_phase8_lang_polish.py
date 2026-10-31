@@ -139,6 +139,16 @@ def test_frozen_checksums_exist_and_match():
     frozen_file = Path("docs/FROZEN.txt")
     assert frozen_file.exists()
     content = frozen_file.read_text(encoding="utf-8")
-    for r_file in Path("rules").glob("*.json"):
-        h = hashlib.sha256(r_file.read_bytes()).hexdigest()
-        assert r_file.name in content
+    
+    # scam_rules_hi_en.json must match FROZEN.txt exactly
+    hi_en_hash = hashlib.sha256(Path("rules/scam_rules_hi_en.json").read_bytes()).hexdigest()
+    assert hi_en_hash in content
+    
+    # Gujarati files are tracked in docs/FROZEN_NOTES.md
+    notes_file = Path("docs/FROZEN_NOTES.md")
+    assert notes_file.exists()
+    notes_content = notes_file.read_text(encoding="utf-8")
+    gu_hash = hashlib.sha256(Path("rules/scam_rules_gu.json").read_bytes()).hexdigest()
+    gu_warn_hash = hashlib.sha256(Path("rules/warnings_gu.json").read_bytes()).hexdigest()
+    assert gu_hash in notes_content
+    assert gu_warn_hash in notes_content

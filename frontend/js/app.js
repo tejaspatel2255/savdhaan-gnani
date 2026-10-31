@@ -36,8 +36,7 @@ export async function init() {
   if (el.btnDemoScam) el.btnDemoScam.addEventListener("click", () => startSample("/assets/sample_run.jsonl"));
   if (el.btnDemoNormal) el.btnDemoNormal.addEventListener("click", () => startSample("/assets/sample_legit.jsonl"));
   el.banner.querySelector(".banner-close").addEventListener("click", () => el.banner.classList.add("hidden"));
-  el.btnStart.addEventListener("click", handleStart);
-  el.btnStop.addEventListener("click", handleStop);
+  el.btnStart.addEventListener("click", handleStart); el.btnStop.addEventListener("click", handleStop);
   el.callSel.addEventListener("change", syncModes);
 
   eye.init(get("col-eye")); tape.init(get("col-tape")); why.init(get("col-why"));
@@ -59,8 +58,7 @@ export async function init() {
     const ft = document.querySelector("#foot .footer-text");
     if (ft) ft.textContent += ` · ${t("static_footer_note")}`;
     [el.callSel, el.modeSel, el.btnStart, el.btnStop].forEach((node) => { if (node) node.style.display = "none"; });
-    const adv = document.getElementById("advanced-controls");
-    if (adv) adv.style.display = "none";
+    const adv = document.getElementById("advanced-controls"); if (adv) adv.style.display = "none";
     return;
   }
 
@@ -168,10 +166,12 @@ export function dispatch(msg) {
   handledMessages.add(key);
 
   if (msg.session_id && msg.session_id !== state.sessionId) {
+    if (msg.type === "session" && (msg.state === "ended" || msg.state === "error")) return;
     resetAll();
     state.sessionId = msg.session_id;
     state.alertFired = false;
   }
+  if (!state.sessionId && msg.type === "summary") return;
 
   try {
     if (msg.type === "session") {

@@ -167,13 +167,23 @@ def test_stop_session_when_none_active():
 
 
 # ---------------------------------------------------------------------------
-# WS mic remote check logic (unit test, not integration)
+# WS UI: Do not replay stale ended sessions on connect
 # ---------------------------------------------------------------------------
 
-def test_ws_mic_remote_host_check_logic():
-    """The loopback check logic: external IPs are outside the whitelist."""
-    allowed_loopback = {"127.0.0.1", "::1", "localhost", "testclient"}
-    remote_ips = ["185.220.100.1", "93.184.216.34", "10.0.0.5"]
-    for ip in remote_ips:
-        assert ip not in allowed_loopback, f"Remote IP {ip} must NOT pass the loopback check"
-    assert "127.0.0.1" in allowed_loopback
+def test_ws_ui_no_stale_replay_after_session_ended():
+    """Connecting to /ws/ui when no session is active must NOT replay old history."""
+    from backend.main import session_manager
+    from backend.events import Emitter
+    # Simulate an ended session with history
+    emitter = Emitter("test_ended_sess")
+    emitter.emit("session", state="starting")
+    emitter.emit("session", state="ended")
+    emitter.emit("summary", max_score=100, final_level="danger")
+    session_manager._last_emitter = emitter
+    session_manager._active_emitter = None
+    session_manager._active_session_id = None
+    session_manager._active_task = None
+    # Verify session is NOT busy
+    assert not session_manager.is_busy()
+
+

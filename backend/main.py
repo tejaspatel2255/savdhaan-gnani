@@ -113,10 +113,11 @@ async def websocket_ui(websocket: WebSocket):
     q = session_manager.subscribe()
     sent_seqs = set()
     try:
-        # First send existing history
-        for msg in session_manager.history():
-            sent_seqs.add(msg["seq"])
-            await websocket.send_text(json.dumps(msg, ensure_ascii=False))
+        # Replay history only if the session is actively running
+        if session_manager.is_busy():
+            for msg in session_manager.history():
+                sent_seqs.add(msg["seq"])
+                await websocket.send_text(json.dumps(msg, ensure_ascii=False))
 
         # Stream live messages
         while True:
