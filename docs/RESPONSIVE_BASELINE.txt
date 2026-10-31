@@ -1,0 +1,247 @@
+Command exited with code 1.
+
+Command output:
+FAIL 320x568 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - phone: the score must come before the tape
+     - phone: sample buttons too far down (top 1323)
+FAIL 320x568 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+     - phone: the score must come before the tape
+     - phone: sample buttons too far down (top 1375)
+FAIL 320x568 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - phone: the score must come before the tape
+     - phone: sample buttons too far down (top 1323)
+FAIL 360x740 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - phone: the score must come before the tape
+     - phone: sample buttons too far down (top 1354)
+FAIL 360x740 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+     - phone: the score must come before the tape
+     - phone: sample buttons too far down (top 1406)
+FAIL 360x740 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - phone: the score must come before the tape
+     - phone: sample buttons too far down (top 1354)
+FAIL 390x844 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - phone: the score must come before the tape
+     - phone: sample buttons too far down (top 1384)
+FAIL 390x844 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+     - phone: the score must come before the tape
+     - phone: sample buttons too far down (top 1436)
+FAIL 390x844 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - phone: the score must come before the tape
+     - phone: sample buttons too far down (top 1384)
+FAIL 430x932 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - phone: the score must come before the tape
+FAIL 430x932 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+     - phone: the score must come before the tape
+FAIL 430x932 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - phone: the score must come before the tape
+FAIL 600x900 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 124x37
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - phone: the score must come before the tape
+FAIL 600x900 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 124x37
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+     - phone: the score must come before the tape
+FAIL 600x900 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 124x37
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 3.6:1
+     - phone: the score must come before the tape
+FAIL 768x1024 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 163x38
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+FAIL 768x1024 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 163x38
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 3.6:1; .t-en 4.1:1
+FAIL 768x1024 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 163x38
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+FAIL 820x1180 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 175x38
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+FAIL 820x1180 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 175x38
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+FAIL 820x1180 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 175x38
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+FAIL 667x375 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 140x37
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - phone: the score must come before the tape
+     - phone: sample buttons too far down (top 1266)
+FAIL 667x375 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 140x37
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+     - phone: the score must come before the tape
+     - phone: sample buttons too far down (top 1302)
+FAIL 667x375 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 140x37
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - phone: the score must come before the tape
+     - phone: sample buttons too far down (top 1266)
+     - receipt dialog does not fit the screen
+FAIL 844x390 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+FAIL 844x390 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+FAIL 844x390 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - receipt dialog does not fit the screen
+FAIL 1024x768 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - score is below the fold (bottom 1176 > 768)
+     - badge is below the fold (bottom 1214 > 768)
+     - demo is below the fold (bottom 1298 > 768)
+FAIL 1024x768 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+     - score is below the fold (bottom 1276 > 768)
+     - badge is below the fold (bottom 1314 > 768)
+     - demo is below the fold (bottom 1398 > 768)
+FAIL 1024x768 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+FAIL 1280x720 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - score is below the fold (bottom 772 > 720)
+     - badge is below the fold (bottom 810 > 720)
+     - demo is below the fold (bottom 894 > 720)
+FAIL 1280x720 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+     - score is below the fold (bottom 995 > 720)
+     - badge is below the fold (bottom 1033 > 720)
+     - demo is below the fold (bottom 1117 > 720)
+FAIL 1280x720 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+FAIL 1366x768 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - score is below the fold (bottom 790 > 768)
+     - badge is below the fold (bottom 828 > 768)
+     - demo is below the fold (bottom 912 > 768)
+FAIL 1366x768 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+     - score is below the fold (bottom 962 > 768)
+     - badge is below the fold (bottom 1000 > 768)
+     - demo is below the fold (bottom 1084 > 768)
+FAIL 1366x768 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+FAIL 1440x900 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - wide+tall screen: page scrolls, height 1330 > screen 900
+     - demo is below the fold (bottom 906 > 900)
+     - phone is below the fold (bottom 982 > 900)
+FAIL 1440x900 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+     - wide+tall screen: page scrolls, height 1654 > screen 900
+     - score is below the fold (bottom 946 > 900)
+     - badge is below the fold (bottom 984 > 900)
+     - demo is below the fold (bottom 1068 > 900)
+     - phone is below the fold (bottom 1306 > 900)
+FAIL 1440x900 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+FAIL 1920x1080 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+     - wide+tall screen: page scrolls, height 1330 > screen 1080
+FAIL 1920x1080 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+     - wide+tall screen: page scrolls, height 1654 > screen 1080
+     - phone is below the fold (bottom 1306 > 1080)
+FAIL 1920x1080 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+FAIL 2560x1440 idle
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+FAIL 2560x1440 danger
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1; .t-en 4.1:1
+     - wide+tall screen: page scrolls, height 1654 > screen 1440
+FAIL 2560x1440 receipt
+     - tap target too small: #btn-demo-normal 145x28; #btn-demo-scam 178x28; .advanced-summary 86x24; .eval-link 180x19
+     - font under 11px: .awaaz-mode-tag 10px; .chip-label-loc 10px; .simulated-tag 9px; .t-loc 9.02px; .t-loc 9.84px
+     - low text contrast: .t-en 2.0:1
+
+197 problem(s) found

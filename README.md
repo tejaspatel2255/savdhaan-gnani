@@ -69,6 +69,7 @@ When using **Try your own words**, text sentences are evaluated 100% locally on 
 - **Clear Demarcation**: UI displays `LIVE MIC`, `FILE`, `REPLAY`, or `DEMO · recorded` badges at all times.
 - **Not a Helpline Replacement**: Intended as a personal safeguard, not a substitute for national cybercrime reporting (1930) or banking helplines.
 - **Language Policy**: English is the primary language across all interfaces; see [LANGUAGE_RULE.md](docs/LANGUAGE_RULE.md).
+- **Responsive Design**: Mobile-first adaptive layout (320px to 4K displays); see [RESPONSIVE.md](docs/RESPONSIVE.md).
 
 ## Submission
 

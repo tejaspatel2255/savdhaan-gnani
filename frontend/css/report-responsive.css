@@ -1,0 +1,13 @@
+/* report-responsive.css: loaded LAST on report.html. Makes the Khata page fit every screen. */
+html, body { overflow-x: hidden; }
+.khata-table { display: block; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.khata-table thead, .khata-table tbody { display: table; width: 100%; min-width: 560px; }
+.back-link { display: inline-flex; align-items: center; min-height: 44px; }
+.headline-grid, .ledger-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.social-card { max-width: min(640px, 100%); }
+pre, code { overflow-wrap: anywhere; }
+.dot-plot-container { overflow-x: auto; padding: 8px; }
+.dot-plot-svg { min-width: 560px; }
+
+/* Contrast fix: ensure card small sample caption meets 4.5:1 ratio */
+.card-small-sample { color: #5a4729; }

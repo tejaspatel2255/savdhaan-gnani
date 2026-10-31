@@ -1,13 +1,13 @@
 SAVDHAAN OFFICIAL RELEASE SEAL
-Timestamp: 2026-10-31T07:29:10.550572+00:00
+Timestamp: 2026-10-31T11:52:18.688827+00:00
 Competition: Great Indian AI Internship Challenge (Gnani AI)
 Challenge Deadline: Nov 10, 2026, 11:59 PM IST
 
 Authoritative File Checksums (SHA256):
-  README.md: c0c8f19cb966001d740baf21ec136624d045497a7eed740926c813fc2f664dee
+  README.md: eb5ed9d72f272fc44abba3be9b3f023b2469764da03c5ec5afbc23f4fea88fb5
   docs/SUBMISSION.md: 8c287476c33244b130b40ff1a7e30136f7cea3cfb49dd0c4fba37f4b51e5f09e
-  frontend/index.html: 201f9c46b680935f42f6daec1551151fa7380e866e012acddeb2192c7443d4d7
-  frontend/report.html: 21dda7862eac87c901d8f6b76e15ab1c4812b84a83a16f2eca439370e9bd43d6
+  frontend/index.html: 9db59e17f5237bc0b3b4dfbacbb01866afc795199b20473f950c71a8739ed8b7
+  frontend/report.html: f6a8ee0625f50cdd7992778a710e47b7a6e13b731692039a104d319ffe4fcdb9
   frontend/assets/results.json: 206f5777cff1339185cfd614f264f634b53e2aeb8c2538f33f434bae2a77cfcf
   frontend/assets/audio/manifest.json: a4dd6b58359a268ead43103bab3c653638c75b177de9d128a70773ddadb94055
   rules/scam_rules_gu.json: 3b83872e94fa6d594139250318e57ef4acf6b6b6769465238ea098f34c3fba47
