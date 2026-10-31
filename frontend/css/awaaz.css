@@ -63,9 +63,3 @@
   letter-spacing: 0.04em;
 }
 
-#stamp-root,
-#receipt-root {
-  position: fixed;
-  pointer-events: none;
-  z-index: 500;
-}
