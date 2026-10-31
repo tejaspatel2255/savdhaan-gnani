@@ -1,0 +1,14 @@
+{
+  "id": "P5",
+  "title": "Add power and electricity cutoff threat patterns",
+  "type": "add_phrase",
+  "target_file": "rules/scam_rules_hi_en.json",
+  "target_rule_id": "THREAT_LEGAL",
+  "fragment": {
+    "patterns_to_add": ["बिजली काट दी जाएगी", "बिजली बंद", "कनेक्शन कट जाएगा"]
+  },
+  "rationale": "Flags common utility electricity disconnection threats demanding urgent transfer.",
+  "evidence": ["HP07"],
+  "potential_risks": "Could trigger if an electricity provider automated reminder mentions scheduled power outages.",
+  "recommendation": "apply"
+}

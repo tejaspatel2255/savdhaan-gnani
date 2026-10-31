@@ -1,0 +1,483 @@
+[
+  {
+    "id": "HN01",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "नमस्ते, बैंक कभी भी आपसे आपका पासवर्ड या ओटीपी नहीं मांगता।"],
+      ["C", "कृपया किसी भी अनजान व्यक्ति के साथ अपनी गोपनीय जानकारी साझा न करें।"],
+      ["C", "सुरक्षित रहें और धोखाधड़ी से बचें।"]
+    ],
+    "scenario": "Bank fraud-awareness automated broadcast"
+  },
+  {
+    "id": "HN02",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "भैया, मैं अमेज़न से डिलीवरी लेकर आपके गेट पर खड़ा हूँ।"],
+      ["L", "हाँ भाई, आ रहा हूँ नीचे।"],
+      ["C", "पैकेट देने के लिए आपके मोबाइल पर आया डिलीवरी कोड बता दीजिए।"]
+    ],
+    "scenario": "Courier at the door asking for delivery OTP"
+  },
+  {
+    "id": "HN03",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "बेटा, कॉलेज की सेमेस्टर फीस जमा करने की आज आखिरी तारीख है।"],
+      ["L", "जी पिताजी, मैं अभी बैंक जाकर ट्रांसफर कर देता हूँ।"],
+      ["C", "हाँ, जल्दी कर देना ताकि लेट फीस न लगे।"]
+    ],
+    "scenario": "Parent reminding child to pay college fee"
+  },
+  {
+    "id": "HN04",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "नमस्ते सर, आपकी कार इंश्योरेंस पॉलिसी अगले हफ्ते समाप्त हो रही है।"],
+      ["L", "मुझे नया कोटेशन भेज दीजिए।"],
+      ["C", "मैंने आपकी ईमेल पर भेज दिया है, सुविधा अनुसार रिन्यू कर लें।"]
+    ],
+    "scenario": "Insurance renewal reminder with email quotation"
+  },
+  {
+    "id": "HN05",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "नमस्ते मैडम, आपके एयरटेल पोस्टपेड प्लान पर नया डेटा ऑफर उपलब्ध है।"],
+      ["L", "मुझे अभी कोई नया प्लान नहीं चाहिए।"],
+      ["C", "कोई बात नहीं, धन्यवाद और आपका दिन शुभ हो।"]
+    ],
+    "scenario": "Telecom promotional plan offer"
+  },
+  {
+    "id": "HN06",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "नमस्ते, मैं लोकल पुलिस स्टेशन से बोल रहा हूँ। आपके पासपोर्ट वेरिफिकेशन के लिए फाइल आई है।"],
+      ["L", "जी सर, कब आना होगा थाने?"],
+      ["C", "कल दोपहर दो बजे मूल दस्तावेजों के साथ आ जाइएगा।"]
+    ],
+    "scenario": "Passport police verification in-person appointment"
+  },
+  {
+    "id": "HN07",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "अरे भाई, पार्टी में क्यों नहीं आया? तेरा इंतजार कर रहे थे।"],
+      ["L", "ऑफिस में काम बहुत था यार।"],
+      ["C", "मज़ाक कर रहा था, ऐसा लगा जैसे तुझे पुलिस ने अरेस्ट कर लिया हो!"]
+    ],
+    "scenario": "Friend making a casual joke using the word arrest"
+  },
+  {
+    "id": "HN08",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "नमस्ते, डॉ. मेहता के क्लिनिक से बोल रही हूँ। आपकी शाम पाँच बजे की अपॉइंटमेंट कन्फर्म है।"],
+      ["L", "जी धन्यवाद, मैं समय पर आ जाऊँगा।"],
+      ["C", "कृपया पुरानी प्रिस्क्रिप्शन साथ रखिएगा।"]
+    ],
+    "scenario": "Doctor office appointment confirmation"
+  },
+  {
+    "id": "HN09",
+    "group": "hard_negative",
+    "lang": "en-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "Hi, your Uber driver is arriving in 2 minutes outside the gate."],
+      ["L", "Yes, I am walking towards the car now."],
+      ["C", "Please check the vehicle number and share the 4-digit start code."]
+    ],
+    "scenario": "Cab driver asking for ride start PIN code in Hinglish/English"
+  },
+  {
+    "id": "HN10",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "नमस्ते, गैस एजेंसी से बोल रहा हूँ। आपका नया गैस सिलेंडर बुक हो गया है।"],
+      ["L", "डिलीवरी कब तक होगी?"],
+      ["C", "कल दोपहर तक पहुँच जाएगा। नकद या ऑनलाइन भुगतान कर सकते हैं।"]
+    ],
+    "scenario": "LPG gas cylinder booking reminder"
+  },
+  {
+    "id": "HN11",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "नमस्ते, आपकी सोसाइटी का मेंटेनेंस बिल जनरेट हो चुका है।"],
+      ["L", "जी, मैं सोसाइटी ऑफिस में चेक जमा कर दूँगा।"],
+      ["C", "जी ठीक है, धन्यवाद।"]
+    ],
+    "scenario": "Society maintenance bill intimation"
+  },
+  {
+    "id": "HN12",
+    "group": "hard_negative",
+    "lang": "gu-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "નમસ્તે, તમારી ક્રેડિટ કાર્ડ સ્ટેટમેન્ટ જનરેટ થઈ ગઈ છે."],
+      ["L", "હા, હું આવતીકાલે ચેક કરી લઈશ."],
+      ["C", "સમયસર ચુકવણી કરવા વિનંતી. આભાર."]
+    ],
+    "scenario": "Credit card statement generated notice in Gujarati"
+  },
+  {
+    "id": "HN13",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "नमस्ते सर, आपका नया डेबिट कार्ड डाक द्वारा डिस्पैच कर दिया गया है।"],
+      ["L", "ट्रैकिंग नंबर कहाँ मिलेगा?"],
+      ["C", "आपके रजिस्टर्ड मोबाइल पर एसएमएस भेज दिया गया है।"]
+    ],
+    "scenario": "Debit card dispatch notification"
+  },
+  {
+    "id": "HN14",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "अरे बेटा, राशन का सामान खत्म हो गया है, शाम को आते हुए ले आना।"],
+      ["L", "जी मम्मी, लिस्ट व्हाट्सएप कर दीजिए।"],
+      ["C", "भेज दी है, आराम से आना।"]
+    ],
+    "scenario": "Family grocery errand conversation"
+  },
+  {
+    "id": "HN15",
+    "group": "hard_negative",
+    "lang": "en-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "Hello sir, calling from your broadband provider. Your monthly invoice is generated."],
+      ["L", "Can you send the payment receipt?"],
+      ["C", "Receipt has already been emailed to your registered address."]
+    ],
+    "scenario": "Broadband monthly billing advisory"
+  },
+  {
+    "id": "HN16",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "नमस्ते, स्कूल एडमिन से बोल रहा हूँ। कल बच्चों की पेरेंट्स मीटिंग है।"],
+      ["L", "समय क्या रहेगा सर?"],
+      ["C", "सुबह नौ से ग्यारह बजे तक।"]
+    ],
+    "scenario": "School parent-teacher meeting intimation"
+  },
+  {
+    "id": "HN17",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "नमस्ते, आपका वाटर प्यूरीफायर सर्विस शेड्यूल तय है कल सुबह।"],
+      ["L", "जी, कल घर पर कोई रहेगा।"],
+      ["C", "टेक्नीशियन सुबह दस बजे पहुँच जाएगा।"]
+    ],
+    "scenario": "Appliance maintenance service schedule confirmation"
+  },
+  {
+    "id": "HN18",
+    "group": "hard_negative",
+    "lang": "gu-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "કેમ છો ભાઈ, કાલે સવારે મંદિર દર્શન માટે જવાનું છે."],
+      ["L", "હા ચોક્કસ, હું ગાડી લઈને આવીશ."],
+      ["C", "સારું, સવારે સાત વાગ્યે મળીશું."]
+    ],
+    "scenario": "Casual temple visit conversation in Gujarati"
+  },
+  {
+    "id": "HN19",
+    "group": "hard_negative",
+    "lang": "hi-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "नमस्ते, आपकी बिजली का मीटर री-रीडिंग पूरा हो चुका है।"],
+      ["L", "क्या कोई अतिरिक्त चार्ज लगा है?"],
+      ["C", "नहीं सर, सब सामान्य है। धन्यवाद।"]
+    ],
+    "scenario": "Utility meter reading confirmation"
+  },
+  {
+    "id": "HN20",
+    "group": "hard_negative",
+    "lang": "en-IN",
+    "expected_level": "calm",
+    "turns": [
+      ["C", "Hi, this is a feedback call from customer support regarding your ticket."],
+      ["L", "My issue was resolved yesterday."],
+      ["C", "Great, thank you for your feedback! Have a good day."]
+    ],
+    "scenario": "Customer support feedback survey"
+  },
+  {
+    "id": "HP01",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "नमस्ते, आपके खाते में पाँच हज़ार रुपये का कैशबैक आया है।"],
+      ["L", "अच्छा, कैसे मिलेगा?"],
+      ["C", "मैंने Google Pay पर कलेक्ट रिक्वेस्ट भेजी है, अपना UPI पिन डालकर एक्सेप्ट करें तुरंत।"]
+    ],
+    "scenario": "UPI collect request scam (enter PIN to receive money)"
+  },
+  {
+    "id": "HP02",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "नमस्ते, आपका ऑनलाइन शॉपिंग रिफंड प्रोसेस हो गया है।"],
+      ["C", "रिफंड पाने के लिए यह क्यूआर कोड स्कैन करें और पैसे आपके खाते में आ जाएंगे।"],
+      ["C", "देर मत कीजिए, यह लिंक सिर्फ दस मिनट के लिए एक्टिव है।"]
+    ],
+    "scenario": "QR code scan refund fraud"
+  },
+  {
+    "id": "HP03",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "नमस्ते सर, आपके मोबाइल में वायरस आ गया है जो बैंक अकाउंट हैक कर रहा है।"],
+      ["L", "अरे बाप रे, अब क्या करें?"],
+      ["C", "तुरंत प्ले स्टोर से AnyDesk ऐप इंस्टॉल करें और मुझे 9 डिजिट का कोड बताएं।"]
+    ],
+    "scenario": "Remote desktop malware removal scam (AnyDesk)"
+  },
+  {
+    "id": "HP04",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "नमस्ते, घर बैठे यूट्यूब वीडियो लाइक करके रोज़ाना तीन हज़ार कमाएं।"],
+      ["L", "काम कैसे शुरू होगा?"],
+      ["C", "रजिस्ट्रेशन के लिए पहले दो हज़ार रुपये सिक्योरिटी डिपॉजिट ट्रांसफर करें।"]
+    ],
+    "scenario": "Work from home task scam with advance fee"
+  },
+  {
+    "id": "HP05",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "आपका सिम कार्ड आज शाम को हमेशा के लिए ब्लॉक हो जाएगा।"],
+      ["L", "क्यों ब्लॉक होगा?"],
+      ["C", "केवाईसी अधूरा है। तुरंत लिंक खोलकर आधार ओटीपी शेयर करें वरना कनेक्शन कटेगा।"]
+    ],
+    "scenario": "SIM block threat with Aadhaar OTP phishing"
+  },
+  {
+    "id": "HP06",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "लोन रिकवरी विभाग से बोल रहा हूँ। आपका लोन बकाया है।"],
+      ["C", "अगर एक घंटे में पैसे नहीं भरे तो आपके रिश्तेदारों को आपकी आपत्तिजनक फोटो भेजेंगे।"],
+      ["C", "तुरंत इस नंबर पर यूपीआई ट्रांसफर करें वरना बदनामी होगी।"]
+    ],
+    "scenario": "Extortion loan app blackmail threat"
+  },
+  {
+    "id": "HP07",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "प्रिय उपभोक्ता, आज रात नौ बजे आपकी बिजली काट दी जाएगी क्योंकि बिल अपडेट नहीं है।"],
+      ["L", "मैंने तो बिल भर दिया था।"],
+      ["C", "हमारे अधिकारी के नंबर पर तुरंत पैसे ट्रांसफर करें वरना पूरी रात बिजली बंद रहेगी।"]
+    ],
+    "scenario": "Electricity power cutoff urgency scam"
+  },
+  {
+    "id": "HP08",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "नमस्ते, सरकारी क्रिप्टो योजना में इन्वेस्ट करें और सिर्फ सात दिन में पैसा डबल पाएं।"],
+      ["L", "क्या यह पक्का है?"],
+      ["C", "बिल्कुल गारंटीड मुनाफा है। अभी दस हज़ार जमा करें और तुरंत लाभ उठाएं।"]
+    ],
+    "scenario": "Crypto double money investment fraud"
+  },
+  {
+    "id": "HP09",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "अंकल, मैं आपके बेटे का दोस्त बोल रहा हूँ। वह पुलिस हिरासत में है।"],
+      ["L", "क्या हुआ मेरे बेटे को?"],
+      ["C", "उसका एक्सीडेंट हो गया है, केस रफा-दफा करने के लिए तुरंत पचास हज़ार ट्रांसफर कीजिए।"],
+      ["C", "यह बात किसी को मत बताना, चुपचाप पैसे भेजो।"]
+    ],
+    "scenario": "Relative in emergency arrest extortion"
+  },
+  {
+    "id": "HP10",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "मैं क्राइम ब्रांच से डीसीपी बोल रहा हूँ। आपके खिलाफ अरेस्ट वारंट जारी हुआ है।"],
+      ["C", "आप डिजिटल अरेस्ट में हैं, फोन मत काटना और किसी को मत बताना।"],
+      ["C", "क्लियरेंस के लिए अपनी सारी जमा पूंजी सेफ अकाउंट में ट्रांसफर करें।"]
+    ],
+    "scenario": "Classic digital arrest with secrecy and money transfer"
+  },
+  {
+    "id": "HP11",
+    "group": "hard_positive",
+    "lang": "en-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "This is FedEx fraud department. A parcel under your Aadhaar contains illegal drugs."],
+      ["L", "I did not send any parcel."],
+      ["C", "Police case is registered. Download TeamViewer now and transfer penalty fee to avoid arrest."]
+    ],
+    "scenario": "Customs courier parcel threat in Hinglish/English"
+  },
+  {
+    "id": "HP12",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "आपका एसबीआई रिवॉर्ड पॉइंट एक्सपायर हो रहा है, सात हज़ार रुपये का वाउचर है।"],
+      ["L", "कैसे रिडीम करें?"],
+      ["C", "लिंक पर जाकर अपना क्रेडिट कार्ड नंबर और सीवीवी दर्ज करें तुरंत।"]
+    ],
+    "scenario": "Credit card reward points phishing"
+  },
+  {
+    "id": "HP13",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "दूरसंचार विभाग से नोटिस है, आपके आधार पर पंद्रह फर्जी सिम चल रहे हैं।"],
+      ["C", "दो घंटे में सारे नंबर और बैंक खाते सीज कर दिए जाएंगे।"],
+      ["C", "वेरिफिकेशन चार्ज के रूप में तुरंत पैसे ट्रांसफर करें।"]
+    ],
+    "scenario": "DoT fake multiple SIM seizure threat"
+  },
+  {
+    "id": "HP14",
+    "group": "hard_positive",
+    "lang": "gu-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "નમસ્તે, ક્રાઈમ બ્રાન્ચમાંથી ઇન્સ્પેક્ટર બોલું છું. તમારા નામે મની લોન્ડરિંગ કેસ છે."],
+      ["L", "ના સાહેબ, મેં કશું કર્યું નથી."],
+      ["C", "તમારી ધરપકડ થશે. કેસ બંધ કરવા માટે સરકારી સેફ એકાઉન્ટમાં પૈસા ટ્રાન્સફર કરો."]
+    ],
+    "scenario": "Crime branch money laundering extortion in Gujarati"
+  },
+  {
+    "id": "HP15",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "नमस्ते, आपको बीस लाख की लॉटरी लगी है।"],
+      ["L", "मुझे लॉटरी कैसे लगी?"],
+      ["C", "इनाम क्लेम करने के लिए जीएसटी टैक्स के दस हज़ार रुपये तुरंत इस क्यूआर पर पे करें।"]
+    ],
+    "scenario": "Lottery prize GST payment advance fee"
+  },
+  {
+    "id": "HP16",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "आपका पैन कार्ड आधार से लिंक नहीं है, बैंक अकाउंट फ्रीज कर दिया गया है।"],
+      ["L", "अब क्या करना होगा?"],
+      ["C", "लिंक एक्टिव करने के लिए आपके फोन पर आया छह अंकों का ओटीपी बताइए अभी।"]
+    ],
+    "scenario": "PAN-Aadhaar linkage OTP harvesting"
+  },
+  {
+    "id": "HP17",
+    "group": "hard_positive",
+    "lang": "en-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "Hello, customs officer from Mumbai airport. Contraband detected in your shipment."],
+      ["C", "You are under immediate digital arrest. Do not disconnect the call."],
+      ["C", "Transfer verification deposit to the RBI safe clearing account now."]
+    ],
+    "scenario": "Customs airport contraband threat in Hinglish"
+  },
+  {
+    "id": "HP18",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "मैडम, आपके बच्चे को हमने किडनैप कर लिया है।"],
+      ["L", "कृपया मेरे बच्चे को छोड़ दीजिए!"],
+      ["C", "अगर पुलिस को बताया तो अंजाम बुरा होगा। तुरंत एक लाख रुपये ट्रांसफर करो।"]
+    ],
+    "scenario": "Virtual kidnapping urgent ransom threat"
+  },
+  {
+    "id": "HP19",
+    "group": "hard_positive",
+    "lang": "gu-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "તમારું બેંક એકાઉન્ટ બ્લોક થઈ ગયું છે. અનબ્લોક કરવા ઓટીપી આપો."],
+      ["L", "ઓટીપી તો કોઈને ન અપાય."],
+      ["C", "હમણાં જ ઓટીપી કહો નહીંતર ખાતું કાયમ માટે બંધ થઈ જશે."]
+    ],
+    "scenario": "Urgent bank account block OTP trap in Gujarati"
+  },
+  {
+    "id": "HP20",
+    "group": "hard_positive",
+    "lang": "hi-IN",
+    "expected_level": "danger",
+    "turns": [
+      ["C", "नमस्ते, आपके नाम पर गैरकानूनी पार्सल मिला है और सुप्रीम कोर्ट से वारंट है।"],
+      ["C", "यह राष्ट्रीय सुरक्षा का मामला है, कमरे का दरवाजा बंद रखें और किसी को न बताएं।"],
+      ["C", "जांच के लिए तुरंत अपनी सारी एफडी तोड़कर सेफ अकाउंट में भेजिए।"]
+    ],
+    "scenario": "High-urgency national security legal threat and FD liquidation"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "id": "P1",
+  "title": "Add courier and delivery boy safe dampener",
+  "type": "add_dampener",
+  "target_file": "rules/scam_rules_hi_en.json",
+  "fragment": {
+    "id": "SAFE_COURIER_BOY",
+    "patterns": ["डिलीवरी बॉय", "डिलीवरी वाले", "कूरियर वाला", "डिलीवरी कोड"],
+    "label_en": "Delivery partner or courier code",
+    "label_hi": "डिलीवरी पार्टनर या कूरियर",
+    "weight": -20
+  },
+  "rationale": "Prevents normal delivery boy door calls (like T09 and HN02) from elevating to careful when OTP is mentioned for receiving a package.",
+  "evidence": ["T09_courier_otp", "HN02"],
+  "potential_risks": "A scammer posing as a delivery boy who also demands bank transfers might receive a -20 discount.",
+  "recommendation": "apply"
+}

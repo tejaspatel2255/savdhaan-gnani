@@ -176,6 +176,23 @@ def check_readme_integrity(readme_path: Path = None, results_path: Path = None) 
     return True
 
 
+def check_frozen_final_integrity() -> bool:
+    """If docs/FROZEN_FINAL.txt exists, verify that rules/*.json hashes match."""
+    frozen_final = ROOT / "docs" / "FROZEN_FINAL.txt"
+    if not frozen_final.exists():
+        return True
+    print("Checking FROZEN_FINAL.txt rules integrity...")
+    content = frozen_final.read_text(encoding="utf-8")
+    for r_file in (ROOT / "rules").glob("*.json"):
+        import hashlib
+        curr_hash = hashlib.sha256(r_file.read_bytes()).hexdigest()
+        if curr_hash not in content:
+            print(f"  [FAIL] Rule file {r_file.name} hash does not match {frozen_final.name}")
+            return False
+    print("  [PASS] Rules match authoritative FROZEN_FINAL.txt.")
+    return True
+
+
 def check_test_suite() -> bool:
     """Run pytest in quiet mode to ensure test suite is green."""
     print("Running pytest suite...")
@@ -202,6 +219,7 @@ def main() -> None:
         ("Git Untracked .env", check_git_status()),
         ("Secrets Scan", check_secrets_in_tree(ROOT)),
         ("README.md Integrity", check_readme_integrity()),
+        ("Frozen Final Integrity", check_frozen_final_integrity()),
         ("Pytest Green", check_test_suite()),
     ]
 

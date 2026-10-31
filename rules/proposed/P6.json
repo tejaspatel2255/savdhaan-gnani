@@ -1,0 +1,11 @@
+{
+  "id": "P6",
+  "title": "Add no-change baseline outcome",
+  "type": "no_change",
+  "target_file": "rules/scam_rules_hi_en.json",
+  "fragment": {},
+  "rationale": "Leaves rules strictly in their original state to prevent overfitting to the seen test split.",
+  "evidence": ["Honest baseline preservation"],
+  "potential_risks": "Known miss T05_card_pin and elevated careful calls T08/T09 remain unadjusted.",
+  "recommendation": "skip"
+}

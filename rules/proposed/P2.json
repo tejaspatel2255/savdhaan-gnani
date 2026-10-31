@@ -1,0 +1,14 @@
+{
+  "id": "P2",
+  "title": "Add UPI collect request and QR code scam detection patterns",
+  "type": "add_phrase",
+  "target_file": "rules/scam_rules_hi_en.json",
+  "target_rule_id": "CRED_PIN_CVV",
+  "fragment": {
+    "patterns_to_add": ["कलेक्ट रिक्वेस्ट", "upi पिन डालकर", "पिन डालकर", "qr कोड स्कैन", "क्यूआर कोड"]
+  },
+  "rationale": "Catches widespread UPI collect scams where victims are duped into entering their PIN to receive money.",
+  "evidence": ["HP01", "HP02"],
+  "potential_risks": "May slightly increase sensitivity if normal callers discuss scanning merchant QR codes.",
+  "recommendation": "apply"
+}

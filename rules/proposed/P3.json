@@ -1,0 +1,17 @@
+{
+  "id": "P3",
+  "title": "Add debit/credit card blocking urgency combo to detect T05",
+  "type": "add_combo",
+  "target_file": "rules/scam_rules_hi_en.json",
+  "fragment": {
+    "id": "COMBO_CARD_DEBIT_BLOCK",
+    "require": ["credentials", "urgency"],
+    "bonus": 15,
+    "label_en": "Card credentials under urgency pressure",
+    "label_hi": "कार्ड विवरण और जल्दबाज़ी का दबाव"
+  },
+  "rationale": "Allows subtle credit/debit card expiry and CVV/PIN harvesting calls (such as missed call T05) to cross the danger alert threshold.",
+  "evidence": ["T05_card_pin", "HP12"],
+  "potential_risks": "Could raise score on legitimate calls where both card numbers and urgency are simultaneously mentioned.",
+  "recommendation": "apply"
+}

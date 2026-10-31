@@ -1,0 +1,14 @@
+{
+  "id": "P4",
+  "title": "Add remote desktop AnyDesk/TeamViewer pattern",
+  "type": "add_phrase",
+  "target_file": "rules/scam_rules_hi_en.json",
+  "target_rule_id": "TECH_REMOTE_APP",
+  "fragment": {
+    "patterns_to_add": ["anydesk ऐप", "टीमव्यूअर", "teamviewer"]
+  },
+  "rationale": "Directly flags remote assistance malware apps frequently used in technical support fraud.",
+  "evidence": ["HP03", "HP11"],
+  "potential_risks": "Low risk; ordinary phone calls rarely mention installing remote desktop apps.",
+  "recommendation": "apply"
+}
