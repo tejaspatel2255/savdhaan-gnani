@@ -23,17 +23,12 @@ export function init(rootEl) {
   getGloss().then((g) => { gloss = g || {}; });
   if (dom.btnJump) {
     dom.btnJump.textContent = t("tape_jump_latest");
-    dom.btnJump.addEventListener("click", () => {
-      userScrolledUp = false;
-      dom.btnJump.classList.remove("visible");
-      scrollToBottom();
-    });
+    dom.btnJump.addEventListener("click", () => { userScrolledUp = false; dom.btnJump.classList.remove("visible"); scrollToBottom(); });
   }
 
   if (dom.scroll) {
     dom.scroll.addEventListener("scroll", () => {
-      const dist = dom.scroll.scrollHeight - dom.scroll.scrollTop - dom.scroll.clientHeight;
-      userScrolledUp = dist > 60;
+      userScrolledUp = (dom.scroll.scrollHeight - dom.scroll.scrollTop - dom.scroll.clientHeight) > 60;
       dom.btnJump.classList.toggle("visible", userScrolledUp);
     });
   }
@@ -137,11 +132,17 @@ export function handle(msg, state) {
     textEl.textContent = msg.text;
     slip.appendChild(textEl);
 
+    let glossEl = null;
     const english = gloss[msg.text];
     if (english) {
-      const glossEl = document.createElement("div");
+      glossEl = document.createElement("div");
       glossEl.className = "slip-gloss";
       glossEl.textContent = `English: ${english}`;
+      slip.appendChild(glossEl);
+    } else if (state.mode === "mic") {
+      glossEl = document.createElement("div");
+      glossEl.className = "slip-gloss";
+      glossEl.textContent = t("words_none_detected");
       slip.appendChild(glossEl);
     }
 
@@ -150,7 +151,7 @@ export function handle(msg, state) {
     slip.appendChild(chipsEl);
 
     dom.scroll.appendChild(slip);
-    segmentSlips.set(msg.segment_index, { text: msg.text, textEl, chipsEl });
+    segmentSlips.set(msg.segment_index, { text: msg.text, textEl, chipsEl, glossEl });
     scrollToBottom();
   } else if (msg.type === "risk") {
     const slipData = segmentSlips.get(msg.segment_index);
@@ -160,6 +161,11 @@ export function handle(msg, state) {
       renderHighlightedText(slipData.textEl, slipData.text, msg.hits);
       while (slipData.chipsEl.firstChild) {
         slipData.chipsEl.removeChild(slipData.chipsEl.firstChild);
+      }
+
+      if (slipData.glossEl && !gloss[slipData.text] && state.mode === "mic") {
+        const labels = [...new Set(msg.hits.map(h => h.label_en || h.category).filter(Boolean))];
+        slipData.glossEl.textContent = labels.length ? `Detected: ${labels.join(", ")}` : t("words_none_detected");
       }
 
       for (const h of msg.hits) {
