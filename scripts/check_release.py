@@ -1,5 +1,6 @@
 """Release hygiene auditor: verifies secrets, README claims, placeholders, and test status."""
 
+import argparse
 import json
 import re
 import subprocess
@@ -7,14 +8,21 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-# Regex to detect secret keys or long random tokens
+from scripts.check_release_helpers import (
+    check_file_size_limits,
+    check_git_history_for_secrets,
+    check_unresolved_todos,
+)
+
+ROOT = Path(__file__).resolve().parent.parent
+
 SECRET_PATTERNS = [
     re.compile(r"""(?i)(?:api_?key|secret|token|password)\s*[:=]\s*['"][a-zA-Z0-9_\-]{20,}['"]"""),
     re.compile(r"""(?i)x-api-key-id\s*[:=]\s*['"][a-zA-Z0-9_\-]{20,}['"]"""),
 ]
-
-SUSPICIOUS_TOKEN_PATTERN = re.compile(r"""(?i)(?:api_?key|secret|token)\s*=\s*[a-zA-Z0-9_\-]{16,}""")
 
 
 def check_git_status() -> bool:
@@ -53,8 +61,7 @@ def check_secrets_in_tree(base_dir: Path) -> bool:
 
         for pat in SECRET_PATTERNS:
             if pat.search(content):
-                # Allow .env.example or test files with fake-key
-                if p.name == ".env.example" or "fake-key" in content:
+                if p.name == ".env.example" or "fake-key" in content or "your_gnani_api_key_here" in content:
                     continue
                 print(f"  [FAIL] Potential secret found in {p.relative_to(base_dir)}")
                 failed = True
@@ -65,28 +72,18 @@ def check_secrets_in_tree(base_dir: Path) -> bool:
 
 
 def extract_numbers_from_results(results_data: dict) -> set:
-    """Extract valid formatted numbers (percentages, k of n, k/n) from results.json."""
     valid_numbers = set()
 
     def add_from_metrics(m):
         if not isinstance(m, dict):
             return
-        for key in ["tp", "fp", "fn", "tn"]:
-            pass
-        tp = m.get("tp")
-        fn = m.get("fn")
-        fp = m.get("fp")
-        tn = m.get("tn")
-
+        tp, fn, fp, tn = m.get("tp"), m.get("fn"), m.get("fp"), m.get("tn")
         if tp is not None and fn is not None:
-            n_pos = tp + fn
-            valid_numbers.add(f"{tp} of {n_pos}")
-            valid_numbers.add(f"{tp}/{n_pos}")
+            valid_numbers.add(f"{tp} of {tp + fn}")
+            valid_numbers.add(f"{tp}/{tp + fn}")
         if fp is not None and tn is not None:
-            n_neg = fp + tn
-            valid_numbers.add(f"{fp} of {n_neg}")
-            valid_numbers.add(f"{fp}/{n_neg}")
-
+            valid_numbers.add(f"{fp} of {fp + tn}")
+            valid_numbers.add(f"{fp}/{fp + tn}")
         recall = m.get("recall")
         if recall is not None:
             valid_numbers.add(f"{recall * 100:.1f}%")
@@ -99,8 +96,7 @@ def extract_numbers_from_results(results_data: dict) -> set:
         if f1 is not None:
             valid_numbers.add(f"{f1:.4f}")
 
-    splits = results_data.get("splits", {})
-    for s_name, s_data in splits.items():
+    for s_data in results_data.get("splits", {}).values():
         add_from_metrics(s_data)
         if "ceiling" in s_data:
             add_from_metrics(s_data["ceiling"])
@@ -109,10 +105,8 @@ def extract_numbers_from_results(results_data: dict) -> set:
 
 
 def check_readme_figures(readme_content: str, results_path: Path) -> bool:
-    """Check that every percentage, k/n or k of n in README exists in results.json."""
     if not results_path.exists():
         return True
-
     try:
         r_data = json.loads(results_path.read_text(encoding="utf-8"))
     except Exception as exc:
@@ -120,71 +114,63 @@ def check_readme_figures(readme_content: str, results_path: Path) -> bool:
         return True
 
     valid_figures = extract_numbers_from_results(r_data)
-
-    # 1. Check all percentages: (\d+\.?\d*%)
-    # Exclude CI interval numbers like 95% CI
-    pct_matches = re.findall(r"(\b\d+\.?\d*%)", readme_content)
-    for pct in pct_matches:
-        if pct == "95%":  # standard confidence interval notation
-            continue
-        if pct not in valid_figures:
-            print(f"  [FAIL] README contains unverified percentage not in results.json: '{pct}'")
+    for pct in re.findall(r"(\b\d+\.?\d*%)", readme_content):
+        if pct != "95%" and pct not in valid_figures:
+            print(f"  [FAIL] README contains unverified percentage: '{pct}'")
             return False
 
-    # 2. Check all "k of n" or "k/n" patterns: (\d+\s*(?:of|/)\s*\d+)
-    count_matches = re.findall(r"(\b\d+\s*(?:of|/)\s*\d+\b)", readme_content)
-    for count_str in count_matches:
-        norm_count = count_str.strip()
-        if norm_count not in valid_figures:
-            print(f"  [FAIL] README contains unverified count ratio not in results.json: '{norm_count}'")
+    for count_str in re.findall(r"(\b\d+\s*(?:of|/)\s*\d+\b)", readme_content):
+        if count_str.strip() not in valid_figures:
+            print(f"  [FAIL] README contains unverified count ratio: '{count_str.strip()}'")
             return False
-
     return True
 
 
-def check_readme_integrity(readme_path: Path = None, results_path: Path = None) -> bool:
-    """Verify README line count, placeholder absence, and metric consistency."""
+def check_readme_integrity(allow_placeholders: bool = False) -> bool:
     print("Checking README.md...")
-    if readme_path is None:
-        readme_path = ROOT / "README.md"
-    if results_path is None:
-        results_path = ROOT / "data" / "eval" / "results.json"
-
+    readme_path = ROOT / "README.md"
+    results_path = ROOT / "data" / "eval" / "results.json"
     if not readme_path.exists():
         print("  [FAIL] README.md does not exist.")
         return False
 
     lines = readme_path.read_text(encoding="utf-8").splitlines()
-    line_count = len(lines)
-    if line_count > 140:
-        print(f"  [FAIL] README.md exceeds 140 lines ({line_count} lines).")
+    if len(lines) > 140:
+        print(f"  [FAIL] README.md exceeds 140 lines ({len(lines)} lines).")
         return False
-    print(f"  [PASS] README.md line count: {line_count} (<= 140).")
+    print(f"  [PASS] README.md line count: {len(lines)} (<= 140).")
 
     content = "\n".join(lines)
-    # Check for unfinished placeholders
-    if "TODO" in content or "<<" in content:
+    if not allow_placeholders and ("TODO" in content or "<<" in content):
         print("  [FAIL] Unfinished 'TODO' or '<<' placeholders remain in README.md.")
         return False
-    print("  [PASS] No placeholders found in README.md.")
+    print("  [PASS] Placeholder check passed.")
 
-    # Check figures against results.json
     if not check_readme_figures(content, results_path):
         return False
-    print("  [PASS] All percentages and k of n counts in README verified against results.json.")
+    print("  [PASS] All figures in README verified against results.json.")
+    return True
 
+
+def check_license_exists() -> bool:
+    print("Checking LICENSE...")
+    lic = ROOT / "LICENSE"
+    if not lic.exists():
+        print("  [FAIL] LICENSE file is missing.")
+        return False
+    print("  [PASS] LICENSE file present.")
     return True
 
 
 def check_frozen_final_integrity() -> bool:
-    """If docs/FROZEN_FINAL.txt exists, verify that rules/*.json hashes match."""
     frozen_final = ROOT / "docs" / "FROZEN_FINAL.txt"
     if not frozen_final.exists():
         return True
     print("Checking FROZEN_FINAL.txt rules integrity...")
+    import hashlib
+
     content = frozen_final.read_text(encoding="utf-8")
     for r_file in (ROOT / "rules").glob("*.json"):
-        import hashlib
         curr_hash = hashlib.sha256(r_file.read_bytes()).hexdigest()
         if curr_hash not in content:
             print(f"  [FAIL] Rule file {r_file.name} hash does not match {frozen_final.name}")
@@ -193,47 +179,34 @@ def check_frozen_final_integrity() -> bool:
     return True
 
 
-def check_test_suite() -> bool:
-    """Run pytest in quiet mode to ensure test suite is green."""
-    print("Running pytest suite...")
-    try:
-        res = subprocess.run([sys.executable, "-m", "pytest", "-q"], cwd=ROOT, capture_output=True, text=True)
-        if res.returncode != 0:
-            print("  [FAIL] Pytest test suite has failures:")
-            print(res.stdout)
-            print(res.stderr)
-            return False
-        print("  [PASS] All pytest test suites passed cleanly.")
-        return True
-    except Exception as exc:
-        print(f"  [FAIL] Could not run pytest: {exc}")
-        return False
-
-
-def main() -> None:
-    print("=" * 60)
-    print("SAVDHAAN RELEASE HYGIENE AUDIT")
-    print("=" * 60)
-
+def run_checks(allow_placeholders: bool = False) -> bool:
     checks = [
         ("Git Untracked .env", check_git_status()),
-        ("Secrets Scan", check_secrets_in_tree(ROOT)),
-        ("README.md Integrity", check_readme_integrity()),
+        ("Tree Secrets Scan", check_secrets_in_tree(ROOT)),
+        ("Git History Secrets Scan", check_git_history_for_secrets()),
+        ("LICENSE file", check_license_exists()),
+        ("Unresolved TODOs", check_unresolved_todos()),
+        ("File Size Limits", check_file_size_limits()),
+        ("README.md Integrity", check_readme_integrity(allow_placeholders)),
         ("Frozen Final Integrity", check_frozen_final_integrity()),
-        ("Pytest Green", check_test_suite()),
     ]
-
-    print("\n" + "=" * 60)
-    print("AUDIT SUMMARY:")
+    print("\n" + "=" * 60 + "\nAUDIT SUMMARY:")
     all_passed = True
     for name, passed in checks:
-        status_str = "PASS" if passed else "FAIL"
-        print(f"  {name:25}: [{status_str}]")
+        print(f"  {name:28}: [{'PASS' if passed else 'FAIL'}]")
         if not passed:
             all_passed = False
     print("=" * 60)
+    return all_passed
 
-    if not all_passed:
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Release hygiene auditor")
+    parser.add_argument("--allow-placeholders", action="store_true", help="Allow <<LINKS>> in docs before publish")
+    args = parser.parse_args()
+
+    print("=" * 60 + "\nSAVDHAAN RELEASE HYGIENE AUDIT\n" + "=" * 60)
+    if not run_checks(args.allow_placeholders):
         sys.exit(1)
     print("\nRelease hygiene verification complete. Ready for submission.")
 

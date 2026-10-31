@@ -1,127 +1,41 @@
-# Deploying Savdhaan
+# Deployment Guide: Savdhaan
 
-Two deployment paths are available depending on what you need.
-
----
-
-## Option A — Static Demo on Vercel (no backend, no API key)
-
-This hosts a **recorded playback demo** only. No Gnani API calls are made.
-Live mic mode, file mode and real scam detection are **not available**.
-
-### Why use this?
-
-- Zero credit leakage — no `GNANI_API_KEY` is required or exposed.
-- Works on Vercel's serverless platform (no persistent WebSocket needed).
-- Good for public evaluation links and the challenge submission demo video.
-
-### Steps
-
-1. **Push to GitHub**:
-   ```bash
-   git push origin main
-   ```
-
-2. **Import Project into Vercel**:
-   - Go to your Vercel Dashboard → **Add New Project**.
-   - Select your Savdhaan GitHub repository and click **Import**.
-
-3. **Configure Project Settings**:
-   - **Framework Preset**: `Other`
-   - **Root Directory**: `./`
-   - **Build Command**: *(leave empty, toggle override on)*
-   - **Install Command**: *(leave empty, toggle override on)*
-   - **Output Directory**: `frontend`
-
-4. **Environment Variables**:
-   - **Do NOT add `GNANI_API_KEY`** to Vercel.
-   - No other secrets are needed.
-
-5. **Deploy**: Click **Deploy**. Your demo will be live at `https://<your-project>.vercel.app`.
-
-### What works on the static demo
-
-| Feature | Status |
-|---|---|
-| Sample Scam Call playback (Eye, Tape, Stamp, Why, Phone warning) | ✅ |
-| Sample Normal Call (bank EMI reminder, zero false alarm) | ✅ |
-| Evaluation Khata (`/report.html`) | ✅ |
-| Language switcher (Hindi / Gujarati) | ✅ |
-| Live microphone mode | ❌ (backend required) |
-| File upload mode | ❌ (backend required) |
+Savdhaan supports two deployment targets:
+1. **Hosted Static Demo (Vercel)**: Zero backend, zero API credits, plays bundled recorded sessions and warning audio for evaluators.
+2. **Full Live Service (Render)**: Full FastAPI backend with live WebSocket streaming to Gnani Prisma v2.5.
 
 ---
 
-## Option B — Full Stack on Render.com (live mic + real Gnani calls)
+## 1. Deploying the Static Demo to Vercel (Recommended for Judges)
 
-This runs the **complete FastAPI backend** alongside the frontend.
-Real-time mic capture, Gnani Prisma STT, scam scoring and Gnani Timbre TTS
-warnings all work. **Requires your `GNANI_API_KEY`.**
+The static frontend runs without any Python server or environment variables:
 
-> [!IMPORTANT]
-> Keep `GNANI_API_KEY` in Render's dashboard as a **Secret** environment variable.
-> Never commit it to git or paste it into `render.yaml`.
-
-### Steps
-
-1. **Push to GitHub** (Procfile and render.yaml must be committed):
-   ```bash
-   git add Procfile render.yaml
-   git push origin main
-   ```
-
-2. **Create a Render Web Service**:
-   - Go to [render.com](https://render.com) → **New** → **Web Service**.
-   - Connect your GitHub repository.
-   - Render will detect `render.yaml` automatically (Blueprint deploy).
-   - If not, set manually:
-     - **Runtime**: Python 3
-     - **Build Command**: `pip install -r requirements.txt`
-     - **Start Command**: `bash start.sh$PORT`
-
-3. **Set Environment Variables in the Render Dashboard**:
-
-   | Variable | Value | Note |
-   |---|---|---|
-   | `GNANI_API_KEY` | `<your key>` | Mark as **Secret** |
-   | `DEMO` | `0` | Enables live modes |
-   | `ALLOWED_ORIGINS` | `https://<your-app>.onrender.com` | Set after first deploy |
-   | `MAX_TTS_CHARS_PER_RUN` | `600` | Credit guard |
-   | `MAX_STT_SECONDS_PER_RUN` | `180` | Credit guard |
-   | `SAVE_LIVE_RUNS` | `false` | Privacy |
-
-4. **First Deploy**:
-   - Click **Deploy**. Wait for the build to finish (≈ 2 min).
-   - Note your public URL: `https://<your-app>.onrender.com`.
-
-5. **Update `ALLOWED_ORIGINS`**:
-   - In Render Dashboard → your service → **Environment** tab.
-   - Set `ALLOWED_ORIGINS` = `https://<your-app>.onrender.com`.
-   - Click **Save Changes** — Render will redeploy automatically.
-
-6. **Verify**:
-   - Open `https://<your-app>.onrender.com` in the browser.
-   - The source badge should show **LIVE MIC** (not STATIC DEMO).
-   - Start a session in FILE mode with one of the sample scripts to confirm
-     Gnani Prisma responds.
-
-### Note on Live Mic Access (ALLOW_REMOTE_LIVE)
-By default, \POST /api/session/start\ and \/ws/mic\ only allow loopback connections (W.0.0.1\, \localhost\). If you host the backend on a remote server (e.g. Render) and intend to access the microphone from an external browser, you must set \ALLOW_REMOTE_LIVE=1\ in your environment.
-> **Warning**: Enabling remote live listening on an unauthenticated public URL may expose your Gnani STT API quota to public misuse. Ensure appropriate origin checking and credit guards.
-
-### Free tier note
-
-Render's free tier **sleeps after 15 minutes of inactivity**.
-The first request after a sleep takes ≈ 30 s to wake up.
-For the demo video, open the page once, wait for the wake-up spinner to clear,
-then start recording.
+1. Log into your [Vercel Dashboard](https://vercel.com).
+2. Click **Add New...** -> **Project**.
+3. Import your GitHub repository (`savdhaan-gnani`).
+4. In the **Project Configuration** panel:
+   - **Framework Preset**: Select `Other` (or leave default detected by `vercel.json`).
+   - **Root Directory**: Leave `./` (the root containing `vercel.json`).
+   - **Build Command**: Leave empty / disabled.
+   - **Output Directory**: Ensure it uses `frontend` (as defined in `vercel.json`).
+   - **Install Command**: Leave empty / disabled.
+5. Click **Deploy**.
+6. Deployment completes in under 15 seconds. Verify that `/` opens the Nazar Control Room and `/report.html` displays the Khata ledger.
 
 ---
 
-## Choosing between A and B
+## 2. Deploying Full Live Backend to Render
 
-| Need | Use |
-|---|---|
-| Public demo link, no API key required | Option A (Vercel) |
-| Full live experience for judging | Option B (Render) |
-| Local development | `uvicorn backend.main:app --reload --port 8000` |
+1. Log into your [Render Dashboard](https://dashboard.render.com).
+2. Click **New +** -> **Web Service**.
+3. Select your repository `savdhaan-gnani`.
+4. Configure service settings:
+   - **Runtime**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `./start.sh`
+5. Under **Environment Variables**, add:
+   - `GNANI_API_KEY`: Your confidential Gnani AI API key.
+   - `MAX_TTS_CHARS_PER_RUN`: `600`
+   - `MAX_STT_SECONDS_PER_RUN`: `180`
+   - `PYTHONUNBUFFERED`: `1`
+6. Click **Create Web Service**. Once live, open the Render URL to use live microphone streaming.

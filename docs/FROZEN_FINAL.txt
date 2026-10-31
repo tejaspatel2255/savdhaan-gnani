@@ -1,0 +1,7 @@
+# FROZEN FINAL RULES SHA256 DIGESTS
+# Date: 2026-10-31
+# Authoritative frozen state prior to blind set scoring.
+
+rules/scam_rules_gu.json: 3b83872e94fa6d594139250318e57ef4acf6b6b6769465238ea098f34c3fba47
+rules/scam_rules_hi_en.json: 477cca5dd0ad163cab2ca14a55c0f32d810d3c614686def2ae2f7b1ecb2ed8c3
+rules/warnings_gu.json: 5209f1680cc0bbc1b35690dbf163d5c24cdedda5c72123c5878a814a9961c421
