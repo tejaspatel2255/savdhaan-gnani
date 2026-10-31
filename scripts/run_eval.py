@@ -33,6 +33,8 @@ from scripts.stream_file import record_call
 MANIFEST_PATH = Path("data/calls/manifest.json")
 DEV_SCRIPTS_PATH = Path("data/scripts/dev_calls.json")
 TEST_SCRIPTS_PATH = Path("data/scripts/test_calls.json")
+BLIND_SCRIPTS_PATH = Path("data/scripts/blind_calls.json")
+from scripts.eval_blind import verify_blind_scoring_guards, record_blind_scoring_metadata
 RULES_PATH = Path("rules/scam_rules_hi_en.json")
 TRANSCRIPTS_DIR = Path("data/transcripts")
 EVAL_DIR = Path("data/eval")
@@ -57,7 +59,14 @@ def get_manifest_entries(split: Optional[str] = None, ids: Optional[List[str]] =
             entries = []
     if not entries:
         # Fallback to loading scripts as synthetic call descriptors
-        calls = load_scripts([DEV_SCRIPTS_PATH, TEST_SCRIPTS_PATH])
+        load_list = [DEV_SCRIPTS_PATH, TEST_SCRIPTS_PATH]
+
+        if split == "blind" and BLIND_SCRIPTS_PATH.exists():
+
+            load_list = [BLIND_SCRIPTS_PATH]
+
+        calls = load_scripts(load_list)
+
         for c in calls:
             entries.append({
                 "id": c.id,
@@ -188,7 +197,14 @@ def score_calls_data(
     # Map scripts if from_script is True
     script_map: Dict[str, Call] = {}
     if from_script:
-        all_scripts = load_scripts([DEV_SCRIPTS_PATH, TEST_SCRIPTS_PATH])
+        load_list = [DEV_SCRIPTS_PATH, TEST_SCRIPTS_PATH]
+
+        if any(c.get("split") == "blind" for c in calls) and BLIND_SCRIPTS_PATH.exists():
+
+            load_list.append(BLIND_SCRIPTS_PATH)
+
+        all_scripts = load_scripts(load_list)
+
         script_map = {c.id: c for c in all_scripts}
 
     for c in calls:
@@ -289,6 +305,24 @@ def handle_score(args: argparse.Namespace) -> None:
         return
 
     # Test split guard
+    if split == "blind":
+
+        ok, msg, times = verify_blind_scoring_guards(
+
+            confirm_blind_once=getattr(args, "confirm_blind_once", False),
+
+            i_understand_this_is_a_rescore=getattr(args, "i_understand_this_is_a_rescore", False),
+
+            results_path=RESULTS_PATH,
+
+        )
+
+        if not ok:
+
+            print(f"Error: {msg}")
+
+            sys.exit(1)
+
     rules_sha = get_rules_sha256()
     test_scoring_info = {"times_scored": 0, "rules_changed_since_first": False}
 
@@ -426,6 +460,14 @@ def handle_score(args: argparse.Namespace) -> None:
         "limitations": limitations,
     }
 
+    if "blind_scoring" in existing_results:
+
+        results_data["blind_scoring"] = existing_results["blind_scoring"]
+
+    if split == "blind":
+
+        record_blind_scoring_metadata(results_data)
+
     EVAL_DIR.mkdir(parents=True, exist_ok=True)
     with open(RESULTS_PATH, "w", encoding="utf-8") as f:
         json.dump(results_data, f, indent=2, ensure_ascii=False)
@@ -455,7 +497,14 @@ def handle_wer(args: argparse.Namespace) -> None:
     audio_tasks = []
     total_seconds = 0.0
 
-    all_scripts = load_scripts([DEV_SCRIPTS_PATH, TEST_SCRIPTS_PATH])
+    load_list = [DEV_SCRIPTS_PATH, TEST_SCRIPTS_PATH]
+
+    if any(c.get("split") == "blind" for c in calls) and BLIND_SCRIPTS_PATH.exists():
+
+        load_list.append(BLIND_SCRIPTS_PATH)
+
+    all_scripts = load_scripts(load_list)
+
     script_map = {c.id: " ".join(t[1] for t in c.turns) for c in all_scripts}
 
     for c in calls:
@@ -527,6 +576,14 @@ def handle_wer(args: argparse.Namespace) -> None:
             "per_call": data["per_call"],
         }
 
+    if "blind_scoring" in existing_results:
+
+        results_data["blind_scoring"] = existing_results["blind_scoring"]
+
+    if split == "blind":
+
+        record_blind_scoring_metadata(results_data)
+
     EVAL_DIR.mkdir(parents=True, exist_ok=True)
     with open(WER_PATH, "w", encoding="utf-8") as f:
         json.dump(wer_out, f, indent=2, ensure_ascii=False)
@@ -542,7 +599,8 @@ def main() -> None:
 
     # 1. record
     p_rec = subparsers.add_parser("record", help="Record real Prisma transcripts of synthetic calls")
-    p_rec.add_argument("--split", choices=["dev", "test", "all"], default="dev")
+    p_rec.add_argument("--split", choices=["dev", "test", "blind", "all"], default="dev")
+
     p_rec.add_argument("--ids", help="Comma-separated call IDs")
     p_rec.add_argument("--cond", default="phone_noise")
     p_rec.add_argument("--force", action="store_true", help="Overwrite existing transcripts")
@@ -550,7 +608,12 @@ def main() -> None:
 
     # 2. score
     p_score = subparsers.add_parser("score", help="Score saved transcripts or script text ceiling")
-    p_score.add_argument("--split", choices=["dev", "test", "all"], default="dev")
+    p_score.add_argument("--split", choices=["dev", "test", "blind", "all"], default="dev")
+
+    p_score.add_argument("--confirm-blind-once", action="store_true", help="Confirm first scoring of blind split")
+
+    p_score.add_argument("--i-understand-this-is-a-rescore", action="store_true", help="Confirm rescoring of blind split")
+
     p_score.add_argument("--cond", default="phone_noise")
     p_score.add_argument("--careful", type=int, default=30)
     p_score.add_argument("--danger", type=int, default=60)

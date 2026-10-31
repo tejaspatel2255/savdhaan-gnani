@@ -36,6 +36,25 @@ def build_markdown_table(results: dict) -> str:
     test_far = f"**{test_ceil.get('false_alarm_rate', 0.0) * 100:.1f}% ({test_ceil.get('fp', 0)} of {test_ceil.get('fp', 0) + test_ceil.get('tn', 0)})** {format_ci(test_ceil.get('false_alarm_ci95'))}"
     test_f1 = f"**{test_ceil.get('f1', 0.0):.4f}**"
 
+    # Blind split
+    blind_split = splits.get("blind", {})
+    blind_ceil = blind_split.get("ceiling", {})
+    if blind_split and blind_split.get("tp") is not None:
+        b_rec = f"**{blind_split.get('recall', 0.0) * 100:.1f}% ({blind_split.get('tp', 0)} of {blind_split.get('tp', 0) + blind_split.get('fn', 0)})** {format_ci(blind_split.get('recall_ci95'))}"
+        b_far = f"**{blind_split.get('false_alarm_rate', 0.0) * 100:.1f}% ({blind_split.get('fp', 0)} of {blind_split.get('fp', 0) + blind_split.get('tn', 0)})** {format_ci(blind_split.get('false_alarm_ci95'))}"
+        b_f1 = f"**{blind_split.get('f1', 0.0):.4f}**"
+        blind_real_row = f"| **Blind Set** (written by someone else) | Real Prisma (`phone_noise`) | {b_rec} | {b_far} | {b_f1} |"
+    else:
+        blind_real_row = "| **Blind Set** (written by someone else) | Real Prisma (`phone_noise`) | not measured yet (`python scripts/run_eval.py score --split blind --ceiling`) | - | - |"
+
+    if blind_ceil and blind_ceil.get("tp") is not None:
+        bc_rec = f"**{blind_ceil.get('recall', 0.0) * 100:.1f}% ({blind_ceil.get('tp', 0)} of {blind_ceil.get('tp', 0) + blind_ceil.get('fn', 0)})** {format_ci(blind_ceil.get('recall_ci95'))}"
+        bc_far = f"**{blind_ceil.get('false_alarm_rate', 0.0) * 100:.1f}% ({blind_ceil.get('fp', 0)} of {blind_ceil.get('fp', 0) + blind_ceil.get('tn', 0)})** {format_ci(blind_ceil.get('false_alarm_ci95'))}"
+        bc_f1 = f"**{blind_ceil.get('f1', 0.0):.4f}**"
+        blind_ceil_row = f"| **Blind Set** (written by someone else) | Perfect Transcript (Ceiling) | {bc_rec} | {bc_far} | {bc_f1} |"
+    else:
+        blind_ceil_row = "| **Blind Set** (written by someone else) | Perfect Transcript (Ceiling) | not measured yet (`python scripts/run_eval.py score --split blind --ceiling`) | - | - |"
+
     rows = [
         START_MARKER,
         "| Evaluation Split | Mode | Scam Recall (95% CI) | False Alarm Rate (95% CI) | F1 Score |",
@@ -44,6 +63,8 @@ def build_markdown_table(results: dict) -> str:
         "| **Dev Split** (5 scam + 5 legit calls) | Real Prisma (`phone_noise`) | not measured yet (`python scripts/run_eval.py record --split dev --go`) | - | - |",
         f"| **Test Split** (5 scam + 5 legit calls, frozen) | Perfect Transcript (Ceiling) | {test_recall} | {test_far} | {test_f1} |",
         "| **Test Split** (5 scam + 5 legit calls, frozen) | Real Prisma (`phone_noise`) | not measured yet (`python scripts/run_eval.py record --split test --go`) | - | - |",
+        blind_ceil_row,
+        blind_real_row,
         END_MARKER,
     ]
     return "\n".join(rows)

@@ -82,6 +82,9 @@ export function renderSectionsDtoG(root, data) {
   const tScoring = data.test_scoring || {};
   const changedStr = tScoring.rules_changed_since_first ? "YES (WARNING: rules modified)" : "NO (rules unchanged)";
   uList.appendChild(el("li", null, `Test split scoring disclosure: scored ${tScoring.times_scored || 0} time(s); rules changed since first scoring: ${changedStr}.`));
+  const bCalls = (data.calls || []).filter((c) => c.split === "blind");
+  const bCount = bCalls.length || (data.splits?.blind?.n) || 12;
+  uList.appendChild(el("li", null, `The blind set was written by a different person from the author but is small (${bCount} calls), so intervals are wide.`));
   secG.appendChild(uList);
   root.appendChild(secG);
 }

@@ -22,6 +22,7 @@ SCRIPT_PATHS = [
     Path("data/scripts/dev_calls.json"),
     Path("data/scripts/test_calls.json"),
 ]
+BLIND_SCRIPT_PATH = Path("data/scripts/blind_calls.json")
 
 
 def load_manifest(manifest_path: Path) -> List[dict]:
@@ -45,17 +46,22 @@ def save_manifest(manifest_path: Path, entries: List[dict]) -> None:
 
 async def main_async() -> None:
     parser = argparse.ArgumentParser(description="Generate synthetic call audio corpus")
-    parser.add_argument("--split", choices=["dev", "test", "all"], default="all")
+    parser.add_argument("--split", choices=["dev", "test", "blind", "all"], default="all")
     parser.add_argument("--ids", help="Comma-separated call IDs to process")
     parser.add_argument("--go", action="store_true", help="Execute real generation (default is dry-run)")
+    parser.add_argument("--dry-run", action="store_true", help="Explicit dry-run mode (default)")
     parser.add_argument("--calls-dir", default="data/calls")
     args = parser.parse_args()
 
-    calls = load_scripts(SCRIPT_PATHS)
-
-    # Filter by split
-    if args.split != "all":
-        calls = [c for c in calls if c.split == args.split]
+    if args.split == "blind":
+        if not BLIND_SCRIPT_PATH.exists():
+            print(f"Error: Blind script file {BLIND_SCRIPT_PATH} not found.")
+            return
+        calls = load_scripts([BLIND_SCRIPT_PATH])
+    else:
+        calls = load_scripts(SCRIPT_PATHS)
+        if args.split != "all":
+            calls = [c for c in calls if c.split == args.split]
 
     # Filter by ids
     if args.ids:
