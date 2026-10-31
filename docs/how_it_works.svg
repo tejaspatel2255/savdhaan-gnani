@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 500" width="880" height="500">
+  <!-- Clean dark card background for light/dark GitHub theme compatibility -->
+  <rect width="880" height="500" rx="12" fill="#0D1326" stroke="#2C3668" stroke-width="2"/>
+
+  <!-- Title & Privacy Guarantee -->
+  <text x="40" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#FAF6ED">
+    SAVDHAAN ARCHITECTURE &amp; DATA FLOW
+  </text>
+  <text x="40" y="68" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" fill="#5BC0BE">
+    Audio is sent to Gnani for transcription; Savdhaan does not save it.
+  </text>
+
+  <!-- Zone Boundary Rectangles -->
+  <!-- Browser Zone -->
+  <rect x="30" y="90" width="230" height="375" rx="8" fill="#131B38" stroke="#3A4880" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="45" y="115" font-family="monospace" font-size="11" font-weight="700" fill="#E8DBBC" letter-spacing="1">
+    [ BROWSER CLIENT ]
+  </text>
+
+  <!-- Backend / Gnani Zone -->
+  <rect x="280" y="90" width="310" height="375" rx="8" fill="#131B38" stroke="#3A4880" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="295" y="115" font-family="monospace" font-size="11" font-weight="700" fill="#E8DBBC" letter-spacing="1">
+    [ FASTAPI SERVER &amp; GNANI CLOUD ]
+  </text>
+
+  <!-- Control Room UI Zone -->
+  <rect x="610" y="90" width="240" height="375" rx="8" fill="#131B38" stroke="#3A4880" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="625" y="115" font-family="monospace" font-size="11" font-weight="700" fill="#E8DBBC" letter-spacing="1">
+    [ NAZAR CONTROL ROOM UI ]
+  </text>
+
+  <!-- Flow Boxes -->
+  <!-- 1. Audio Source -->
+  <rect x="45" y="140" width="200" height="60" rx="6" fill="#1C274E" stroke="#5BC0BE" stroke-width="1.5"/>
+  <text x="60" y="165" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">1. Live Audio Source</text>
+  <text x="60" y="185" font-family="system-ui, sans-serif" font-size="11" fill="#A4B3D6">Mic (PCM 8kHz / 16kHz)</text>
+
+  <!-- Arrow 1 to 2 -->
+  <path d="M 245 170 L 295 170" stroke="#5BC0BE" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- 2. Gnani Prisma v2.5 STT -->
+  <rect x="295" y="140" width="280" height="60" rx="6" fill="#1B4D89" stroke="#5BC0BE" stroke-width="1.5"/>
+  <text x="310" y="165" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">2. Gnani Prisma v2.5</text>
+  <text x="310" y="185" font-family="system-ui, sans-serif" font-size="11" fill="#FAF6ED">Realtime Speech-to-Text WebSocket</text>
+
+  <!-- Arrow 2 to 3 -->
+  <path d="M 435 200 L 435 235" stroke="#5BC0BE" stroke-width="2" fill="none"/>
+
+  <!-- 3. Transparent Rule Scorer -->
+  <rect x="295" y="235" width="280" height="85" rx="6" fill="#1C274E" stroke="#C9B98F" stroke-width="1.5"/>
+  <text x="310" y="258" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">3. Transparent Rule Scorer</text>
+  <text x="310" y="278" font-family="system-ui, sans-serif" font-size="11" fill="#E8DBBC">• 8 Cue Categories (Urgency, Threat)</text>
+  <text x="310" y="296" font-family="system-ui, sans-serif" font-size="11" fill="#E8DBBC">• Rolling Transcript (0-100 Risk Score)</text>
+  <text x="310" y="312" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#5BC0BE">Deterministic · Zero Hallucination</text>
+
+  <!-- Arrow 3 to UI & Audio -->
+  <path d="M 575 275 L 625 275" stroke="#5BC0BE" stroke-width="2" fill="none"/>
+
+  <!-- 4. Control Room UI Elements -->
+  <rect x="625" y="140" width="210" height="65" rx="6" fill="#1C274E" stroke="#E5391F" stroke-width="1.5"/>
+  <text x="640" y="165" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">The Eye &amp; Stamp</text>
+  <text x="640" y="185" font-family="system-ui, sans-serif" font-size="11" fill="#F8D7DA">Slam DANGER Stamp on score ≥ 60</text>
+
+  <rect x="625" y="220" width="210" height="65" rx="6" fill="#1C274E" stroke="#C9B98F" stroke-width="1.5"/>
+  <text x="640" y="245" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">The Tape &amp; Why</text>
+  <text x="640" y="265" font-family="system-ui, sans-serif" font-size="11" fill="#FAF6ED">Live slips with highlighted cue words</text>
+
+  <rect x="625" y="300" width="210" height="65" rx="6" fill="#1C274E" stroke="#5BC0BE" stroke-width="1.5"/>
+  <text x="640" y="325" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">Listener Phone Card</text>
+  <text x="640" y="345" font-family="system-ui, sans-serif" font-size="11" fill="#FAF6ED">Simulated Family SMS Alert</text>
+
+  <!-- 5. Gnani Timbre TTS -->
+  <rect x="295" y="345" width="280" height="75" rx="6" fill="#1B4D89" stroke="#5BC0BE" stroke-width="1.5"/>
+  <text x="310" y="370" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">4. Gnani Timbre v3.0 Spoken Alert</text>
+  <text x="310" y="390" font-family="system-ui, sans-serif" font-size="11" fill="#FAF6ED">Pre-synthesised warning audio</text>
+  <text x="310" y="408" font-family="system-ui, sans-serif" font-size="10" fill="#A4B3D6">Spoken in listener's language (Hindi / Gujarati)</text>
+
+  <!-- Arrow from 3 to 4 -->
+  <path d="M 435 320 L 435 345" stroke="#5BC0BE" stroke-width="2" fill="none"/>
+
+  <!-- Audio playback into listener phone -->
+  <path d="M 575 385 L 625 385 L 625 365" stroke="#5BC0BE" stroke-width="1.5" stroke-dasharray="3 3" fill="none"/>
+
+  <!-- Footer disclosure -->
+  <text x="440" y="482" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#A4B3D6">
+    Savdhaan live scam shield · Great Indian AI Internship Challenge · Gnani Prisma v2.5 + Timbre v3.0
+  </text>
+</svg>

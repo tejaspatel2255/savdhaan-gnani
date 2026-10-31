@@ -111,6 +111,15 @@ function renderFullReport(root, data, isFixture = false) {
   const back = elLoc("a", "back-link", "← Back to the Nazar control room", "मुख्य नियंत्रण कक्ष");
   back.href = "/";
   nav.appendChild(back);
+
+  const sep = el("span", "footer-sep", " · ");
+  nav.appendChild(sep);
+
+  const archLink = el("a", "back-link", "Architecture & Data Flow Diagram");
+  archLink.href = "/docs/how_it_works.svg";
+  archLink.target = "_blank";
+  nav.appendChild(archLink);
+
   foot.appendChild(nav);
   root.appendChild(foot);
 }

@@ -6,6 +6,8 @@ and speaks immediate warnings while simulating family alerts before money or cre
 
 Built for the **Great Indian AI Internship Challenge** by **Gnani AI** (Deadline: Nov 10, 2026, 11:59 PM IST).
 
+![Savdhaan Architecture & Flow](docs/how_it_works.svg)
+
 ## Run in Two Minutes (Offline Demo)
 
 Zero configuration, zero API credits, and no secrets needed:

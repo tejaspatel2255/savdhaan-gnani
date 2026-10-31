@@ -1,0 +1,22 @@
+{
+  "languages": {
+    "hi-IN": {
+      "has_voice": true,
+      "files": [
+        "warn_hi_in_arrest_shivani.wav",
+        "warn_hi_in_generic_shivani.wav",
+        "warn_hi_in_money_shivani.wav",
+        "warn_hi_in_otp_shivani.wav",
+        "warn_hi_in_remote_shivani.wav"
+      ]
+    },
+    "gu-IN": {
+      "has_voice": false,
+      "files": []
+    },
+    "en-IN": {
+      "has_voice": false,
+      "files": []
+    }
+  }
+}

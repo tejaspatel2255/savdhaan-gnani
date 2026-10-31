@@ -135,6 +135,14 @@ export const STRINGS = {
   rules_panel_title: { hi: "हम किन शब्दों पर ध्यान देते हैं", en: "Words we listen for", gu: "કયા શબ્દ ધ્યાનમાં આવે છે" },
   rules_loading: { hi: "लोड हो रहा है…", en: "Loading…", gu: "લોડ થઈ રહ્યું છે…" },
   rules_unavailable: { hi: "नियम उपलब्ध नहीं", en: "Rules unavailable", gu: "નિયમ ઉપલબ્ધ નથી" },
+
+  /* Voice availability */
+  voice_not_generated: { hi: "आवाज़ अभी नहीं बनी", en: "voice not generated", gu: "અવાજ હજુ ઉપલબ્ધ નથી" },
+  voice_missing_phone: {
+    hi: "इस भाषा के लिए अभी आवाज़ नहीं बनी; लिखित चेतावनी दिखाई जा रही है",
+    en: "Voice for this language is not generated yet; showing the written warning",
+    gu: "આ ભાષા માટે હજુ અવાજ બન્યો નથી; લખેલી ચેતવણી દર્શાવવામાં આવી રહી છે",
+  },
 };
 
 const loggedFallbacks = new Set();

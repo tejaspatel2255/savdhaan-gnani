@@ -39,6 +39,18 @@ def export_static():
     else:
         print(f"Exported {copied_audio} warning audio files to {TARGET_AUDIO_DIR}.")
 
+    # 3. Export audio manifest
+    manifest_data = {"languages": {}}
+    for lang_code, prefix in [("hi-IN", "warn_hi_in_"), ("gu-IN", "warn_gu_in_"), ("en-IN", "warn_en_in_")]:
+        files = [p.name for p in TARGET_AUDIO_DIR.glob(f"{prefix}*.wav")]
+        manifest_data["languages"][lang_code] = {
+            "has_voice": len(files) > 0,
+            "files": sorted(files),
+        }
+    manifest_path = TARGET_AUDIO_DIR / "manifest.json"
+    manifest_path.write_text(json.dumps(manifest_data, indent=2), encoding="utf-8")
+    print(f"Generated audio manifest at {manifest_path}")
+
     print("Static export complete.")
 
 

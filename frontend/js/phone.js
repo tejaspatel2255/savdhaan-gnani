@@ -112,7 +112,7 @@ function handleWarningAudio(msg, state) {
   } else if (!msg.audio_url && msg.reason) {
     const switchedOff = msg.reason === "speaking_off" && !state.isStatic && !state.isSample;
     if (!switchedOff) playTwoToneBeep();
-    const reasonKey = switchedOff ? "voice_off" : (state.isStatic || msg.reason === "no_audio_yet" ? "voice_missing" : (msg.reason === "tts_over_cap" ? "tts_over_cap" : "tts_failed"));
+    const reasonKey = switchedOff ? "voice_off" : (state.isStatic || msg.reason === "no_audio_yet" ? "voice_missing_phone" : (msg.reason === "tts_over_cap" ? "tts_over_cap" : "tts_failed"));
     barsBox.appendChild(fill(mk("warning-reason t-stack on-danger"), reasonKey));
   }
 
