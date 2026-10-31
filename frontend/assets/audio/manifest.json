@@ -11,12 +11,24 @@
       ]
     },
     "gu-IN": {
-      "has_voice": false,
-      "files": []
+      "has_voice": true,
+      "files": [
+        "warn_gu_in_arrest_shivani.wav",
+        "warn_gu_in_generic_shivani.wav",
+        "warn_gu_in_money_shivani.wav",
+        "warn_gu_in_otp_shivani.wav",
+        "warn_gu_in_remote_shivani.wav"
+      ]
     },
     "en-IN": {
-      "has_voice": false,
-      "files": []
+      "has_voice": true,
+      "files": [
+        "warn_en_in_arrest_shivani.wav",
+        "warn_en_in_generic_shivani.wav",
+        "warn_en_in_money_shivani.wav",
+        "warn_en_in_otp_shivani.wav",
+        "warn_en_in_remote_shivani.wav"
+      ]
     }
   }
 }

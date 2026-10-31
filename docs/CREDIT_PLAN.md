@@ -1,7 +1,7 @@
 # Savdhaan Credit Plan & Execution Steps
 
-**Reported Dashboard Balance**: 4000.0 credits
-**Safety Threshold (1/3 Balance Rule)**: 1333.3 credits
+**Reported Dashboard Balance**: 4998.5 credits
+**Safety Threshold (1/3 Balance Rule)**: 1666.2 credits
 
 > [!WARNING]
 > **Cost per unit unknown**: Run the pilot step first and fill `docs/OPEN_QUESTIONS.md`.

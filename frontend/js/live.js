@@ -42,6 +42,13 @@ export function init(opts = {}) {
   if (el.btnLive) el.btnLive.addEventListener("click", _onLiveClick);
   if (el.btnStop) el.btnStop.addEventListener("click", _onStopClick);
 
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && el.noticeOverlay && !el.noticeOverlay.classList.contains("hidden")) {
+      el.noticeOverlay.classList.add("hidden");
+      if (el.btnLive) el.btnLive.focus();
+    }
+  });
+
   _checkHealth();
 }
 

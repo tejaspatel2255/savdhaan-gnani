@@ -85,7 +85,12 @@ export async function getUsage() {
   return request("/api/usage");
 }
 
-export async function getEval() {
+export async function getEval(useFixture = false) {
+  if (useFixture) {
+    const res = await fetch("/assets/results.fixture.json");
+    if (!res.ok) throw new ApiError(res.status, "Failed to load fixture evaluation data");
+    return await res.json();
+  }
   try {
     return await request("/api/eval");
   } catch (err) {
