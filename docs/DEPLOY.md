@@ -77,7 +77,7 @@ warnings all work. **Requires your `GNANI_API_KEY`.**
    - If not, set manually:
      - **Runtime**: Python 3
      - **Build Command**: `pip install -r requirements.txt`
-     - **Start Command**: `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
+     - **Start Command**: `bash start.sh$PORT`
 
 3. **Set Environment Variables in the Render Dashboard**:
 
