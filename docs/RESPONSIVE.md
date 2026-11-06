@@ -15,8 +15,9 @@ Savdhaan adapts seamlessly across all viewports from 320 px phones to 2560 px di
 3. **Laptops & Landscape Displays (1000 px+)**:
    - Three-column control room: Left tape slips, center sticky Eye and risk meter, right why-list and active phone frame.
 
-4. **Fit-to-Screen Dashboard (>= 1000 px wide and >= 800 px tall)**:
-   - Page scrolling is eliminated (`overflow: hidden` on viewport); inner panels (tape, why-list, phone) scroll independently.
+4. **Fit-to-Screen Dashboard (>= 1000 px wide)**:
+   - **Short laptops (520 px - 799 px height)**: Handled via `fit-short.css` using `zoom: 0.8`. The complete dashboard fits within the viewport with zero outer page scroll; phone card and tape scroll within their bounded boxes.
+   - **Tall screens (>= 800 px height)**: Outer page scrolling eliminated (`overflow: hidden`), inner panels scroll independently. All critical evidence (Nazar Eye, phone card, sample buttons, footer) remain above the fold.
 
 ## Accessibility & Contrast Standards
 
