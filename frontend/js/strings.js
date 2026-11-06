@@ -116,6 +116,7 @@ export const STRINGS = {
   live_btn_stop: { hi: "सुनना बंद करें", en: "Stop listening", gu: "સાંભળવાનું બંધ કરો" },
   live_usage_label: { hi: "उपयोग", en: "STT usage", gu: "ઉપયોગ" },
   live_no_key: { hi: "API कुंजी नहीं — लाइव बंद है", en: "API key missing — live disabled", gu: "API key ગોઠવેલ નથી — live બંધ" },
+  live_static: { hi: "यह रिकॉर्डेड डेमो है — लाइव सुनना सिर्फ़ अपने कंप्यूटर पर चलता है", en: "This hosted site is a recorded demo. Live listening runs only on your own computer (see the README).", gu: "આ રેકોર્ડેડ ડેમો છે — લાઇવ સાંભળવું ફક્ત તમારા કમ્પ્યુટર પર ચાલે છે" },
   live_demo_mode: { hi: "डेमो मोड — लाइव बंद है", en: "Demo mode — live disabled", gu: "ડેમો મોડ — live બંધ" },
   live_source_label: { hi: "स्रोत: LIVE MIC", en: "Source: LIVE MIC", gu: "સ્ત્રોત: LIVE MIC" },
   live_lang_label: { hi: "भाषा चुनें", en: "Language", gu: "ભાષા" },

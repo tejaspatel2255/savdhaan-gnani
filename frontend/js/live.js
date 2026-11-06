@@ -59,12 +59,19 @@ async function _checkHealth() {
     _usageCap = h.max_stt_seconds ?? 180;
     if (!h.gnani_key_present) {
       el.btnLive.disabled = true;
-      if (el.disabledReason) { el.disabledReason.textContent = t("live_no_key"); el.disabledReason.style.display = ""; }
+      if (el.disabledReason) { el.disabledReason.textContent = t("live_no_key"); el.disabledReason.style.display = "inline-block"; }
     } else if (h.demo) {
       el.btnLive.disabled = true;
-      if (el.disabledReason) { el.disabledReason.textContent = t("live_demo_mode"); el.disabledReason.style.display = ""; }
+      if (el.disabledReason) { el.disabledReason.textContent = t("live_demo_mode"); el.disabledReason.style.display = "inline-block"; }
     }
-  } catch (_) {}
+  } catch (_) {
+    _disableLive("live_static");   // no backend (static hosting): live cannot work here
+  }
+}
+
+function _disableLive(key) {
+  if (el.btnLive) { el.btnLive.disabled = true; el.btnLive.dataset.unavailable = "1"; }
+  if (el.disabledReason) { el.disabledReason.textContent = t(key); el.disabledReason.style.display = "inline-block"; }
 }
 
 function _onLiveClick() {
@@ -95,6 +102,7 @@ async function _startLive() {
     _sessionId = sessionId;
   } catch (err) {
     _setState("idle");
+    if (!err.status || err.status === 404 || err.status === 405) { _disableLive("live_static"); return; }
     if (_onDispatch) _onDispatch({ type: "error", code: err.status === 403 ? "live_local_only" : "internal", message: err.message, recoverable: true });
     return;
   }
@@ -131,7 +139,7 @@ function _setState(s) {
     alert: t("live_state_alert"), stopped: t("live_state_stopped"),
   };
   if (el.stateBadge) { el.stateBadge.textContent = labels[s] || s; el.stateBadge.dataset.state = s; }
-  if (el.btnLive) { el.btnLive.dataset.liveState = s; el.btnLive.disabled = (s !== "idle" && s !== "stopped"); }
+  if (el.btnLive) { el.btnLive.dataset.liveState = s; el.btnLive.disabled = (s !== "idle" && s !== "stopped") || el.btnLive.dataset.unavailable === "1"; }
   if (el.btnStop) el.btnStop.style.display = (s === "listening" || s === "alert") ? "" : "none";
   if (s === "idle" || s === "stopped") _hideStrip();
 }
@@ -147,15 +155,9 @@ function _hideStrip() {
 
 /** Called by app.js dispatch for session / alert / usage_tick events. */
 export function handle(msg) {
-  // Only a session whose source is "mic" drives the live bar out of idle
-  const isMic = (msg.mode === "mic" || msg.source === "mic" || _sessionId != null);
-  if (msg.type === "alert" && isMic) _setState("alert");
-  if (msg.type === "session") {
-    if (msg.mode === "mic" && (msg.state === "listening" || msg.state === "alert")) {
-      _setState(msg.state);
-    } else if (msg.state === "ended" || msg.state === "error") {
-      _sessionId = null; _setState("idle");
-    }
+  if (msg.type === "alert") _setState("alert");
+  if (msg.type === "session" && (msg.state === "ended" || msg.state === "error")) {
+    _sessionId = null; _setState("idle");
   }
   if (msg.type === "usage_tick") _updateUsage(msg.stt_seconds_used, msg.stt_seconds_cap || _usageCap);
 }
