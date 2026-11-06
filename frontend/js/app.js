@@ -12,7 +12,7 @@ import * as phone from "./phone.js";
 import * as receipt from "./receipt.js";
 import * as live from "./live.js";
 import * as words from "./words.js";
-import { playSample } from "./devfeed.js";
+import { playSample, stopSample } from "./devfeed.js";
 
 export const FEATURES = { mic: true };
 export const state = { sessionId: null, mode: "mock", modeLabel: "MOCK", lang: "hi-IN", level: "calm", score: 0, alertFired: false, isStatic: false, isSample: false };
@@ -61,13 +61,11 @@ export async function init() {
     const adv = document.getElementById("advanced-controls"); if (adv) adv.style.display = "none";
     return;
   }
-
   await fetchCalls();
   try {
     const h = await getHealth();
     if (h.demo && el.badge) { el.badge.textContent = t("badge_demo"); el.badge.className = "badge-pill mode-mock"; el.badge.classList.remove("hidden"); }
   } catch (_) {}
-
   const p = new URLSearchParams(window.location.search);
   if (p.get("dev") === "1") {
     playSample("/assets/sample_run.jsonl", dispatch, { speed: parseFloat(p.get("speed") || "1"), at: p.get("at") ? parseFloat(p.get("at")) : null });
@@ -109,10 +107,8 @@ function unlockAudio() {
   }
   if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
 }
-
 async function handleStart() {
-  state.isSample = false;
-  unlockAudio();
+  state.isSample = false; unlockAudio();
   el.banner.classList.add("hidden");
   el.btnStart.disabled = true; el.btnStop.disabled = false;
   const p = new URLSearchParams(window.location.search);
@@ -138,6 +134,12 @@ async function handleStart() {
 
 async function handleStop() {
   stopMic();
+  if (state.isSample) {
+    stopSample(); state.isSample = false; resetAll();
+    if (el.btnStart) el.btnStart.disabled = false;
+    if (el.btnStop) el.btnStop.disabled = true;
+    return;
+  }
   if (!state.sessionId) return;
   el.btnStop.disabled = true;
   try { await stopSession(state.sessionId); } catch (err) { showBanner("internal", err.message); }
@@ -148,11 +150,9 @@ function showBanner(code, msg = "") {
   el.bannerServer.textContent = msg ? `Detail: ${msg}` : "";
   el.banner.classList.remove("hidden");
 }
-
 function startSample(url) {
   unlockAudio(); resetAll(); state.isSample = true; playSample(url, dispatch, { speed: 1.0 });
 }
-
 function resetAll() {
   handledMessages.clear();
   eye.reset(); tape.reset(); why.reset(); waveform.reset();

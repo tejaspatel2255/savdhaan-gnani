@@ -1,9 +1,21 @@
 import { fetchSampleRun } from "./api.js";
 
+let currentSampleAbort = null;
+
+export function stopSample() {
+  if (currentSampleAbort) {
+    currentSampleAbort();
+    currentSampleAbort = null;
+  }
+}
+
 /**
  * Dev feed replay driver for deterministic visual testing and design polish.
  */
 export async function playSample(url, dispatch, { speed = 1, at = null } = {}) {
+  stopSample();
+  let cancelled = false;
+  currentSampleAbort = () => { cancelled = true; };
   try {
     const text = await fetchSampleRun(url);
     const lines = text.split("\n");
@@ -19,10 +31,13 @@ export async function playSample(url, dispatch, { speed = 1, at = null } = {}) {
       }
     }
 
+    if (cancelled) return;
+
     if (at !== null && at !== undefined) {
       // Deterministic snapshot mode at timestamp N
       document.body.classList.add("no-anim");
       for (const msg of messages) {
+        if (cancelled) return;
         if (msg.t <= at) {
           dispatch(msg);
         }
@@ -35,6 +50,7 @@ export async function playSample(url, dispatch, { speed = 1, at = null } = {}) {
     const startMonotonic = performance.now();
 
     for (const msg of messages) {
+      if (cancelled) return;
       const targetTimeMs = ((msg.t || 0) / effectiveSpeed) * 1000;
       const elapsedMs = performance.now() - startMonotonic;
       const delay = Math.max(0, targetTimeMs - elapsedMs);
@@ -42,9 +58,14 @@ export async function playSample(url, dispatch, { speed = 1, at = null } = {}) {
       if (delay > 0) {
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
+      if (cancelled) return;
       dispatch(msg);
     }
   } catch (err) {
     console.error("Failed to play devfeed sample:", err);
+  } finally {
+    if (currentSampleAbort === currentSampleAbort) {
+      currentSampleAbort = null;
+    }
   }
 }

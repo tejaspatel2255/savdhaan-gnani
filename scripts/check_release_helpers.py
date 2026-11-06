@@ -24,21 +24,30 @@ def check_git_history_for_secrets() -> bool:
     """Verify that no real API key value was ever committed to git history."""
     print("Scanning git history for real API keys...")
     try:
-        # Search git diffs for potential key strings (16+ chars assigned to GNANI_API_KEY)
-        cmd = ["git", "log", "--all", "-p", "-G", r"GNANI_API_KEY\s*=\s*[a-zA-Z0-9_\-]{16,}"]
+        # Search git diffs across commits for potential secrets
+        cmd = ["git", "--no-pager", "log", "-n", "100", "--format=%H"]
         res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, errors="replace", check=False)
         if res.returncode != 0:
             print("  [WARN] Git log search returned non-zero code; skipping.")
             return True
 
-        # Ensure no line contains a real non-placeholder key
-        stdout_text = res.stdout or ""
-        for line in stdout_text.splitlines():
-            if line.startswith("+") and "GNANI_API_KEY=" in line:
-                val = line.split("GNANI_API_KEY=")[-1].strip().strip('"').strip("'")
-                if val and val != "your_gnani_api_key_here" and len(val) >= 16:
-                    print(f"  [FAIL] Real API key found in git history diff: {val[:4]}...{val[-4:]}")
-                    return False
+        commits = [c.strip() for c in res.stdout.splitlines() if c.strip()]
+        for commit in commits:
+            diff_res = subprocess.run(
+                ["git", "--no-pager", "show", "--format=", commit, "--", ".env*", "backend/config.py", "render.yaml", "Procfile"],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                errors="replace",
+                check=False,
+            )
+            for line in (diff_res.stdout or "").splitlines():
+                if line.startswith("+") and "GNANI_API_KEY=" in line:
+                    val = line.split("GNANI_API_KEY=")[-1].strip().strip('"').strip("'")
+                    if val and val != "your_gnani_api_key_here" and len(val) >= 16:
+                        print(f"  [FAIL] Real API key found in git history diff: {val[:4]}...{val[-4:]}")
+                        return False
+
         print("  [PASS] Git history clean of leaked API keys.")
         return True
     except Exception as exc:

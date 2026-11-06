@@ -147,9 +147,15 @@ function _hideStrip() {
 
 /** Called by app.js dispatch for session / alert / usage_tick events. */
 export function handle(msg) {
-  if (msg.type === "alert") _setState("alert");
-  if (msg.type === "session" && (msg.state === "ended" || msg.state === "error")) {
-    _sessionId = null; _setState("idle");
+  // Only a session whose source is "mic" drives the live bar out of idle
+  const isMic = (msg.mode === "mic" || msg.source === "mic" || _sessionId != null);
+  if (msg.type === "alert" && isMic) _setState("alert");
+  if (msg.type === "session") {
+    if (msg.mode === "mic" && (msg.state === "listening" || msg.state === "alert")) {
+      _setState(msg.state);
+    } else if (msg.state === "ended" || msg.state === "error") {
+      _sessionId = null; _setState("idle");
+    }
   }
   if (msg.type === "usage_tick") _updateUsage(msg.stt_seconds_used, msg.stt_seconds_cap || _usageCap);
 }

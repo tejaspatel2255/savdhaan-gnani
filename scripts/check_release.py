@@ -126,27 +126,40 @@ def check_readme_figures(readme_content: str, results_path: Path) -> bool:
     return True
 
 
-def check_readme_integrity(allow_placeholders: bool = False) -> bool:
+def check_readme_integrity(
+    allow_placeholders: bool = False,
+    readme_path: Path | None = None,
+    results_path: Path | None = None,
+) -> bool:
     print("Checking README.md...")
-    readme_path = ROOT / "README.md"
-    results_path = ROOT / "data" / "eval" / "results.json"
-    if not readme_path.exists():
-        print("  [FAIL] README.md does not exist.")
+    readme_file = readme_path or (ROOT / "README.md")
+    results_file = results_path or (ROOT / "data" / "eval" / "results.json")
+    if not readme_file.exists():
+        print(f"  [FAIL] {readme_file.name} does not exist.")
         return False
 
-    lines = readme_path.read_text(encoding="utf-8").splitlines()
+    lines = readme_file.read_text(encoding="utf-8").splitlines()
     if len(lines) > 140:
         print(f"  [FAIL] README.md exceeds 140 lines ({len(lines)} lines).")
         return False
     print(f"  [PASS] README.md line count: {len(lines)} (<= 140).")
 
     content = "\n".join(lines)
-    if not allow_placeholders and ("TODO" in content or "<<" in content):
-        print("  [FAIL] Unfinished 'TODO' or '<<' placeholders remain in README.md.")
-        return False
+    if not allow_placeholders:
+        if "TODO" in content or "<<" in content:
+            print("  [FAIL] Unfinished 'TODO' or '<<' placeholders remain in README.md.")
+            return False
+    else:
+        # Check that only allowed link placeholders remain
+        allowed_placeholders = {"<<DEMO LINK>>", "<<VIDEO LINK>>", "<<REPO LINK>>"}
+        found_placeholders = set(re.findall(r"<<[^>]+>>", content))
+        disallowed = found_placeholders - allowed_placeholders
+        if "TODO" in content or "TBD" in content or disallowed:
+            print(f"  [FAIL] Disallowed placeholders remain in README.md: {disallowed or 'TODO/TBD'}")
+            return False
     print("  [PASS] Placeholder check passed.")
 
-    if not check_readme_figures(content, results_path):
+    if not check_readme_figures(content, results_file):
         return False
     print("  [PASS] All figures in README verified against results.json.")
     return True

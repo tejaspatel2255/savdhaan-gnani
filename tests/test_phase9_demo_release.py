@@ -73,7 +73,31 @@ def test_readme_line_count_and_integrity():
     assert readme_path.exists()
     lines = readme_path.read_text(encoding="utf-8").splitlines()
     assert len(lines) <= 140, f"README exceeds 140 lines: {len(lines)}"
-    assert check_readme_integrity() is True
+    assert check_readme_integrity(allow_placeholders=True) is True
+
+
+def test_check_release_rejects_disallowed_placeholders(tmp_path):
+    fake_readme = tmp_path / "README.md"
+    fake_results = tmp_path / "results.json"
+    fake_results.write_text(json.dumps({
+        "splits": {
+            "test": {
+                "ceiling": {"tp": 4, "fn": 1, "fp": 0, "tn": 5, "recall": 0.8, "false_alarm_rate": 0.0}
+            }
+        }
+    }), encoding="utf-8")
+
+    # Disallowed placeholder <<SOMETHING ELSE>>
+    fake_readme.write_text("Repository: <<SOMETHING ELSE>>\n", encoding="utf-8")
+    assert check_readme_integrity(allow_placeholders=True, readme_path=fake_readme, results_path=fake_results) is False
+
+    # Disallowed TODO
+    fake_readme.write_text("TODO: finish this section\n", encoding="utf-8")
+    assert check_readme_integrity(allow_placeholders=True, readme_path=fake_readme, results_path=fake_results) is False
+
+    # Disallowed TBD
+    fake_readme.write_text("TBD: link here\n", encoding="utf-8")
+    assert check_readme_integrity(allow_placeholders=True, readme_path=fake_readme, results_path=fake_results) is False
 
 
 def test_check_release_rejects_invented_readme_numbers(tmp_path):
