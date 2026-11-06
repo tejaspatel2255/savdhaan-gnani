@@ -47,7 +47,7 @@ All figures come directly from `data/eval/results.json` (`/report.html`):
 | **Dev Split** (5 scam + 5 legit calls) | Real Prisma (`phone_noise`) | not measured yet (`python scripts/run_eval.py record --split dev --go`) | - | - |
 | **Test Split** (5 scam + 5 legit calls, frozen) | Perfect Transcript (Ceiling) | **80.0% (4 of 5)** `[0.3755, 0.9638]` | **0.0% (0 of 5)** `[0.0000, 0.4345]` | **0.8889** |
 | **Test Split** (5 scam + 5 legit calls, frozen) | Real Prisma (`phone_noise`) | not measured yet (`python scripts/run_eval.py record --split test --go`) | - | - |
-| **Blind Set** (written by someone else) | Perfect Transcript (Ceiling) | not measured yet (`python scripts/run_eval.py score --split blind --ceiling`) | - | - |
+| **Blind Set** (written by someone else) | Perfect Transcript (Ceiling) | **100.0% (1 of 1)** `[0.2065, 1.0000]` | **0.0% (0 of 1)** `[0.0000, 0.7935]` | **1.0000** |
 | **Blind Set** (written by someone else) | Real Prisma (`phone_noise`) | not measured yet (`python scripts/run_eval.py score --split blind --ceiling`) | - | - |
 <!-- RESULTS:END -->
 

@@ -1,0 +1,48 @@
+[
+  {
+    "id": "B01",
+    "title": "Fake electricity officer power cutoff threat",
+    "label": "scam",
+    "lang": "hi-IN",
+    "split": "blind",
+    "script_path": "data\\scripts\\blind_calls.json",
+    "audio_path": "data\\calls\\B01__phone_noise.wav",
+    "noise": "phone_noise snr 15 dB",
+    "duration_s": 19.72,
+    "first_cue_s": 4.46,
+    "variants": {
+      "clean": "data\\calls\\B01__clean.wav",
+      "phone": "data\\calls\\B01__phone.wav",
+      "phone_noise": "data\\calls\\B01__phone_noise.wav",
+      "phone_noise_drops": "data\\calls\\B01__phone_noise_drops.wav"
+    },
+    "voices": {
+      "caller": "Avinash",
+      "listener": "Chetana"
+    },
+    "chars": 216
+  },
+  {
+    "id": "B02",
+    "title": "Automated broadband maintenance advisory",
+    "label": "legit",
+    "lang": "hi-IN",
+    "split": "blind",
+    "script_path": "data\\scripts\\blind_calls.json",
+    "audio_path": "data\\calls\\B02__phone_noise.wav",
+    "noise": "phone_noise snr 15 dB",
+    "duration_s": 13.92,
+    "first_cue_s": null,
+    "variants": {
+      "clean": "data\\calls\\B02__clean.wav",
+      "phone": "data\\calls\\B02__phone.wav",
+      "phone_noise": "data\\calls\\B02__phone_noise.wav",
+      "phone_noise_drops": "data\\calls\\B02__phone_noise_drops.wav"
+    },
+    "voices": {
+      "caller": "Avinash",
+      "listener": "Chetana"
+    },
+    "chars": 150
+  }
+]

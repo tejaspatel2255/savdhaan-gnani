@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-10-28T06:55:17Z",
+  "generated_at": "2026-11-06T18:36:26Z",
   "rules_sha256": "477cca5dd0ad163cab2ca14a55c0f32d810d3c614686def2ae2f7b1ecb2ed8c3",
   "rules_pack": "hi_en",
   "thresholds": {
     "careful": 30,
     "danger": 60
   },
-  "n_calls": 20,
+  "n_calls": 22,
   "splits": {
     "test": {
       "tp": null,
@@ -115,6 +115,60 @@
         },
         "n": 10
       }
+    },
+    "blind": {
+      "tp": null,
+      "fn": null,
+      "fp": null,
+      "tn": null,
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "false_alarm_rate": null,
+      "recall_ci95": [
+        null,
+        null
+      ],
+      "false_alarm_ci95": [
+        null,
+        null
+      ],
+      "careful_on_legit": null,
+      "time_to_alert_s": null,
+      "time_from_cue_s": null,
+      "n": 2,
+      "ceiling": {
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 1,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "recall_ci95": [
+          0.2065,
+          1.0
+        ],
+        "false_alarm_ci95": [
+          0.0,
+          0.7935
+        ],
+        "careful_on_legit": 0,
+        "time_to_alert_s": {
+          "n": 1,
+          "median": 6.4,
+          "mean": 6.4,
+          "max": 6.4
+        },
+        "time_from_cue_s": {
+          "n": 1,
+          "median": 1.94,
+          "mean": 1.94,
+          "max": 1.94
+        },
+        "n": 2
+      }
     }
   },
   "latency_ms": null,
@@ -128,6 +182,62 @@
     "note": "Digits vs spelled-out numbers and Roman vs Devanagari spellings count as errors; WER values are an upper bound."
   },
   "calls": [
+    {
+      "id": "B01",
+      "split": "blind",
+      "label": "scam",
+      "alerted": true,
+      "alert_t": 6.4,
+      "first_cue_s": 4.46,
+      "max_score": 93,
+      "max_level": "danger",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, बिजली विभाग से बिलिंग अधिकारी बोल रहा हूँ।"
+        },
+        {
+          "t": 1.9,
+          "text": "जी, क्या बात है?"
+        },
+        {
+          "t": 3.4,
+          "text": "आपका पिछले महीने का बिजली बिल बकाया है, आज रात कनेक्शन कट जाएगा।"
+        },
+        {
+          "t": 4.9,
+          "text": "मैंने तो बिल भर दिया था।"
+        },
+        {
+          "t": 6.4,
+          "text": "तुरंत दिए गए लिंक पर क्लिक करके अपडेट करें वरना पेनल्टी लगेगी।"
+        }
+      ]
+    },
+    {
+      "id": "B02",
+      "split": "blind",
+      "label": "legit",
+      "alerted": false,
+      "alert_t": null,
+      "first_cue_s": null,
+      "max_score": 0,
+      "max_level": "calm",
+      "segments": [
+        {
+          "t": 0.4,
+          "text": "नमस्ते, आपके इंटरनेट सेवा प्रदाता की तरफ से सूचित किया जाता है।"
+        },
+        {
+          "t": 1.9,
+          "text": "कल रात दो बजे से चार बजे तक नियमित रखरखाव का कार्य होगा।"
+        },
+        {
+          "t": 3.4,
+          "text": "असुविधा के लिए खेद है, धन्यवाद।"
+        }
+      ]
+    },
     {
       "id": "D01_digital_arrest",
       "split": "dev",
@@ -766,15 +876,25 @@
     }
   ],
   "test_scoring": {
-    "times_scored": 2,
+    "times_scored": 3,
     "rules_changed_since_first": false
   },
   "limitations": [
     "The same author wrote the rules and the evaluation call scripts.",
     "The calls use synthetic TTS voices rather than real-world human phone recordings.",
     "The evaluation sets are small (10 calls per split), so confidence intervals are wide.",
-    "The frozen test split was scored 2 time(s).",
-    "WER comparison: digits vs spelled-out words and Devanagari vs Roman spelling count as errors, making WER an upper bound.",
-    "T05 is an expected miss"
-  ]
+    "The frozen test split was scored 3 time(s).",
+    "WER comparison: digits vs spelled-out words and Devanagari vs Roman spelling count as errors, making WER an upper bound."
+  ],
+  "blind_scoring": {
+    "times_scored": 1,
+    "first_scored_at": "2026-11-06T18:36:26.162051+00:00",
+    "last_scored_at": "2026-11-06T18:36:26.162051+00:00",
+    "rules_sha256": {
+      "scam_rules_gu.json": "3b83872e94fa6d594139250318e57ef4acf6b6b6769465238ea098f34c3fba47",
+      "scam_rules_hi_en.json": "477cca5dd0ad163cab2ca14a55c0f32d810d3c614686def2ae2f7b1ecb2ed8c3",
+      "warnings_gu.json": "5209f1680cc0bbc1b35690dbf163d5c24cdedda5c72123c5878a814a9961c421"
+    },
+    "blind_sha256": "4ec13dd0a42362588599669df01fc6205fbd6c020ec2992a606300f7973963bd"
+  }
 }
