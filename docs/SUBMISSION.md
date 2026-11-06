@@ -53,8 +53,8 @@ Scam calls claiming "digital arrest," fake police warrants, and electricity bill
 🔹 **Nazar Guardian Interface**: Features an evil-eye control room, live receipt tape evidence log, and simulated family SOS notifications.
 
 📺 **Demo Video (75s)**: <<VIDEO LINK>>
-🌐 **Try the Live Static Demo**: <<DEMO LINK>>
-💻 **Open-Source Repository**: <<REPO LINK>>
+🌐 **Try the Live Static Demo**: https://savdhaan-gnani.vercel.app
+💻 **Open-Source Repository**: https://github.com/tejaspatel2255/savdhaan-gnani
 
 #GnaniAI #GreatIndianAIInternshipChallenge #SpeechAI #CyberSecurity #IndianAI #FastAPI #VoiceAI
 
@@ -75,8 +75,8 @@ Why Savdhaan?
 3. Spoken voice warnings via Gnani Timbre v3.0.
 4. Transparent 'Nazar' receipt tape evidence view.
 
-Try the hosted demo: <<DEMO LINK>>
-Code: <<REPO LINK>>
+Try the hosted demo: https://savdhaan-gnani.vercel.app
+Code: https://github.com/tejaspatel2255/savdhaan-gnani
 
 ## 4. Pre-Flight Submission Checklist
 
@@ -85,5 +85,5 @@ Code: <<REPO LINK>>
 - [ ] Static frontend verified: `python scripts/verify_static_site.py`.
 - [ ] Recorded 75-second video following `docs/VIDEO_SHOTLIST.md`.
 - [ ] Hosted demo live on Vercel with all assets loading properly.
-- [ ] Replaced placeholders `<<DEMO LINK>>`, `<<VIDEO LINK>>`, and `<<REPO LINK>>` in `README.md`.
+- [ ] Replaced placeholders `https://savdhaan-gnani.vercel.app`, `<<VIDEO LINK>>`, and `https://github.com/tejaspatel2255/savdhaan-gnani` in `README.md`.
 - [ ] Verified git tag created and pushed: `git tag -a v1.0.0 -m "Final submission release" && git push origin v1.0.0`.
