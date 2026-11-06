@@ -2,6 +2,41 @@
 
 This document provides ready-to-use project summaries, social post copy, and submission checklists for the **Great Indian AI Internship Challenge** by **Gnani AI** (Deadline: Nov 10, 2026, 11:59 PM IST).
 
+## Facts for the post (generated)
+
+`
+============================================================
+SAVDHAAN POST FACTS & VERIFIED METRICS
+============================================================
+
+Split: DEV
+  Ceiling Recall : 100.0% (5 of 5)
+  Ceiling FAR    : 0.0% (0 of 5)
+  Ceiling F1     : 1.0000
+  Prisma Audio   : not measured yet
+
+Split: TEST
+  Ceiling Recall : 80.0% (4 of 5)
+  Ceiling FAR    : 0.0% (0 of 5)
+  Ceiling F1     : 0.8889
+  Prisma Audio   : not measured yet
+
+Split: BLIND
+  Ceiling Recall : 100.0% (1 of 1)
+  Ceiling FAR    : 0.0% (0 of 1)
+  Ceiling F1     : 1.0000
+  Prisma Audio   : not measured yet
+
+============================================================
+Core Capabilities:
+  - Real-time live audio streaming with Gnani Prisma v2.5 WebSocket STT
+  - Zero-latency deterministic regex and token gating scam scoring
+  - Protective voice interrupt synthesis with Gnani Timbre v3.0 TTS
+  - Trilingual warning voice pack (Hindi, Gujarati, English)
+  - 'Nazar' guardian eye interface with transparent evidence receipt tape
+============================================================
+`
+
 ## 1. 90-Word Submission Description
 
 Savdhaan (सावधान) is a live scam-call shield that protects citizens in real time using explainable speech intelligence. Incoming phone audio streams to Gnani Prisma v2.5 for live transcription. A deterministic bilingual scoring engine detects coercion, OTP theft, digital arrest, and remote-app traps with zero false alarms on legitimate calls. Upon detecting danger, Savdhaan speaks an immediate voice warning using Gnani Timbre v3.0 in Hindi, Gujarati, or English, while simulating family alerts and rendering an auditable evidence receipt in the 'Nazar' evil-eye control room.
