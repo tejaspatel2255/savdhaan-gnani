@@ -26,8 +26,14 @@ def build_markdown_table(results: dict) -> str:
     dev_split = splits.get("dev", {})
     test_split = splits.get("test", {})
 
-    dev_ceil = dev_split.get("ceiling", {})
-    test_ceil = test_split.get("ceiling", {})
+    dev_ceil = dev_split.get("ceiling") or {}
+    test_ceil = test_split.get("ceiling") or {}
+
+    # Dev ceiling
+    if not dev_ceil and dev_split.get("tp") is not None:
+        dev_ceil = dev_split
+    if not test_ceil and test_split.get("tp") is not None:
+        test_ceil = test_split
 
     # Dev ceiling
     dev_recall = f"**{dev_ceil.get('recall', 0.0) * 100:.1f}% ({dev_ceil.get('tp', 0)} of {dev_ceil.get('tp', 0) + dev_ceil.get('fn', 0)})** {format_ci(dev_ceil.get('recall_ci95'))}"
