@@ -13,9 +13,11 @@
 - Output file `data/scripts/blind_calls.json` is hashed on import into `docs/FROZEN_BLIND.txt`.
 - Once frozen, `blind_calls.json` must never be edited manually.
 
-## 4. One-Shot Scoring Guard
+## 4. One-Shot Scoring Guard & Status
+- **Current Status**: The first scoring was a placeholder run on the two development example calls (B01, B02); a real blind set from an independent second person is still needed.
+- When the friend's real set arrives, import with `python scripts/import_blind.py --new-version`. If the file hash changes and matches `docs/FROZEN_BLIND.txt`, the scoring counts as a fresh first scoring of the new set, and previous placeholder history is preserved.
 - Cannot score until:
   1. `docs/FROZEN_FINAL.txt` exists and matches `rules/*.json`.
   2. `docs/FROZEN_BLIND.txt` exists and matches `data/scripts/blind_calls.json`.
   3. Flag `--confirm-blind-once` is provided.
-- Any rescoring requires `--i-understand-this-is-a-rescore` and is flagged in audit reports.
+- Any rescoring of the same set requires `--i-understand-this-is-a-rescore` and is flagged in audit reports.

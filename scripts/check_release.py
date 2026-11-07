@@ -113,6 +113,14 @@ def check_readme_figures(readme_content: str, results_path: Path) -> bool:
         print(f"  [WARN] Could not parse results.json: {exc}")
         return True
 
+    from scripts.blind_status import blind_status
+    if blind_status(r_data) == "placeholder":
+        # Ensure README blind set row does NOT claim a percentage
+        for line in readme_content.splitlines():
+            if "Blind Set" in line and re.search(r"\b\d+\.?\d*%", line):
+                print(f"  [FAIL] README displays blind percentages while blind status is placeholder: '{line.strip()}'")
+                return False
+
     valid_figures = extract_numbers_from_results(r_data)
     for pct in re.findall(r"(\b\d+\.?\d*%)", readme_content):
         if pct != "95%" and pct not in valid_figures:

@@ -46,14 +46,21 @@ def verify_blind_scoring_guards(
     if blind_hash not in frozen_blind_content:
         return False, f"Blind set hash does not match {frozen_blind_path}.", 0
 
-    # Check times already scored
+    # Check times already scored and check if blind set hash changed
     times_scored = 0
+    prev_blind_hash = None
     if results_path.exists():
         try:
             res_data = json.loads(results_path.read_text(encoding="utf-8"))
-            times_scored = res_data.get("blind_scoring", {}).get("times_scored", 0)
+            scoring_meta = res_data.get("blind_scoring", {})
+            times_scored = scoring_meta.get("times_scored", 0)
+            prev_blind_hash = scoring_meta.get("blind_sha256")
         except Exception:
             pass
+
+    # If the hash has changed and matches FROZEN_BLIND, count as a FIRST scoring of the new set
+    if times_scored > 0 and prev_blind_hash and blind_hash != prev_blind_hash:
+        times_scored = 0
 
     if times_scored > 0:
         if not i_understand_this_is_a_rescore:
@@ -87,14 +94,28 @@ def record_blind_scoring_metadata(
     }
 
     scoring_meta = results_data.get("blind_scoring", {})
-    prev_times = scoring_meta.get("times_scored", 0)
+    prev_hash = scoring_meta.get("blind_sha256")
     now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
 
-    scoring_meta["times_scored"] = prev_times + 1
-    if "first_scored_at" not in scoring_meta:
-        scoring_meta["first_scored_at"] = now_iso
-    scoring_meta["last_scored_at"] = now_iso
-    scoring_meta["rules_sha256"] = rules_hashes
-    scoring_meta["blind_sha256"] = blind_hash
+    # If new set arrived, archive previous scoring to history
+    if prev_hash and prev_hash != blind_hash:
+        history = results_data.setdefault("blind_scoring_history", [])
+        scoring_meta["note"] = "placeholder run on example calls"
+        history.append(dict(scoring_meta))
+        scoring_meta = {
+            "times_scored": 1,
+            "first_scored_at": now_iso,
+            "last_scored_at": now_iso,
+            "rules_sha256": rules_hashes,
+            "blind_sha256": blind_hash,
+        }
+    else:
+        prev_times = scoring_meta.get("times_scored", 0)
+        scoring_meta["times_scored"] = prev_times + 1
+        if "first_scored_at" not in scoring_meta:
+            scoring_meta["first_scored_at"] = now_iso
+        scoring_meta["last_scored_at"] = now_iso
+        scoring_meta["rules_sha256"] = rules_hashes
+        scoring_meta["blind_sha256"] = blind_hash
 
     results_data["blind_scoring"] = scoring_meta

@@ -116,10 +116,26 @@ export function renderSectionsAtoC(root, data, devSplit, testSplit, blindSplit, 
     { name: "TEST (FROZEN)", real: testSplit, ceil: testSplit.ceiling },
   ];
   if (blindSplit && (blindSplit.tp !== undefined || blindSplit.ceiling !== undefined)) {
-    splitItems.push({ name: "BLIND (ONE-SHOT)", real: blindSplit, ceil: blindSplit.ceiling });
+    const bN = blindSplit.n ?? (blindSplit.ceiling?.n ?? 0);
+    if (bN < 10) {
+      splitItems.push({ name: "BLIND (PLACEHOLDER RUN)", real: null, ceil: null, placeholderNotice: `Blind set not ready. Only ${bN} example calls written during development were scored (placeholder test of the pipeline, ceiling only). A real blind set written by another person is still needed.` });
+    } else {
+      splitItems.push({ name: "BLIND (ONE-SHOT)", real: blindSplit, ceil: blindSplit.ceiling });
+    }
   }
 
   splitItems.forEach((item) => {
+    if (item.placeholderNotice) {
+      const trP = el("tr");
+      trP.appendChild(el("td", "mono-num", item.name));
+      const tdNotice = el("td", "sub", item.placeholderNotice);
+      tdNotice.colSpan = 6;
+      tdNotice.style.fontStyle = "italic";
+      tdNotice.style.color = "var(--muted, #aebbd9)";
+      trP.appendChild(tdNotice);
+      tbodyB.appendChild(trP);
+      return;
+    }
     const trC = el("tr");
     trC.appendChild(el("td", "mono-num", item.name));
     trC.appendChild(el("td", null, "Perfect Scripts (Ceiling)"));

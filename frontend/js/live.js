@@ -10,6 +10,7 @@ import { startMic, stopMic, MicError } from "./mic.js";
 const NOTICE_KEY = "savdhaan_live_notice_seen";
 
 let _state = "idle";   // idle | permission | connecting | listening | alert | stopped
+let _liveActive = false;
 let _sessionId = null;
 let _usageCap = 180;
 let _onDispatch = null; // callback to forward events to app.dispatch
@@ -110,9 +111,11 @@ async function _startLive() {
   _setState("connecting");
   try {
     await startMic(sessionId);
+    _liveActive = true;
     _setState("listening");
     _showStrip();
   } catch (merr) {
+    _liveActive = false;
     _setState("stopped");
     const code = merr instanceof MicError ? (merr.code === "denied" ? "mic_denied" : "mic_no_device") : "internal";
     if (_onDispatch) _onDispatch({ type: "error", code, message: merr.message, recoverable: true });
@@ -122,6 +125,7 @@ async function _startLive() {
 }
 
 async function _onStopClick() {
+  _liveActive = false;
   stopMic();
   if (_sessionId) {
     try { await stopSession(_sessionId); } catch (_) {}
@@ -133,6 +137,7 @@ async function _onStopClick() {
 
 function _setState(s) {
   _state = s;
+  if (s === "idle" || s === "stopped") _liveActive = false;
   const labels = {
     idle: t("live_state_idle"), permission: t("live_state_permission"),
     connecting: t("live_state_connecting"), listening: t("live_state_listening"),
@@ -155,11 +160,11 @@ function _hideStrip() {
 
 /** Called by app.js dispatch for session / alert / usage_tick events. */
 export function handle(msg) {
-  if (msg.type === "alert") _setState("alert");
+  if (msg.type === "alert" && _liveActive) _setState("alert");
   if (msg.type === "session" && (msg.state === "ended" || msg.state === "error")) {
-    _sessionId = null; _setState("idle");
+    _sessionId = null; _liveActive = false; _setState("idle");
   }
-  if (msg.type === "usage_tick") _updateUsage(msg.stt_seconds_used, msg.stt_seconds_cap || _usageCap);
+  if (msg.type === "usage_tick" && _liveActive) _updateUsage(msg.stt_seconds_used, msg.stt_seconds_cap || _usageCap);
 }
 
 function _updateUsage(used, cap) {

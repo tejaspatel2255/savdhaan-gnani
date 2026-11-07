@@ -132,8 +132,17 @@ def test_record_without_go_streams_nothing(monkeypatch, capsys):
     assert "Dry run complete" in captured
 
 
-def test_record_over_cap_prints_exact_refusal(monkeypatch, capsys):
+def test_record_over_cap_prints_exact_refusal(monkeypatch, capsys, tmp_path):
     from backend.config import settings
+    # Make test hermetic: create fake manifest with duration exceeding cap
+    fake_manifest = [
+        {"id": "D01_digital_arrest", "split": "dev", "duration_s": 15.0, "variants": {}},
+        {"id": "D02_otp_kyc", "split": "dev", "duration_s": 15.0, "variants": {}},
+    ]
+    manifest_file = tmp_path / "manifest.json"
+    manifest_file.write_text(json.dumps(fake_manifest), encoding="utf-8")
+    monkeypatch.setattr("scripts.run_eval.MANIFEST_PATH", manifest_file)
+
     # Settings is a frozen dataclass, replace the instance with an updated one
     new_settings = Settings(
         api_key=settings.api_key,

@@ -5,6 +5,9 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+import sys
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 RESULTS_FILE = ROOT / "data" / "eval" / "results.json"
 README_FILE = ROOT / "README.md"
 
@@ -37,23 +40,34 @@ def build_markdown_table(results: dict) -> str:
     test_f1 = f"**{test_ceil.get('f1', 0.0):.4f}**"
 
     # Blind split
+    from scripts.blind_status import blind_status
+    b_status = blind_status(results)
+
     blind_split = splits.get("blind", {})
     blind_ceil = blind_split.get("ceiling", {})
-    if blind_split and blind_split.get("tp") is not None:
-        b_rec = f"**{blind_split.get('recall', 0.0) * 100:.1f}% ({blind_split.get('tp', 0)} of {blind_split.get('tp', 0) + blind_split.get('fn', 0)})** {format_ci(blind_split.get('recall_ci95'))}"
-        b_far = f"**{blind_split.get('false_alarm_rate', 0.0) * 100:.1f}% ({blind_split.get('fp', 0)} of {blind_split.get('fp', 0) + blind_split.get('tn', 0)})** {format_ci(blind_split.get('false_alarm_ci95'))}"
-        b_f1 = f"**{blind_split.get('f1', 0.0):.4f}**"
-        blind_real_row = f"| **Blind Set** (written by someone else) | Real Prisma (`phone_noise`) | {b_rec} | {b_far} | {b_f1} |"
-    else:
-        blind_real_row = "| **Blind Set** (written by someone else) | Real Prisma (`phone_noise`) | not measured yet (`python scripts/run_eval.py score --split blind --ceiling`) | - | - |"
+    b_n = blind_split.get("n", 0) if blind_split else 0
+    if b_status == "placeholder":
+        blind_ceil_row = f"| **Blind Set** (written by someone else) | Perfect Transcript (Ceiling) | not ready (placeholder run on {b_n} example calls) | - | - |"
+        blind_real_row = f"| **Blind Set** (written by someone else) | Real Prisma (`phone_noise`) | not ready (placeholder run on {b_n} example calls) | - | - |"
+    elif b_status == "scored":
+        if blind_split and blind_split.get("tp") is not None:
+            b_rec = f"**{blind_split.get('recall', 0.0) * 100:.1f}% ({blind_split.get('tp', 0)} of {blind_split.get('tp', 0) + blind_split.get('fn', 0)})** {format_ci(blind_split.get('recall_ci95'))}"
+            b_far = f"**{blind_split.get('false_alarm_rate', 0.0) * 100:.1f}% ({blind_split.get('fp', 0)} of {blind_split.get('fp', 0) + blind_split.get('tn', 0)})** {format_ci(blind_split.get('false_alarm_ci95'))}"
+            b_f1 = f"**{blind_split.get('f1', 0.0):.4f}**"
+            blind_real_row = f"| **Blind Set** (written by someone else) | Real Prisma (`phone_noise`) | {b_rec} | {b_far} | {b_f1} |"
+        else:
+            blind_real_row = "| **Blind Set** (written by someone else) | Real Prisma (`phone_noise`) | not measured yet (`python scripts/run_eval.py score --split blind --ceiling`) | - | - |"
 
-    if blind_ceil and blind_ceil.get("tp") is not None:
-        bc_rec = f"**{blind_ceil.get('recall', 0.0) * 100:.1f}% ({blind_ceil.get('tp', 0)} of {blind_ceil.get('tp', 0) + blind_ceil.get('fn', 0)})** {format_ci(blind_ceil.get('recall_ci95'))}"
-        bc_far = f"**{blind_ceil.get('false_alarm_rate', 0.0) * 100:.1f}% ({blind_ceil.get('fp', 0)} of {blind_ceil.get('fp', 0) + blind_ceil.get('tn', 0)})** {format_ci(blind_ceil.get('false_alarm_ci95'))}"
-        bc_f1 = f"**{blind_ceil.get('f1', 0.0):.4f}**"
-        blind_ceil_row = f"| **Blind Set** (written by someone else) | Perfect Transcript (Ceiling) | {bc_rec} | {bc_far} | {bc_f1} |"
+        if blind_ceil and blind_ceil.get("tp") is not None:
+            bc_rec = f"**{blind_ceil.get('recall', 0.0) * 100:.1f}% ({blind_ceil.get('tp', 0)} of {blind_ceil.get('tp', 0) + blind_ceil.get('fn', 0)})** {format_ci(blind_ceil.get('recall_ci95'))}"
+            bc_far = f"**{blind_ceil.get('false_alarm_rate', 0.0) * 100:.1f}% ({blind_ceil.get('fp', 0)} of {blind_ceil.get('fp', 0) + blind_ceil.get('tn', 0)})** {format_ci(blind_ceil.get('false_alarm_ci95'))}"
+            bc_f1 = f"**{blind_ceil.get('f1', 0.0):.4f}**"
+            blind_ceil_row = f"| **Blind Set** (written by someone else) | Perfect Transcript (Ceiling) | {bc_rec} | {bc_far} | {bc_f1} |"
+        else:
+            blind_ceil_row = "| **Blind Set** (written by someone else) | Perfect Transcript (Ceiling) | not measured yet (`python scripts/run_eval.py score --split blind --ceiling`) | - | - |"
     else:
         blind_ceil_row = "| **Blind Set** (written by someone else) | Perfect Transcript (Ceiling) | not measured yet (`python scripts/run_eval.py score --split blind --ceiling`) | - | - |"
+        blind_real_row = "| **Blind Set** (written by someone else) | Real Prisma (`phone_noise`) | not measured yet (`python scripts/run_eval.py score --split blind --ceiling`) | - | - |"
 
     rows = [
         START_MARKER,
