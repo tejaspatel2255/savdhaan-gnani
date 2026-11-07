@@ -24,12 +24,12 @@ def test_html_link_tags_order():
     index_html = (ROOT / "frontend" / "index.html").read_text(encoding="utf-8")
     report_html = (ROOT / "frontend" / "report.html").read_text(encoding="utf-8")
 
-    # index.html: css/final-fix.css must be the last <link rel="stylesheet">, linked after css/fit-short.css
+    # index.html: css/layout-v3.css must be the last <link rel="stylesheet">, linked after css/final-fix.css
     index_links = re.findall(r'<link\s+rel="stylesheet"\s+href="([^"]+)"', index_html)
     assert len(index_links) > 0
-    assert index_links[-1] == "css/final-fix.css", f"Last link in index.html is {index_links[-1]}"
-    assert "css/fit-short.css" in index_links
-    assert index_links.index("css/final-fix.css") > index_links.index("css/fit-short.css")
+    assert index_links[-1] == "css/layout-v3.css", f"Last link in index.html is {index_links[-1]}"
+    assert "css/final-fix.css" in index_links
+    assert index_links.index("css/layout-v3.css") > index_links.index("css/final-fix.css")
 
     # report.html: css/report-responsive.css linked after css/khata.css
     report_links = re.findall(r'<link\s+rel="stylesheet"\s+href="([^"]+)"', report_html)

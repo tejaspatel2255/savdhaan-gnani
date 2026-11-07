@@ -1,0 +1,94 @@
+/* layout-v3.css: loaded LAST. A real fit-to-screen layout with NO zoom.
+   Desktop (>=1000px wide and >=560px high): three columns fill the window, the page itself never scrolls;
+   only the Tape, the evidence list and the phone card scroll inside their own boxes.
+   Narrower or shorter screens keep the stacked layout from responsive.css. */
+
+/* ---- 1. Desktop fit (no zoom) ---- */
+@media (min-width: 1000px) and (min-height: 560px) {
+  html { zoom: 1 !important; --z: 1; }
+  html, body { height: 100%; overflow: hidden; }
+  .app-shell { height: 100dvh; width: 100%; max-width: none; min-height: 0; overflow: hidden; }
+  #hdr { flex: 0 0 auto; padding: 6px 16px; }
+  #live-status-strip, #awaaz, #foot { flex: 0 0 auto; }
+
+  /* Header controls: one wrapping row; the Advanced panel floats instead of growing the header */
+  #controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; min-width: 0; }
+  .live-bar { flex: 0 1 auto; }
+  #live-disabled-reason { flex: 1 1 140px; min-width: 140px; max-width: 720px; }
+  .advanced-disclosure { position: relative; flex: 0 0 auto; }
+  .advanced-body { position: absolute; right: 0; top: calc(100% + 6px); z-index: 200; min-width: 280px;
+    display: flex; flex-direction: column; gap: 8px; padding: 12px; background: var(--night-2);
+    border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.5); }
+
+  /* Three columns that use the whole width */
+  #main-grid {
+    flex: 1 1 auto; min-height: 0; width: 100%; max-width: min(100%, 2200px); margin: 0 auto;
+    padding: clamp(8px, 1.4vh, 16px) clamp(10px, 1.2vw, 24px);
+    gap: clamp(8px, 1.4vh, 14px) clamp(10px, 1.1vw, 20px);
+    grid-template-columns: minmax(0, 32fr) minmax(0, 31fr) minmax(0, 37fr);
+    grid-template-areas: "tape eye why" "tape eye phone" "w1 eye phone" "w2 eye phone";
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+  }
+  #col-tape, #col-why, #phone-slot, #col-eye, .words-panel { min-height: 0; }
+  #col-tape { max-height: none; overflow: hidden; display: flex; flex-direction: column; }
+  .tape-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+  .panel-header { padding-top: clamp(6px, 1vh, 12px); padding-bottom: clamp(6px, 1vh, 12px); }
+
+  /* Eye column: centred, sized from the window height so nothing is cut off */
+  #col-eye { align-self: stretch; position: static; overflow: auto; padding: clamp(8px, 1.6vh, 20px) 12px; }
+  .eye-container { height: 100%; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: clamp(4px, 1vh, 12px); }
+  .eye-svg { width: clamp(120px, 30vh, 340px); max-width: 100%; height: auto; aspect-ratio: 1 / 1; flex: 0 1 auto; }
+  .score-num { font-size: clamp(44px, 8.5vh, 96px); line-height: 1; }
+  .demo-actions-box { gap: 8px; }
+
+  /* Evidence list compact; phone column takes the remaining height and scrolls inside only if it must */
+  .why-list { max-height: clamp(64px, 16vh, 200px); min-height: 0; overflow-y: auto; }
+  #phone-slot { overflow: auto; justify-content: flex-start; gap: 8px; padding: clamp(6px, 1.2vh, 14px) clamp(6px, 1.2vh, 14px) 6px; }
+  #phone-slot > .panel-header { padding-top: 2px; padding-bottom: 2px; margin-bottom: 0; }
+  .phone-frame { width: min(280px, 90%); flex: 0 0 auto; }   /* the warning card never collapses */
+  .family-card-slot { flex: 0 0 auto; width: 100%; min-width: 0; max-width: 100%; }
+  .family-card { width: 100%; min-width: 0; max-width: 100%; }
+
+  /* Bottom strips keep their height */
+  #awaaz { height: clamp(44px, 6.5vh, 64px); }
+  .awaaz-header { top: 4px; }
+  #foot { height: clamp(24px, 3.4vh, 32px); }
+
+  /* Phone warning type scales with window height so the whole card stays visible */
+  .phone-screen { padding: clamp(14px, 2.4vh, 24px) 12px 10px; }
+  .phone-screen[data-state="danger"] { padding-top: clamp(16px, 2.6vh, 28px); padding-bottom: 8px; gap: 4px; }
+  .danger-card-title { font-size: clamp(28px, 5vh, 52px); }
+  .danger-card-title .t-loc { font-size: clamp(14px, 2.2vh, 20px); }
+  .danger-lines { gap: 1px; margin: 2px 0; line-height: 1.2; }
+  .danger-lines .t-en { font-size: clamp(12px, 1.8vh, 16px); }
+  .danger-lines .t-loc { font-size: clamp(11px, 1.5vh, 13px); }
+  .audio-bars-container { font-size: 11px; line-height: 1.2; margin: 0; }
+}
+
+/* ---- 2. Compact sizes only on real desktops (touch widths below 1100 keep 44 px targets) ---- */
+@media (min-width: 1100px) and (min-height: 560px) {
+  #controls, .live-bar { flex-wrap: nowrap; }
+  .btn-hangup { min-height: 34px; padding: 2px 16px; font-size: 13px; }
+  .btn-tap-audio { min-height: 28px; margin-top: 0; }
+}
+@media (min-width: 1100px) and (min-height: 560px) and (max-height: 680px) {
+  .btn-demo { min-height: 36px; padding: 6px 14px; }
+}
+
+/* ---- 3. Wide windows: phone warning and family alert side by side ---- */
+@media (min-width: 1320px) and (min-height: 560px) {
+  #phone-slot { display: grid !important; grid-template-columns: auto minmax(0, 1fr); column-gap: 14px;
+    align-content: start; align-items: start; justify-items: stretch; }
+  #phone-slot > .panel-header { grid-column: 1 / -1; justify-self: center; }
+  #phone-slot > .phone-frame { grid-column: 1; width: 240px; }
+  #phone-slot > .family-card-slot { grid-column: 2; }
+}
+@media (min-width: 1320px) and (min-height: 900px) {
+  #phone-slot > .phone-frame { width: clamp(240px, 26vh, 320px); }
+}
+@media (min-width: 1800px) and (min-height: 800px) { body { font-size: 17px; } }
+
+/* ---- 4. Dialogs: responsive.css set max-width:94vw, which stretched them across the whole desktop ---- */
+.receipt-dialog { max-width: min(440px, 94vw); }
+#live-notice-overlay .live-notice-box { max-width: min(480px, 94vw); }

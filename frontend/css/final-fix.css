@@ -39,19 +39,3 @@
   #live-disabled-reason { grid-column: 1 / -1; }
 }
 
-/* ---- Short laptops: fit the whole dashboard, no page scroll (tested 1280x560 to 1600x760) ---- */
-@media (min-width: 1100px) and (min-height: 520px) and (max-height: 799px) {
-  html { --z: .8; zoom: var(--z); }
-  html, body { height: 100%; overflow: hidden; }
-  .app-shell { height: calc(100vh / var(--z)); width: calc(100vw / var(--z)); max-width: none; min-height: 0; }
-  #hdr { padding: 4px 16px; }
-  #main-grid { flex: 1; min-height: 0; grid-template-rows: minmax(0,.45fr) minmax(0,1.55fr) auto auto; }
-  #col-tape { max-height: none; }
-  #col-eye { align-self: stretch; position: static; }
-  #col-tape, #col-why, #phone-slot, #col-eye { min-height: 0; overflow: hidden; }
-  .tape-scroll { flex: 1; min-height: 0; overflow-y: auto; }
-  .why-list { max-height: none; min-height: 0; }
-  #phone-slot { overflow: auto; }
-  #awaaz { height: 40px; }
-  #foot { height: 26px; }
-}
