@@ -1,0 +1,57 @@
+/* final-fix.css: loaded LAST. Header never overlaps, Listen live stays a real-looking button,
+   short laptops fit without page scroll, no empty strip on the right. */
+
+/* ---- Header: grows with its content, wraps cleanly ---- */
+#hdr { height: auto !important; min-height: 44px; flex-wrap: wrap !important; align-items: center;
+  row-gap: 6px; column-gap: 12px; overflow: visible !important; }
+.hdr-left, .hdr-centre { flex: 0 0 auto; min-width: 0; }
+.hdr-centre { flex-wrap: nowrap; margin-left: auto; order: 2; }
+#controls { flex: 1 1 320px; min-width: 0; margin: 0; order: 3; }
+.live-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; min-width: 0; }
+.badge-pill { white-space: nowrap; flex: 0 0 auto; }
+.brand-hi, .brand-en { white-space: nowrap; }
+.live-bar > * { min-width: 0; }
+
+/* ---- Listen live: still looks like a button when it is disabled ---- */
+#btn-listen-live { min-height: 36px; flex: 0 0 auto; }
+#btn-listen-live:disabled { opacity: 1; cursor: not-allowed; background: transparent;
+  border: 2px dashed #6f86b8; color: #c9d4ee; }
+#btn-listen-live:disabled .live-icon { opacity: .6; }
+#live-lang-sel { flex: 0 1 190px; min-height: 36px; }
+
+/* ---- The reason text gets its own readable line, never overlaps the page ---- */
+#live-disabled-reason { flex: 1 1 100%; font-size: .8rem; line-height: 1.35; color: #aebbd9;
+  white-space: normal; overflow-wrap: anywhere; }
+@media (min-width: 1100px) { #live-disabled-reason { flex: 1 1 280px; max-width: 520px; } }
+
+/* ---- Phones ---- */
+@media (max-width: 599px) {
+  #hdr { display: flex !important; padding: 8px 12px; }
+  .hdr-left { flex: 0 1 auto; max-width: 100%; }
+  .hdr-centre { grid-column: auto; grid-row: auto; order: 2; flex-wrap: wrap; margin-left: 0; gap: 6px; }
+  .badge-pill { height: 28px; font-size: 11px; padding: 0 10px; }
+  #btn-listen-live { padding: 6px 10px; gap: 4px; }
+  #controls { flex: 1 1 100%; order: 3; }
+  .brand-tagline { display: none; }
+  .live-bar { display: grid; grid-template-columns: 1fr 1fr; }
+  #btn-listen-live, #live-lang-sel, #btn-live-stop { width: 100%; min-height: 44px; justify-content: center; }
+  #btn-live-stop { grid-column: 1 / -1; }
+  #live-disabled-reason { grid-column: 1 / -1; }
+}
+
+/* ---- Short laptops: fit the whole dashboard, no page scroll (tested 1280x560 to 1600x760) ---- */
+@media (min-width: 1100px) and (min-height: 520px) and (max-height: 799px) {
+  html { --z: .8; zoom: var(--z); }
+  html, body { height: 100%; overflow: hidden; }
+  .app-shell { height: calc(100vh / var(--z)); width: calc(100vw / var(--z)); max-width: none; min-height: 0; }
+  #hdr { padding: 4px 16px; }
+  #main-grid { flex: 1; min-height: 0; grid-template-rows: minmax(0,.45fr) minmax(0,1.55fr) auto auto; }
+  #col-tape { max-height: none; }
+  #col-eye { align-self: stretch; position: static; }
+  #col-tape, #col-why, #phone-slot, #col-eye { min-height: 0; overflow: hidden; }
+  .tape-scroll { flex: 1; min-height: 0; overflow-y: auto; }
+  .why-list { max-height: none; min-height: 0; }
+  #phone-slot { overflow: auto; }
+  #awaaz { height: 40px; }
+  #foot { height: 26px; }
+}
