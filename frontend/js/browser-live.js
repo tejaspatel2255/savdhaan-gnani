@@ -107,7 +107,10 @@ function _processSentence(text) {
     audio_duration_ms: Math.round(text.length * 50), stt_latency_ms: null,
   });
   const res = scoreSentence(text, idx);
-  if (res.categories) res.categories.forEach(c => _allCategories.add(c));
+  if (res.categories) {
+    const cats = Array.isArray(res.categories) ? res.categories : Object.keys(res.categories);
+    cats.forEach(c => _allCategories.add(c));
+  }
   _maxScore = Math.max(_maxScore, res.score || 0);
 
   const riskEvent = Object.assign({}, res, { type: "risk", segment_index: idx });

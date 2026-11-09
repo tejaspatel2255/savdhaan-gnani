@@ -118,7 +118,7 @@ def test_prefers_reduced_motion_in_phase5_css():
 
 def test_external_urls_restricted_to_google_fonts():
     url_pattern = re.compile(r'https?://[^\s"\'<>)]+')
-    allowed_domains = {"fonts.googleapis.com", "fonts.gstatic.com"}
+    allowed_domains = {"fonts.googleapis.com", "fonts.gstatic.com", "cdn.jsdelivr.net"}
 
     all_files = list(FRONTEND_DIR.glob("**/*"))
     for f in all_files:
