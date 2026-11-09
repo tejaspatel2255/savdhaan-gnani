@@ -97,6 +97,7 @@ def main():
     import threading
 
     url_to_use = a.url
+    httpd = None
     try:
         urllib.request.urlopen(a.url, timeout=0.8)
     except Exception:
@@ -110,7 +111,7 @@ def main():
         server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
         server_thread.start()
         url_to_use = f"http://127.0.0.1:{port}"
-        print(f"Backend not active at {a.url}; serving frontend statically on {url_to_use}")
+        print(f"Backend not active at {a.url}; serving frontend statically on {url_to_use}", flush=True)
 
     with sync_playwright() as pw:
         br = pw.chromium.launch()
@@ -127,13 +128,21 @@ def main():
                 errs = [e for e in errs if "fonts" not in e.lower() and "ERR_TUNNEL" not in e and "404" not in e]
                 probs += ["console error: " + e[:80] for e in errs[:2]]
                 pg.screenshot(path=f"{a.shots}/{state}_{w}x{h}.png", full_page=(a.page == "report"))
-                print(("PASS " if not probs else "FAIL ") + f"{w}x{h} {state}")
+                print(("PASS " if not probs else "FAIL ") + f"{w}x{h} {state}", flush=True)
                 for x in probs:
-                    print("     - " + x)
+                    print("     - " + x, flush=True)
                 total += len(probs)
                 pg.close()
         br.close()
-    print(f"\n{total} problem(s) found")
+
+    if httpd:
+        try:
+            httpd.shutdown()
+            httpd.server_close()
+        except Exception:
+            pass
+
+    print(f"\n{total} problem(s) found", flush=True)
     sys.exit(1 if total else 0)
 
 

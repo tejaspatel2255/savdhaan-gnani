@@ -16,7 +16,7 @@ import { initBrowserLive } from "./browser-live.js";
 import { playSample, stopSample } from "./devfeed.js";
 
 export const FEATURES = { mic: true };
-export const state = { sessionId: null, mode: "mock", modeLabel: "MOCK", lang: "hi-IN", level: "calm", score: 0, alertFired: false, isStatic: false, isSample: false };
+export const state = { sessionId: null, mode: "mock", modeLabel: "MOCK", lang: "en-IN", level: "calm", score: 0, alertFired: false, isStatic: false, isSample: false };
 let audioCtx = null, callsList = [], el = {};
 const handledMessages = new Set();
 
@@ -26,8 +26,7 @@ export async function init() {
   el = {
     polite: get("live-polite"), assertive: get("live-assertive"),
     badge: get("mode-badge"), synthetic: get("synthetic-pill"), reconnect: get("reconnect-chip"),
-    banner, bannerMsg: banner.querySelector(".banner-msg"),
-    bannerServer: banner.querySelector(".banner-server-msg"),
+    banner, bannerMsg: banner.querySelector(".banner-msg"), bannerServer: banner.querySelector(".banner-server-msg"),
     callSel: get("call-select"), langSel: get("lang-select"), modeSel: get("mode-select"),
     speakCb: get("speak-warning-cb"), btnStart: get("btn-start"), btnStop: get("btn-stop"),
     btnDemoScam: get("btn-demo-scam"), btnDemoNormal: get("btn-demo-normal"),
@@ -42,14 +41,24 @@ export async function init() {
   waveform.init(get("awaaz")); stamp.init(get("stamp-root")); phone.init(get("phone-slot"));
   receipt.init(get("receipt-root"), () => (state.isSample ? startSample("/assets/sample_run.jsonl") : handleStart()));
   live.init({ onDispatch: dispatch });
-  words.init(el.langSel.value.startsWith("gu") ? "gu" : "hi_en");
   initBrowserLive(dispatch);
 
-  for (const l of LANGS) {
-    const o = document.createElement("option"); o.value = l.code; o.textContent = l.label; el.langSel.appendChild(o);
+  const liveLangSel = get("live-lang-sel");
+  if (el.langSel) {
+    while (el.langSel.firstChild) el.langSel.removeChild(el.langSel.firstChild);
+    for (const l of LANGS) {
+      const o = document.createElement("option"); o.value = l.code; o.textContent = l.label; el.langSel.appendChild(o);
+    }
   }
-  setLocal(el.langSel.value); applyLabels();
-  el.langSel.addEventListener("change", () => { setLocal(el.langSel.value); applyLabels(); words.setPack(el.langSel.value); });
+  const syncLang = (code) => {
+    state.lang = code;
+    if (liveLangSel && liveLangSel.value !== code) liveLangSel.value = code;
+    if (el.langSel && el.langSel.value !== code) el.langSel.value = code;
+    setLocal(code); applyLabels(); words.setPack(code.startsWith("gu") ? "gu" : "hi_en");
+  };
+  syncLang((liveLangSel && liveLangSel.value) || (el.langSel && el.langSel.value) || "en-IN");
+  if (liveLangSel) liveLangSel.addEventListener("change", () => syncLang(liveLangSel.value));
+  if (el.langSel) el.langSel.addEventListener("change", () => syncLang(el.langSel.value));
 
   const hasBackend = await detectBackend();
   if (!hasBackend) {
@@ -57,8 +66,7 @@ export async function init() {
     if (el.badge) { el.badge.textContent = t("badge_static"); el.badge.className = "badge-pill mode-mock"; el.badge.classList.remove("hidden"); }
     const ft = document.querySelector("#foot .footer-text");
     if (ft) ft.textContent += ` · ${t("static_footer_note")}`;
-    const adv = get("advanced-controls");
-    if (adv) adv.style.display = "none";
+    const adv = get("advanced-controls"); if (adv) adv.style.display = "none";
     [el.callSel, el.modeSel, el.btnStart, el.btnStop].forEach((n) => { if (n) n.style.display = "none"; });
   } else {
     try {
@@ -97,7 +105,6 @@ function syncModes() {
     const o = document.createElement("option"); o.value = m; o.textContent = m.toUpperCase(); el.modeSel.appendChild(o);
   }
 }
-
 function unlockAudio() {
   if (!audioCtx) {
     const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -121,8 +128,7 @@ async function handleStart() {
   try {
     const res = await startSession(body);
     if (body.mode === "mic") {
-      try { await startMic(res.session_id); }
-      catch (merr) {
+      try { await startMic(res.session_id); } catch (merr) {
         showBanner(merr instanceof MicError ? (merr.code === "denied" ? "mic_denied" : "mic_no_device") : "internal", merr.message);
         try { await stopSession(res.session_id); } catch (_) {}
         el.btnStart.disabled = false; el.btnStop.disabled = true;
@@ -151,17 +157,13 @@ function showBanner(code, msg = "") {
   el.bannerServer.textContent = msg ? `Detail: ${msg}` : ""; el.banner.classList.remove("hidden");
 }
 function startSample(url) { state.modeLabel = "MOCK"; unlockAudio(); resetAll(); state.isSample = true; playSample(url, dispatch, { speed: 1.0 }); }
-function resetAll() {
-  handledMessages.clear(); eye.reset(); tape.reset(); why.reset();
-  waveform.reset(); stamp.reset(); phone.reset(); receipt.reset();
-}
+function resetAll() { handledMessages.clear(); [eye, tape, why, waveform, stamp, phone, receipt].forEach((m) => m.reset()); }
 
 export function dispatch(msg) {
   if (!msg || typeof msg !== "object" || !msg.type) return;
   const key = `${msg.session_id || "n"}_${msg.seq != null ? msg.seq : "x"}`;
   if (handledMessages.has(key)) return;
   handledMessages.add(key);
-
   if (msg.session_id && msg.session_id !== state.sessionId) {
     if (msg.type === "session" && (msg.state === "ended" || msg.state === "error")) return;
     resetAll(); state.sessionId = msg.session_id; state.alertFired = false;

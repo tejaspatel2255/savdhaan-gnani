@@ -4,10 +4,17 @@
  */
 import { STRINGS } from "./strings.js";
 
-let local = "hi";
+let local = "";
 
 export function setLocal(code) {
-  local = String(code || "").startsWith("gu") ? "gu" : "hi";
+  const c = String(code || "").toLowerCase();
+  if (c.startsWith("gu")) {
+    local = "gu";
+  } else if (c.startsWith("hi")) {
+    local = "hi";
+  } else {
+    local = "";
+  }
 }
 
 export function getLocal() {

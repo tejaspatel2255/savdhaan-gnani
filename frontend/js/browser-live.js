@@ -8,7 +8,7 @@ import { initScorer, startScoring, scoreSentence } from "./py-scorer.js";
 
 let _recognition = null, _isRunning = false, _sessionStartTime = 0;
 let _dispatch = null, _sessionId = null, _seq = 0, _sentenceIndex = 0;
-let _alertTriggered = false, _maxScore = 0, _activeLang = "hi-IN", _timeoutTimer = null;
+let _alertTriggered = false, _maxScore = 0, _activeLang = "en-IN", _timeoutTimer = null;
 let _allCategories = new Set(), _btnMic = null, _captionEl = null;
 
 export function initBrowserLive(dispatch) {

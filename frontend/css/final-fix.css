@@ -6,23 +6,29 @@
   row-gap: 6px; column-gap: 12px; overflow: visible !important; }
 .hdr-left, .hdr-centre { flex: 0 0 auto; min-width: 0; }
 .hdr-centre { flex-wrap: nowrap; margin-left: auto; order: 2; }
-#controls { flex: 1 1 320px; min-width: 0; margin: 0; order: 3; }
-.live-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; min-width: 0; }
-.badge-pill { white-space: nowrap; flex: 0 0 auto; }
+#controls { flex: 0 1 auto; min-width: 0; margin: 0; order: 3; }
+.live-bar { display: flex; flex-wrap: nowrap; align-items: center; gap: 10px; min-width: 0; }
+.badge-pill { white-space: nowrap; flex: 0 0 auto; height: 34px; min-height: 34px; font-size: 11px; padding: 0 14px; letter-spacing: 0.05em; font-weight: 600; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; line-height: 1.2; overflow: visible; }
 .brand-hi, .brand-en { white-space: nowrap; }
 .live-bar > * { min-width: 0; }
 
-/* ---- Listen live: still looks like a button when it is disabled ---- */
-#btn-listen-live { min-height: 36px; flex: 0 0 auto; }
+/* ---- Listen live & Language Selector: clean unified sizing ---- */
+#btn-listen-live { min-height: 44px; height: 44px; padding: 0 16px; font-size: 13px; flex: 0 0 auto; border-radius: 6px; box-sizing: border-box; display: inline-flex; align-items: center; gap: 8px; }
 #btn-listen-live:disabled { opacity: 1; cursor: not-allowed; background: transparent;
-  border: 2px dashed #6f86b8; color: #c9d4ee; }
+  border: 1px dashed #6f86b8; color: #c9d4ee; }
 #btn-listen-live:disabled .live-icon { opacity: .6; }
-#live-lang-sel { flex: 0 1 190px; min-height: 36px; }
+#live-lang-sel { flex: 0 0 auto; width: auto; min-height: 44px; height: 44px; font-size: 13px; padding: 0 12px; border-radius: 6px; box-sizing: border-box; }
+
+@media (min-width: 1025px) {
+  #btn-listen-live { min-height: 34px; height: 34px; padding: 0 14px; font-size: 12px; }
+  #live-lang-sel { min-height: 34px; height: 34px; font-size: 12px; padding: 0 12px; }
+  .badge-pill { min-height: 34px; height: 34px; font-size: 11px; padding: 0 14px; }
+}
 
 /* ---- The reason text gets its own readable line, never overlaps the page ---- */
-#live-disabled-reason { flex: 1 1 100%; font-size: .8rem; line-height: 1.35; color: #aebbd9;
-  white-space: normal; overflow-wrap: anywhere; }
-@media (min-width: 1100px) { #live-disabled-reason { flex: 1 1 280px; max-width: 520px; } }
+#live-disabled-reason { flex: 0 1 auto; font-size: 12px; line-height: 1.35; color: #aebbd9;
+  white-space: nowrap; }
+@media (min-width: 1100px) { #live-disabled-reason { flex: 0 1 auto; max-width: 480px; } }
 
 /* ---- Phones ---- */
 @media (max-width: 599px) {

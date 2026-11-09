@@ -96,7 +96,7 @@ body.shake-page .app-shell {
   border: 2px dashed var(--danger);
   border-radius: var(--radius-panel);
   padding: 2px var(--sp-12);
-  color: var(--danger);
+  color: var(--danger-text);
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 600;

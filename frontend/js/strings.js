@@ -4,9 +4,9 @@
  * shown smaller under or beside the English by i18n.js.
  */
 export const LANGS = [
+  { code: "en-IN", label: "English · Hinglish" },
   { code: "hi-IN", label: "Hindi · हिंदी" },
   { code: "gu-IN", label: "Gujarati · ગુજરાતી" },
-  { code: "en-IN", label: "English · Hinglish" },
 ];
 
 export const STRINGS = {
