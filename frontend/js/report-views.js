@@ -9,17 +9,9 @@ export function el(tag, className, text) {
   return elem;
 }
 
-/** Element with English text first and a smaller Hindi secondary span. */
-export function elLoc(tag, className, en, hi) {
-  const elem = el(tag, className, en);
-  if (hi) {
-    const sub = document.createElement("span");
-    sub.className = "t-loc";
-    sub.setAttribute("lang", "hi");
-    sub.textContent = hi;
-    elem.appendChild(sub);
-  }
-  return elem;
+/** Element with English text only for report page. */
+export function elLoc(tag, className, en, _hi) {
+  return el(tag, className, en);
 }
 
 export function renderPencilBar(svg, pct) {

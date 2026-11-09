@@ -22,6 +22,7 @@ body.khata-body {
 }
 
 .khata-header { margin-bottom: 32px; border-bottom: 2px solid var(--ink); padding-bottom: 12px; }
+.khata-body .t-loc { display: none !important; }
 .khata-title { font-family: var(--font-display, "Yatra One", serif); font-size: 32px; line-height: 40px; margin: 0 0 6px 0; color: var(--ink); }
 .khata-subtitle { font-family: var(--font-mono, "IBM Plex Mono", monospace); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: #695d46; margin: 0; }
 .khata-section { margin-bottom: 40px; }
