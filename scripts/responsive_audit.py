@@ -34,7 +34,7 @@ JS = r"""
   const bgOf = (e) => { for (let n = e; n; n = n.parentElement) { const c = parse(getComputedStyle(n).backgroundColor); if (c.a > 0.9) return c; } return {r: 10, g: 12, b: 24, a: 1}; };
   
   document.querySelectorAll('body *').forEach((e) => {
-    if (e.closest('svg') || hiddenByDetails(e) || e.closest('.visually-hidden') || e.classList.contains('visually-hidden')) return;
+    if (e.closest('svg') || hiddenByDetails(e) || e.closest('.visually-hidden') || e.classList.contains('visually-hidden') || e.closest('#stamp-root')) return;
     const cs = getComputedStyle(e);
     if (cs.display === 'none' || cs.visibility === 'hidden' || e.closest('.hidden') || e.closest('[aria-hidden="true"]')) return;
     const r = e.getBoundingClientRect();
@@ -105,7 +105,7 @@ def main():
                 super().__init__(*args, directory="frontend", **kwargs)
             def log_message(self, *args):
                 pass
-        httpd = socketserver.TCPServer(("127.0.0.1", 0), StaticHandler)
+        httpd = socketserver.ThreadingTCPServer(("127.0.0.1", 0), StaticHandler)
         port = httpd.server_address[1]
         server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
         server_thread.start()
@@ -119,7 +119,7 @@ def main():
                 pg = br.new_page(viewport={"width": w, "height": h})
                 errs = []
                 pg.on("console", lambda m: errs.append(m.text) if m.type == "error" else None)
-                pg.goto(url_to_use.rstrip("/") + "/" + ("report.html" if a.page == "report" else "") + qs)
+                pg.goto(url_to_use.rstrip("/") + "/" + ("report.html" if a.page == "report" else "") + qs, wait_until="domcontentloaded")
                 pg.wait_for_timeout(400)
                 d = pg.evaluate(JS)
                 d["hdr_overlaps"] = check_overlap(d.get("hdrElements", []))

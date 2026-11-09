@@ -51,4 +51,6 @@
 
 /* Report page (cream paper): secondary text in ink for contrast */
 .khata-body .t-loc,
-.social-card .t-loc { color: var(--ink); }
+.social-card .t-loc,
+#reconnect-chip .t-loc,
+.live-usage-label .t-loc { color: var(--ink); }
