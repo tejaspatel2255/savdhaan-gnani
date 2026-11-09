@@ -22,7 +22,8 @@ export function connect(url, onMessage, onStatus) {
     if (url) return url;
     const loc = window.location;
     const proto = loc.protocol === "https:" ? "wss:" : "ws:";
-    return `${proto}//${loc.host}/ws/ui`;
+    const host = loc.hostname.includes("vercel.app") ? "savdhaan-gnani.onrender.com" : loc.host;
+    return `${proto}//${host}/ws/ui`;
   }
 
   function start() {

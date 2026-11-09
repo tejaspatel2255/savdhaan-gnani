@@ -71,7 +71,7 @@ export async function init() {
   } else {
     try {
       const h = await getHealth();
-      if (!h.gnani_live) {
+      if (h && !h.gnani_key_present) {
         const lb = get("btn-listen-live"), r = get("live-disabled-reason");
         if (lb) lb.disabled = true; if (r) r.textContent = t("live_no_key");
       }

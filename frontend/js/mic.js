@@ -55,7 +55,8 @@ export async function startMic(sessionId) {
 
   // Open WebSocket to backend
   const proto = location.protocol === "https:" ? "wss:" : "ws:";
-  const url = `${proto}//${location.host}/ws/mic?session_id=${encodeURIComponent(sessionId)}`;
+  const host = location.hostname.includes("vercel.app") ? "savdhaan-gnani.onrender.com" : location.host;
+  const url = `${proto}//${host}/ws/mic?session_id=${encodeURIComponent(sessionId)}`;
   _ws = new WebSocket(url);
   _ws.binaryType = "arraybuffer";
 

@@ -14,5 +14,11 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://savdhaan-gnani.onrender.com/api/$1"
+    }
   ]
 }
