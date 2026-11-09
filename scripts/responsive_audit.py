@@ -6,6 +6,11 @@ Exit code 0 only if every check passes. Needs the app running at --url.
 import argparse
 import sys
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 from playwright.sync_api import sync_playwright
 from scripts.responsive_audit_lib import check_overlap, check_responsive_rules
 
@@ -85,6 +90,28 @@ def main():
     a = ap.parse_args()
     Path(a.shots).mkdir(parents=True, exist_ok=True)
     total = 0
+
+    import urllib.request
+    import http.server
+    import socketserver
+    import threading
+
+    url_to_use = a.url
+    try:
+        urllib.request.urlopen(a.url, timeout=0.8)
+    except Exception:
+        class StaticHandler(http.server.SimpleHTTPRequestHandler):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, directory="frontend", **kwargs)
+            def log_message(self, *args):
+                pass
+        httpd = socketserver.TCPServer(("127.0.0.1", 0), StaticHandler)
+        port = httpd.server_address[1]
+        server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        server_thread.start()
+        url_to_use = f"http://127.0.0.1:{port}"
+        print(f"Backend not active at {a.url}; serving frontend statically on {url_to_use}")
+
     with sync_playwright() as pw:
         br = pw.chromium.launch()
         for (w, h) in SIZES:
@@ -92,7 +119,7 @@ def main():
                 pg = br.new_page(viewport={"width": w, "height": h})
                 errs = []
                 pg.on("console", lambda m: errs.append(m.text) if m.type == "error" else None)
-                pg.goto(a.url.rstrip("/") + "/" + ("report.html" if a.page == "report" else "") + qs)
+                pg.goto(url_to_use.rstrip("/") + "/" + ("report.html" if a.page == "report" else "") + qs)
                 pg.wait_for_timeout(400)
                 d = pg.evaluate(JS)
                 d["hdr_overlaps"] = check_overlap(d.get("hdrElements", []))

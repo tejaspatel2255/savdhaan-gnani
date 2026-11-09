@@ -148,7 +148,7 @@ function showBanner(code, msg = "") {
   if (t(code) === code) el.bannerMsg.textContent = code; else fill(el.bannerMsg, code);
   el.bannerServer.textContent = msg ? `Detail: ${msg}` : ""; el.banner.classList.remove("hidden");
 }
-function startSample(url) { unlockAudio(); resetAll(); state.isSample = true; playSample(url, dispatch, { speed: 1.0 }); }
+function startSample(url) { state.modeLabel = "MOCK"; unlockAudio(); resetAll(); state.isSample = true; playSample(url, dispatch, { speed: 1.0 }); }
 function resetAll() {
   handledMessages.clear(); eye.reset(); tape.reset(); why.reset();
   waveform.reset(); stamp.reset(); phone.reset(); receipt.reset();
@@ -170,7 +170,7 @@ export function dispatch(msg) {
     if (msg.type === "session") {
       state.mode = msg.mode || state.mode; state.modeLabel = msg.mode_label || state.modeLabel; state.lang = msg.lang || state.lang;
       if (el.badge) {
-        el.badge.textContent = (state.isStatic && msg.mode_label !== "BROWSER MIC") ? t("badge_static") : state.modeLabel;
+        el.badge.textContent = (state.isStatic && state.modeLabel !== "BROWSER MIC") ? t("badge_static") : state.modeLabel;
         el.badge.className = `badge-pill mode-${state.mode}`; el.badge.classList.remove("hidden");
       }
       if (el.synthetic) el.synthetic.classList.toggle("hidden", !msg.synthetic);

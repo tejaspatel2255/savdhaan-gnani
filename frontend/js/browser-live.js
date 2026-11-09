@@ -60,7 +60,7 @@ export async function startBrowserLive(langOverride) {
     models: { stt: "Browser speech recognition", tts: "Pre-generated Gnani Timbre warning" },
     thresholds: { careful: 30, danger: 60 },
   });
-  _emit("session", { state: "listening" });
+  _emit("session", { state: "listening", mode_label: "BROWSER MIC" });
 
   _startSpeechRec();
   _timeoutTimer = setTimeout(() => stopBrowserLive(), 180000);
