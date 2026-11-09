@@ -101,6 +101,7 @@ async function _startLive() {
     const res = await startSession({ mode: "mic", lang, speak_warning: true });
     sessionId = res.session_id;
     _sessionId = sessionId;
+    if (_onDispatch) _onDispatch({ type: "session", state: "starting", session_id: sessionId, mode: "mic", mode_label: "LIVE MIC", lang, synthetic: false });
   } catch (err) {
     _setState("idle");
     if (!err.status || err.status === 404 || err.status === 405) { _disableLive("live_static"); return; }
@@ -114,6 +115,7 @@ async function _startLive() {
     _liveActive = true;
     _setState("listening");
     _showStrip();
+    if (_onDispatch) _onDispatch({ type: "session", state: "listening", session_id: sessionId, mode: "mic", mode_label: "LIVE MIC", lang, synthetic: false });
   } catch (merr) {
     _liveActive = false;
     _setState("stopped");

@@ -168,7 +168,6 @@ export function dispatch(msg) {
     if (msg.type === "session" && (msg.state === "ended" || msg.state === "error")) return;
     resetAll(); state.sessionId = msg.session_id; state.alertFired = false;
   }
-  if (!state.sessionId && msg.type === "summary") return;
 
   try {
     if (msg.type === "session") {
