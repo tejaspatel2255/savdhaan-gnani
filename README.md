@@ -24,9 +24,11 @@ Open [http://localhost:8000](http://localhost:8000). Click **Play a sample scam 
 
 ```bash
 cp .env.example .env
-# Edit .env and set your GNANI_API_KEY
+# Set your GNANI_API_KEY in .env (never commit or share this key)
 python -m backend.main
 ```
+
+> **Credential Safety**: The API key is loaded strictly on the backend from `GNANI_API_KEY` in `.env` via `python-dotenv`. It is **never** committed to version control (`.gitignore` protects all `.env` files), never logged, never saved in browser storage, and never transmitted to the frontend. WebSockets route audio securely from backend to Gnani cloud.
 
 ## Live Modes
 
@@ -71,6 +73,7 @@ When using **Try your own words**, text sentences are evaluated 100% locally on 
 
 ## Safety, Privacy & Honest Demo
 
+- **Zero Credential Exposure**: `GNANI_API_KEY` exists exclusively in backend memory and `.env`. All secrets, keys, and tokens are strictly excluded by `.gitignore`.
 - **100% Synthetic Data**: All test recordings, names, and numbers are artificial.
 - **Zero Voice Cloning**: No voice imitation or speaker cloning APIs are ever called.
 - **Privacy First**: Microphone audio is streamed directly to RAM buffers and never saved to disk.

@@ -1,8 +1,37 @@
-# Environment variables and secrets (CRITICAL: NEVER COMMIT)
+# ── Environment variables and secrets (CRITICAL: NEVER COMMIT) ────────────────
 .env
 .env*.local
 .env.*
+*.env
+*.env.*
+*.env.bak
+*.env.save
 !.env.example
+
+# Credentials, tokens, and private keys
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+id_rsa*
+id_ed25519*
+*token*.json
+*token*.txt
+*credential*.json
+service_account*.json
+service-account*.json
+client_secret*.json
+client_secrets*.json
+.netrc
+.npmrc
+
+# Cloud deployment CLI metadata & local caches
+.vercel/
+.render/
+.aws/
+.gcloud/
 
 # Python virtual environments
 .venv/
@@ -67,6 +96,8 @@ tmp_test_dir/
 *.swp
 *.swo
 *~
+*.bak
+*.orig
 .DS_Store
 Thumbs.db
 ehthumbs.db
