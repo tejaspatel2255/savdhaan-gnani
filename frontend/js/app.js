@@ -71,7 +71,7 @@ export async function init() {
   const p = new URLSearchParams(window.location.search);
   if (p.get("dev") === "1") {
     playSample("/assets/sample_run.jsonl", dispatch, { speed: parseFloat(p.get("speed") || "1"), at: p.get("at") ? parseFloat(p.get("at")) : null });
-  } else {
+  } else if (!state.isStatic) {
     connect(null, dispatch, (st) => el.reconnect.classList.toggle("hidden", st !== "reconnecting"));
   }
 }

@@ -103,7 +103,7 @@ def main():
 
         level = page.locator(".level-text").text_content()
         score = page.locator(".score-num").text_content()
-        print(f"Risk state: Level={level}, Score={score}")
+        print(f"Risk state: Level={ascii(level)}, Score={score}")
         assert int(score) >= 60, f"Expected score >= 60, got {score}"
 
         # Check phone card STOP warning
