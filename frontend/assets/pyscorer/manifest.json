@@ -1,0 +1,25 @@
+{
+  "files": {
+    "backend/scorer/__init__.py": {
+      "sha256": "f4d4c4602ede5d45c985f1358d0ef0b258b497348b99d2db5832373f2072d2a5"
+    },
+    "backend/scorer/engine.py": {
+      "sha256": "9ef3350639e68a98ae858836de39cbc3dae24301a6666b1c5491e71507a2f844"
+    },
+    "backend/scorer/matching.py": {
+      "sha256": "83fc361d481882f70b263f0535db9bf581f62f2c883c0476868765d72c031c68"
+    },
+    "backend/scorer/normalize.py": {
+      "sha256": "184620e268b1f1a554f3ab04d5ccf3d551338ef2cb4ce606ce42ed1beb45957b"
+    },
+    "backend/scorer/rules_loader.py": {
+      "sha256": "e3f19c652c52d8055c0858c5316696d47c91d139d9f7a111da987298e64630df"
+    },
+    "rules/scam_rules_hi_en.json": {
+      "sha256": "477cca5dd0ad163cab2ca14a55c0f32d810d3c614686def2ae2f7b1ecb2ed8c3"
+    },
+    "rules/scam_rules_gu.json": {
+      "sha256": "3b83872e94fa6d594139250318e57ef4acf6b6b6769465238ea098f34c3fba47"
+    }
+  }
+}

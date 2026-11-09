@@ -1,0 +1,54 @@
+{
+"pack": "hi_en", "version": 1, "window_segments": 6, "decay": 0.9,
+"strong_rule_weight": 45, "min_categories_for_danger": 2,
+"negation_window_after": 6, "negation_window_before": 2,
+"negation_guard_categories": ["credentials", "payment"],
+"negation_phrases": ["na karein", "na kare", "na batayein", "na bataye", "na dein", "na de", "nahi", "nahin", "nhi", "mat", "never", "not", "dont", "do not", "न करें", "न बताएं", "न दें", "नहीं", "नही", "मत"],
+"negation_exceptions": ["nahi to", "nahin to", "nhi to", "नहीं तो", "नही तो"],
+"categories": {
+ "credentials": {"weight": 30, "label_en": "Asks for OTP, PIN or card details", "label_hi": "OTP / PIN माँगा"},
+ "payment": {"weight": 28, "label_en": "Asks to move money or pay a fee", "label_hi": "पैसे भेजने को कहा"},
+ "remote_app": {"weight": 28, "label_en": "Asks to install an app or share the screen", "label_hi": "रिमोट ऐप / स्क्रीन शेयर"},
+ "threat": {"weight": 22, "label_en": "Arrest, legal or blocking threat", "label_hi": "गिरफ़्तारी / बंद की धमकी"},
+ "secrecy": {"weight": 22, "label_en": "Told to keep quiet or stay on the line", "label_hi": "किसी को न बताने को कहा"},
+ "prize_kyc": {"weight": 14, "label_en": "Prize, refund or KYC bait", "label_hi": "इनाम / KYC का लालच"},
+ "authority": {"weight": 10, "label_en": "Claims to be an officer or agency", "label_hi": "अधिकारी बनकर बात"},
+ "urgency": {"weight": 6, "label_en": "Pressure to act right now", "label_hi": "जल्दबाज़ी का दबाव"}
+},
+"rules": [
+ {"id": "CRED_OTP_ASK", "category": "credentials", "patterns": ["otp bata*", "otp share*", "otp de*", "apna otp", "otp number bata*", "otp bol*", "otp code", "ओटीपी बता*", "ओटीपी शेयर*", "ओटीपी दे*", "अपना ओटीपी", "ओटीपी नंबर बता*", "ओटीपी बोल*"]},
+ {"id": "CRED_PIN_CVV", "category": "credentials", "patterns": ["pin number bata*", "pin bata*", "apna pin", "cvv bata*", "cvv number", "card number bata*", "card ka number bata*", "password bata*", "pin share*", "पिन बता*", "पिन नंबर बता*", "अपना पिन", "सीवीवी", "कार्ड नंबर बता*", "पासवर्ड बता*"]},
+ {"id": "CRED_ID_ASK", "category": "credentials", "weight": 15, "patterns": ["aadhaar number bata*", "aadhar number bata*", "pan number bata*", "आधार नंबर बता*", "पैन नंबर बता*"]},
+ {"id": "AUTH_AGENCY", "category": "authority", "patterns": ["cyber crime", "cyber cell", "crime branch", "narcotics", "customs", "trai", "cbi", "enforcement directorate", "police", "inspector", "साइबर क्राइम", "साइबर सेल", "क्राइम ब्रांच", "नारकोटिक्स", "कस्टम*", "ट्राई", "सीबीआई", "पुलिस", "इंस्पेक्टर"]},
+ {"id": "AUTH_COURT", "category": "authority", "patterns": ["court", "supreme court", "high court", "judge", "कोर्ट", "जज"]},
+ {"id": "AUTH_SELF_ID", "category": "authority", "patterns": ["officer bol*", "officer speaking", "main officer", "technical team se", "security team se", "fraud department se", "अधिकारी बोल*", "ऑफिसर बोल*", "सिक्योरिटी टीम से"]},
+ {"id": "THREAT_DIGITAL_ARREST", "category": "threat", "weight": 60, "patterns": ["digital arrest", "डिजिटल अरेस्ट"]},
+ {"id": "THREAT_ARREST", "category": "threat", "patterns": ["arrest*", "giraftar*", "gireftar*", "warrant", "jail", "case darj", "fir darj", "गिरफ्तार*", "अरेस्ट", "वारंट", "जेल", "केस दर्ज", "एफआईआर"]},
+ {"id": "THREAT_BLOCK", "category": "threat", "patterns": ["account band ho*", "account freeze*", "account block*", "sim band ho*", "sim block*", "number band ho*", "number block*", "connection cut*", "legal action", "khata band ho*", "खाता बंद", "अकाउंट बंद", "अकाउंट फ्रीज", "सिम बंद", "नंबर बंद", "कनेक्शन कट", "कानूनी कार्रवाई", "कानूनी कार्यवाही"]},
+ {"id": "URG_NOW", "category": "urgency", "patterns": ["abhi", "turant", "jaldi", "isi waqt", "immediately", "right now", "aaj hi", "last warning", "do ghante", "two hours", "24 ghante", "अभी", "तुरंत", "जल्दी", "इसी वक्त", "आज ही", "आखिरी चेतावनी", "दो घंटे", "24 घंटे"]},
+ {"id": "SECRET_KEEP", "category": "secrecy", "patterns": ["kisi ko mat bata*", "kisi se mat bol*", "kisi ko na bata*", "kisi se baat mat", "ghar walon ko mat", "family ko mat", "do not tell anyone", "dont tell anyone", "gopniya", "confidential", "किसी को मत बता*", "किसी को न बता*", "किसी से बात मत", "घर वालों को मत", "गोपनीय"]},
+ {"id": "STAY_ON_LINE", "category": "secrecy", "patterns": ["call mat kat*", "call mat kaat*", "call cut mat", "phone mat kat*", "phone mat kaat*", "line par bane rah*", "line pe bane rah*", "line par rahiye", "stay on the line", "do not disconnect", "कॉल मत काट*", "फोन मत काट*", "लाइन पर बने रह*", "लाइन पर रहिए"]},
+ {"id": "PAY_SAFE_ACCOUNT", "category": "payment", "weight": 45, "patterns": ["safe account", "rbi account", "secure account", "verification account", "सेफ अकाउंट", "आरबीआई अकाउंट", "सुरक्षित खाते"]},
+ {"id": "PAY_TRANSFER", "category": "payment", "patterns": ["paisa transfer", "paise transfer", "amount transfer", "paise bhej*", "paisa bhej*", "upi se bhej*", "money transfer", "processing fee", "registration fee", "refundable deposit", "पैसा ट्रांसफर", "पैसे ट्रांसफर", "पैसे भेज*", "पैसा भेज*", "अमाउंट ट्रांसफर", "प्रोसेसिंग फीस", "रजिस्ट्रेशन फीस"]},
+ {"id": "PAY_GIFT_CRYPTO", "category": "payment", "patterns": ["gift card", "google play card", "bitcoin", "crypto", "usdt", "गिफ्ट कार्ड", "बिटकॉइन", "क्रिप्टो"]},
+ {"id": "REMOTE_TOOL", "category": "remote_app", "weight": 45, "patterns": ["anydesk", "any desk", "teamviewer", "team viewer", "quicksupport", "quick support", "rustdesk", "एनीडेस्क", "एनी डेस्क", "टीमव्यूअर", "टीम व्यूअर", "क्विक सपोर्ट"]},
+ {"id": "REMOTE_ACTION", "category": "remote_app", "patterns": ["screen share*", "apk file", "apk download", "link par click", "link pe click", "app download kar*", "remote access", "screen dikha*", "स्क्रीन शेयर", "एपीके", "लिंक पर क्लिक", "ऐप डाउनलोड", "ऐप इंस्टॉल", "रिमोट एक्सेस"]},
+ {"id": "BAIT_KYC", "category": "prize_kyc", "patterns": ["kyc expire*", "kyc update", "kyc pending", "kyc verify", "केवाईसी"]},
+ {"id": "BAIT_PRIZE", "category": "prize_kyc", "patterns": ["lucky draw", "inaam jeet*", "lottery jeet*", "kbc lottery", "cashback milega", "refund pending", "refund process", "लकी ड्रॉ", "इनाम जीत*", "लॉटरी जीत*", "रिफंड पेंडिंग"]},
+ {"id": "BAIT_UTILITY", "category": "prize_kyc", "patterns": ["bijli connection", "bijli ka connection kat*", "electricity bill pending", "sim 24 ghante", "बिजली कनेक्शन", "बिजली का कनेक्शन कट"]}
+],
+"combos": [
+ {"id": "COMBO_AUTH_THREAT", "requires_all": ["authority", "threat"], "bonus": 15, "label_en": "Officer plus threat", "label_hi": "अधिकारी + धमकी"},
+ {"id": "COMBO_THREAT_SECRECY", "requires_all": ["threat", "secrecy"], "bonus": 15, "label_en": "Threat plus secrecy", "label_hi": "धमकी + गोपनीयता"},
+ {"id": "COMBO_AUTH_CRED", "requires_all": ["authority", "credentials"], "bonus": 20, "label_en": "Officer asks for OTP or PIN", "label_hi": "अधिकारी ने OTP / PIN माँगा"},
+ {"id": "COMBO_PAY_SECRECY", "requires_all": ["payment", "secrecy"], "bonus": 20, "label_en": "Money transfer plus secrecy", "label_hi": "पैसे + गोपनीयता"},
+ {"id": "COMBO_REMOTE_AUTH", "requires_all": ["remote_app", "authority"], "bonus": 20, "label_en": "Officer asks for remote access", "label_hi": "अधिकारी ने रिमोट एक्सेस माँगा"},
+ {"id": "COMBO_BAIT_CRED", "requires_all": ["prize_kyc", "credentials"], "bonus": 15, "label_en": "Bait plus OTP request", "label_hi": "लालच + OTP"},
+ {"id": "COMBO_URGENCY_MONEY", "requires_all": ["urgency"], "requires_any": ["credentials", "payment"], "bonus": 10, "label_en": "Rush plus money or OTP", "label_hi": "जल्दबाज़ी + पैसे / OTP"}
+],
+"dampeners": [
+ {"id": "SAFE_DONT_SHARE", "weight": -25, "label_en": "Warns not to share OTP", "label_hi": "OTP शेयर न करने की सलाह", "patterns": ["otp kisi ke saath share na", "otp share na karein", "kabhi share na", "kisi ke saath share na", "never share", "do not share", "dont share", "otp kisi ko na bata*", "kabhi otp nahi maang*", "bank kabhi otp", "bank kabhi pin", "कभी शेयर न", "किसी के साथ शेयर न", "ओटीपी शेयर न", "कभी ओटीपी नहीं मांग*", "बैंक कभी ओटीपी", "ओटीपी किसी को न बता*"]},
+ {"id": "SAFE_AWARENESS", "weight": -20, "label_en": "Fraud awareness message", "label_hi": "धोखाधड़ी से बचाव का संदेश", "patterns": ["fraud se savdhan", "fraud se bachein", "savdhan rahein", "scam se savdhan", "धोखाधड़ी से", "सावधान रहें", "फ्रॉड से बचें"]},
+ {"id": "SAFE_AUTOMATED", "weight": -15, "label_en": "Routine reminder or alert", "label_hi": "सामान्य रिमाइंडर / अलर्ट", "patterns": ["automated reminder", "automated call", "yeh ek reminder", "aapki emi", "emi due", "statement ready", "transaction alert", "appointment", "delivery partner", "aapka order", "आपकी ईएमआई", "अपॉइंटमेंट", "आपका ऑर्डर", "डिलीवरी पार्टनर"]}
+]
+}

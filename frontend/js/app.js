@@ -12,11 +12,11 @@ import * as phone from "./phone.js";
 import * as receipt from "./receipt.js";
 import * as live from "./live.js";
 import * as words from "./words.js";
+import { initBrowserLive } from "./browser-live.js";
 import { playSample, stopSample } from "./devfeed.js";
 
 export const FEATURES = { mic: true };
 export const state = { sessionId: null, mode: "mock", modeLabel: "MOCK", lang: "hi-IN", level: "calm", score: 0, alertFired: false, isStatic: false, isSample: false };
-
 let audioCtx = null, callsList = [], el = {};
 const handledMessages = new Set();
 
@@ -32,7 +32,6 @@ export async function init() {
     speakCb: get("speak-warning-cb"), btnStart: get("btn-start"), btnStop: get("btn-stop"),
     btnDemoScam: get("btn-demo-scam"), btnDemoNormal: get("btn-demo-normal"),
   };
-
   if (el.btnDemoScam) el.btnDemoScam.addEventListener("click", () => startSample("/assets/sample_run.jsonl"));
   if (el.btnDemoNormal) el.btnDemoNormal.addEventListener("click", () => startSample("/assets/sample_legit.jsonl"));
   el.banner.querySelector(".banner-close").addEventListener("click", () => el.banner.classList.add("hidden"));
@@ -44,6 +43,7 @@ export async function init() {
   receipt.init(get("receipt-root"), () => (state.isSample ? startSample("/assets/sample_run.jsonl") : handleStart()));
   live.init({ onDispatch: dispatch });
   words.init(el.langSel.value.startsWith("gu") ? "gu" : "hi_en");
+  initBrowserLive(dispatch);
 
   for (const l of LANGS) {
     const o = document.createElement("option"); o.value = l.code; o.textContent = l.label; el.langSel.appendChild(o);
@@ -57,15 +57,17 @@ export async function init() {
     if (el.badge) { el.badge.textContent = t("badge_static"); el.badge.className = "badge-pill mode-mock"; el.badge.classList.remove("hidden"); }
     const ft = document.querySelector("#foot .footer-text");
     if (ft) ft.textContent += ` · ${t("static_footer_note")}`;
-    [el.callSel, el.modeSel, el.btnStart, el.btnStop].forEach((node) => { if (node) node.style.display = "none"; });
-    const adv = document.getElementById("advanced-controls"); if (adv) adv.style.display = "none";
-    return;
+    [el.callSel, el.modeSel, el.btnStart, el.btnStop].forEach((n) => { if (n) n.style.display = "none"; });
+  } else {
+    try {
+      const h = await getHealth();
+      if (!h.gnani_live) {
+        const lb = get("btn-listen-live"), r = get("live-disabled-reason");
+        if (lb) lb.disabled = true; if (r) r.textContent = t("live_no_key");
+      }
+    } catch (_) {}
+    fetchCalls();
   }
-  await fetchCalls();
-  try {
-    const h = await getHealth();
-    if (h.demo && el.badge) { el.badge.textContent = t("badge_demo"); el.badge.className = "badge-pill mode-mock"; el.badge.classList.remove("hidden"); }
-  } catch (_) {}
   const p = new URLSearchParams(window.location.search);
   if (p.get("dev") === "1") {
     playSample("/assets/sample_run.jsonl", dispatch, { speed: parseFloat(p.get("speed") || "1"), at: p.get("at") ? parseFloat(p.get("at")) : null });
@@ -76,8 +78,7 @@ export async function init() {
 
 async function fetchCalls() {
   try {
-    const res = await getCalls();
-    callsList = res.calls || [];
+    const res = await getCalls(); callsList = res.calls || [];
     while (el.callSel.firstChild) el.callSel.removeChild(el.callSel.firstChild);
     for (const c of callsList) {
       const o = document.createElement("option"); o.value = c.id; o.textContent = `${c.title} (SYNTHETIC)`; el.callSel.appendChild(o);
@@ -99,17 +100,16 @@ function unlockAudio() {
   if (!audioCtx) {
     const Ctx = window.AudioContext || window.webkitAudioContext;
     if (Ctx) {
-      audioCtx = new Ctx();
-      const s = audioCtx.createBufferSource();
+      audioCtx = new Ctx(); const s = audioCtx.createBufferSource();
       s.buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.05, audioCtx.sampleRate);
       s.connect(audioCtx.destination); s.start(0);
     }
   }
   if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
 }
+
 async function handleStart() {
-  state.isSample = false; unlockAudio();
-  el.banner.classList.add("hidden");
+  state.isSample = false; unlockAudio(); el.banner.classList.add("hidden");
   el.btnStart.disabled = true; el.btnStop.disabled = false;
   const p = new URLSearchParams(window.location.search);
   const body = {
@@ -136,8 +136,7 @@ async function handleStop() {
   stopMic();
   if (state.isSample) {
     stopSample(); state.isSample = false; resetAll();
-    if (el.btnStart) el.btnStart.disabled = false;
-    if (el.btnStop) el.btnStop.disabled = true;
+    if (el.btnStart) el.btnStart.disabled = false; if (el.btnStop) el.btnStop.disabled = true;
     return;
   }
   if (!state.sessionId) return;
@@ -147,16 +146,12 @@ async function handleStop() {
 
 function showBanner(code, msg = "") {
   if (t(code) === code) el.bannerMsg.textContent = code; else fill(el.bannerMsg, code);
-  el.bannerServer.textContent = msg ? `Detail: ${msg}` : "";
-  el.banner.classList.remove("hidden");
+  el.bannerServer.textContent = msg ? `Detail: ${msg}` : ""; el.banner.classList.remove("hidden");
 }
-function startSample(url) {
-  unlockAudio(); resetAll(); state.isSample = true; playSample(url, dispatch, { speed: 1.0 });
-}
+function startSample(url) { unlockAudio(); resetAll(); state.isSample = true; playSample(url, dispatch, { speed: 1.0 }); }
 function resetAll() {
-  handledMessages.clear();
-  eye.reset(); tape.reset(); why.reset(); waveform.reset();
-  stamp.reset(); phone.reset(); receipt.reset();
+  handledMessages.clear(); eye.reset(); tape.reset(); why.reset();
+  waveform.reset(); stamp.reset(); phone.reset(); receipt.reset();
 }
 
 export function dispatch(msg) {
@@ -167,21 +162,21 @@ export function dispatch(msg) {
 
   if (msg.session_id && msg.session_id !== state.sessionId) {
     if (msg.type === "session" && (msg.state === "ended" || msg.state === "error")) return;
-    resetAll();
-    state.sessionId = msg.session_id;
-    state.alertFired = false;
+    resetAll(); state.sessionId = msg.session_id; state.alertFired = false;
   }
   if (!state.sessionId && msg.type === "summary") return;
 
   try {
     if (msg.type === "session") {
       state.mode = msg.mode || state.mode; state.modeLabel = msg.mode_label || state.modeLabel; state.lang = msg.lang || state.lang;
-      if (el.badge) { el.badge.textContent = state.isStatic ? t("badge_static") : state.modeLabel; el.badge.className = `badge-pill mode-${state.mode}`; el.badge.classList.remove("hidden"); }
+      if (el.badge) {
+        el.badge.textContent = (state.isStatic && msg.mode_label !== "BROWSER MIC") ? t("badge_static") : state.modeLabel;
+        el.badge.className = `badge-pill mode-${state.mode}`; el.badge.classList.remove("hidden");
+      }
       if (el.synthetic) el.synthetic.classList.toggle("hidden", !msg.synthetic);
       const running = (msg.state === "listening" || msg.state === "starting");
       if (!running) stopMic();
-      if (el.btnStart) el.btnStart.disabled = running;
-      if (el.btnStop) el.btnStop.disabled = !running;
+      if (el.btnStart) el.btnStart.disabled = running; if (el.btnStop) el.btnStop.disabled = !running;
     } else if (msg.type === "risk") {
       const prev = state.level; state.score = msg.score; state.level = msg.level;
       document.body.setAttribute("data-level", msg.level);

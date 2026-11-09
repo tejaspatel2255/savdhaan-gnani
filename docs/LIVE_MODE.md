@@ -14,3 +14,10 @@ Savdhaan provides real-time microphone listening and analysis via **Gnani Prisma
 - **Local-Only by Default**: Live listening is restricted to loopback connections (`127.0.0.1`, `localhost`). External clients receive HTTP 403 / WS 4003 unless `ALLOW_REMOTE_LIVE=1` is explicitly set.
 - **Credit Guards**: Capped at `MAX_STT_SECONDS_PER_RUN` (default 180s) to strictly prevent runaway credit usage.
 - **Zero Disk Recording**: Audio buffers live purely in memory and are discarded when the session ends unless `SAVE_LIVE_RUNS=true` is enabled.
+
+## Troubleshooting Local Live Mode
+If "Listen live" shows disabled or fails to connect locally, run the diagnostic doctor:
+```bash
+python scripts/live_doctor.py
+```
+It tests `.env`, API key presence, environment flags, and port 8000 health without consuming any Gnani credits.

@@ -51,6 +51,10 @@ def export_static():
     manifest_path.write_text(json.dumps(manifest_data, indent=2), encoding="utf-8")
     print(f"Generated audio manifest at {manifest_path}")
 
+    # 4. Export pyscorer bundle
+    from scripts.export_pyscorer import export_pyscorer
+    export_pyscorer()
+
     print("Static export complete.")
 
 

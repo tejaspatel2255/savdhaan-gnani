@@ -18,10 +18,12 @@ Savdhaan incorporates carefully selected open-source libraries, runtimes, and ex
 | `jiwer` | `>=3.0.0` | Apache-2.0 | Word Error Rate (WER) & Character Error Rate (CER) calculation |
 | `pytest` | `>=8.0.0` | MIT | Unit and integration test framework |
 
-## Frontend Assets
+## Frontend Assets & In-Browser Runtimes
 
 | Asset | Source / Author | License | Description |
 | :--- | :--- | :--- | :--- |
+| **Pyodide** (`v0.26.4`) | Mozilla / Pyodide Authors | [MPL-2.0](https://www.mozilla.org/MPL/2.0/) | WebAssembly Python runtime powering in-browser execution of `backend/scorer` rules on static hosts. |
+| **Web Speech API** | W3C Standard (Chrome / Edge built-in) | Browser Built-in | Client-side speech-to-text recognition for the static demo "Speak yourself" mode. |
 | **Google Fonts** (`Cinzel`, `JetBrains Mono`, `Noto Sans Devanagari`, `Noto Sans Gujarati`) | Google Fonts / Open Font Contributors | [SIL Open Font License 1.1](https://scripts.sil.org/OFL) | High-legibility typography for English and Indic scripts. System fallbacks ensure graceful rendering offline. |
 | Handcrafted Inline SVGs | Savdhaan Project | MIT | Nazar eye, receipt tape textures, stamps, and shield icons (zero external CDN or icon libraries). |
 

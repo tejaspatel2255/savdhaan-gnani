@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="css/live.css">
   <link rel="stylesheet" href="css/words.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/browser-live.css">
   <link rel="stylesheet" href="css/final-fix.css">
   <link rel="stylesheet" href="css/layout-v3.css">
 </head>
@@ -211,10 +212,15 @@
           <!-- State Line -->
           <div class="state-line" data-i18n="state_idle"><span class="t-en">Start a call</span></div>
 
+          <!-- Live Caption for Speech -->
+          <div id="live-caption" aria-live="polite" class="live-caption"></div>
+
           <!-- Demo Quick Sample Actions -->
           <div id="demo-actions" class="demo-actions-box">
             <button id="btn-demo-scam" class="btn-demo btn-demo-scam">Play a sample scam call</button>
             <button id="btn-demo-normal" class="btn-demo btn-demo-normal">Play a normal call</button>
+            <button id="btn-browser-mic" class="btn-demo btn-demo-mic" data-i18n="btn_browser_mic">Speak yourself (browser mic)</button>
+            <div id="browser-mic-note" class="browser-mic-note" data-i18n="browser_mic_note">Browser speech recognition (Chrome/Edge). Not Gnani Prisma; your browser's speech service hears your voice.</div>
           </div>
         </div>
       </section>

@@ -133,6 +133,13 @@ export async function analyzeText(text, pack = "hi_en") {
   });
 }
 
+/** Fetch a text/code asset (e.g. for Pyodide in-browser scoring). */
+export async function fetchTextAsset(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new ApiError(res.status, `Failed to load asset ${url}: ${res.statusText}`);
+  return res.text();
+}
+
 /** Fetch rule-category summaries for the "Words we listen for" panel. */
 export async function getRulesSummary() {
   return request("/api/rules/summary");

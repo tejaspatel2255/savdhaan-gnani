@@ -28,6 +28,15 @@ cp .env.example .env
 python -m backend.main
 ```
 
+## Live Modes
+
+Savdhaan provides two complementary live listening modes:
+
+| Mode | Where it runs | Speech Recognition | Scam Scoring | Secrets / Credits | Use case |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Local Live Mode** (`LIVE MIC`) | `localhost:8000` | **Gnani Prisma v2.5** (streaming WebSocket) | Python Scorer (backend) | Requires `GNANI_API_KEY` | High-accuracy evaluation & official Gnani pipeline |
+| **Speak Yourself** (`BROWSER MIC`) | Static Host (Vercel) / Local | Browser Web Speech API (`webkitSpeechRecognition`) | Real Python Scorer compiled via **Pyodide** (WebAssembly in browser) | Zero credits, zero API keys | Interactive public testing with your own voice on static deployments |
+
 ## Where Gnani AI Is Used
 
 | Capability | Gnani Engine | Endpoint | Calling Code |
