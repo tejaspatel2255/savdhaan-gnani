@@ -116,7 +116,7 @@ export const STRINGS = {
   live_btn_stop: { hi: "सुनना बंद करें", en: "Stop listening", gu: "સાંભળવાનું બંધ કરો" },
   live_usage_label: { hi: "उपयोग", en: "STT usage", gu: "ઉપયોગ" },
   live_no_key: { hi: "API कुंजी नहीं — लाइव बंद है", en: "API key missing — live disabled", gu: "API key ગોઠવેલ નથી — live બંધ" },
-  live_static: { hi: "लाइव Gnani सुनना सिर्फ़ अपने कंप्यूटर पर चलता है। यहाँ 'खुद बोलें (ब्राउज़र माइक)' का उपयोग करें।", en: "Live Gnani listening runs only on your own computer. On this hosted site, use 'Speak yourself (browser mic)'.", gu: "લાઇવ Gnani સાંભળવું ફક્ત તમારા કમ્પ્યુટર પર ચાલે છે. અહીં 'પોતે બોલો (બ્રાઉઝર માઇક)' નો ઉપયોગ કરો." },
+  live_static: { hi: "सिर्फ़ लोकल पर · नीचे 'खुद बोलें' आज़माएँ", en: "Local only · Try 'Speak yourself' below", gu: "ફક્ત લોકલ પર · નીચે 'પોતે બોલો' વાપરો" },
   btn_browser_mic: { hi: "खुद बोलें (ब्राउज़र माइक)", en: "Speak yourself (browser mic)", gu: "પોતે બોલો (બ્રાઉઝર માઇક)" },
   btn_browser_mic_stop: { hi: "बोलना रोकें", en: "Stop speaking", gu: "બોલવાનું રોકો" },
   browser_mic_note: { hi: "ब्राउज़र स्पीच रिकग्निशन (Chrome/Edge)। यह Gnani Prisma नहीं है।", en: "Browser speech recognition (Chrome/Edge). Not Gnani Prisma; your browser's speech service hears your voice.", gu: "બ્રાઉઝર સ્પીચ રેકગ્નિશન (Chrome/Edge). આ Gnani Prisma નથી." },

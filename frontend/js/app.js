@@ -57,6 +57,8 @@ export async function init() {
     if (el.badge) { el.badge.textContent = t("badge_static"); el.badge.className = "badge-pill mode-mock"; el.badge.classList.remove("hidden"); }
     const ft = document.querySelector("#foot .footer-text");
     if (ft) ft.textContent += ` · ${t("static_footer_note")}`;
+    const adv = get("advanced-controls");
+    if (adv) adv.style.display = "none";
     [el.callSel, el.modeSel, el.btnStart, el.btnStop].forEach((n) => { if (n) n.style.display = "none"; });
   } else {
     try {
