@@ -6,6 +6,7 @@ let dom = null;
 let currentScreen = "calm";
 let audioElement = null;
 let playedSessions = new Set();
+let onHangupCallback = null;
 
 function mk(cls) {
   const d = document.createElement("div");
@@ -13,12 +14,13 @@ function mk(cls) {
   return d;
 }
 
-export function init(rootEl) {
+export function init(rootEl, onHangup) {
   dom = {
     root: rootEl,
     screen: rootEl.querySelector(".phone-screen"),
     familyContainer: rootEl.querySelector(".family-card-slot"),
   };
+  onHangupCallback = onHangup || null;
   reset();
 }
 
@@ -58,7 +60,11 @@ function renderScreen(stateName) {
 
     const btn = fill(document.createElement("button"), "phone_hangup_btn");
     btn.className = "btn-hangup";
-    btn.addEventListener("click", () => renderScreen("safe"));
+    btn.addEventListener("click", () => {
+      if (audioElement) { audioElement.pause(); audioElement = null; }
+      renderScreen("safe");
+      if (onHangupCallback) onHangupCallback();
+    });
     dom.screen.appendChild(btn);
   } else if (stateName === "safe") {
     dom.screen.appendChild(fill(mk("phone-ended-safe"), "phone_ended_safe"));

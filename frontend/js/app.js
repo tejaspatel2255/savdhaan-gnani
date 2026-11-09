@@ -34,11 +34,10 @@ export async function init() {
   if (el.btnDemoScam) el.btnDemoScam.addEventListener("click", () => startSample("/assets/sample_run.jsonl"));
   if (el.btnDemoNormal) el.btnDemoNormal.addEventListener("click", () => startSample("/assets/sample_legit.jsonl"));
   el.banner.querySelector(".banner-close").addEventListener("click", () => el.banner.classList.add("hidden"));
-  el.btnStart.addEventListener("click", handleStart); el.btnStop.addEventListener("click", handleStop);
-  el.callSel.addEventListener("change", syncModes);
+  el.btnStart.addEventListener("click", handleStart); el.btnStop.addEventListener("click", handleStop); el.callSel.addEventListener("change", syncModes);
 
   eye.init(get("col-eye")); tape.init(get("col-tape")); why.init(get("col-why"));
-  waveform.init(get("awaaz")); stamp.init(get("stamp-root")); phone.init(get("phone-slot"));
+  waveform.init(get("awaaz")); stamp.init(get("stamp-root")); phone.init(get("phone-slot"), handleHangup);
   receipt.init(get("receipt-root"), () => (state.isSample ? startSample("/assets/sample_run.jsonl") : handleStart()));
   live.init({ onDispatch: dispatch });
   initBrowserLive(dispatch);
@@ -90,9 +89,7 @@ async function fetchCalls() {
   try {
     const res = await getCalls(); callsList = res.calls || [];
     while (el.callSel.firstChild) el.callSel.removeChild(el.callSel.firstChild);
-    for (const c of callsList) {
-      const o = document.createElement("option"); o.value = c.id; o.textContent = `${c.title} (SYNTHETIC)`; el.callSel.appendChild(o);
-    }
+    for (const c of callsList) { const o = document.createElement("option"); o.value = c.id; o.textContent = `${c.title} (SYNTHETIC)`; el.callSel.appendChild(o); }
     syncModes();
   } catch (err) { showBanner("network", err.message); }
 }
@@ -108,11 +105,7 @@ function syncModes() {
 function unlockAudio() {
   if (!audioCtx) {
     const Ctx = window.AudioContext || window.webkitAudioContext;
-    if (Ctx) {
-      audioCtx = new Ctx(); const s = audioCtx.createBufferSource();
-      s.buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.05, audioCtx.sampleRate);
-      s.connect(audioCtx.destination); s.start(0);
-    }
+    if (Ctx) { audioCtx = new Ctx(); const s = audioCtx.createBufferSource(); s.buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.05, audioCtx.sampleRate); s.connect(audioCtx.destination); s.start(0); }
   }
   if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
 }
@@ -148,13 +141,26 @@ async function handleStop() {
     return;
   }
   if (!state.sessionId) return;
-  el.btnStop.disabled = true;
-  try { await stopSession(state.sessionId); } catch (err) { showBanner("internal", err.message); }
+  el.btnStop.disabled = true; try { await stopSession(state.sessionId); } catch (err) { showBanner("internal", err.message); }
 }
 
 function showBanner(code, msg = "") {
   if (t(code) === code) el.bannerMsg.textContent = code; else fill(el.bannerMsg, code);
   el.bannerServer.textContent = msg ? `Detail: ${msg}` : ""; el.banner.classList.remove("hidden");
+}
+function handleHangup() {
+  if (state.isSample) {
+    stopSample(); state.isSample = false;
+    dispatch({ type: "session", state: "ended", mode: "mock", mode_label: "MOCK", session_id: state.sessionId, synthetic: true });
+    dispatch({
+      type: "summary", session_id: state.sessionId, duration_s: 24, segments: 4, time_to_alert_s: 6.0,
+      max_score: state.score || 79, final_level: state.level || "danger", categories: ["threat", "secrecy"],
+      stt_latency_ms: { p50: 312, p95: 540 }, credits_used: { stt_seconds: 0, tts_chars: 0 }, mode: "mock", synthetic: true,
+    });
+  } else {
+    handleStop(); stopBrowserLive();
+    const ls = document.getElementById("btn-live-stop"); if (ls && ls.style.display !== "none") ls.click();
+  }
 }
 function startSample(url) { state.modeLabel = "MOCK"; unlockAudio(); resetAll(); state.isSample = true; playSample(url, dispatch, { speed: 1.0 }); }
 function resetAll() { handledMessages.clear(); [eye, tape, why, waveform, stamp, phone, receipt].forEach((m) => m.reset()); }
@@ -172,23 +178,18 @@ export function dispatch(msg) {
   try {
     if (msg.type === "session") {
       state.mode = msg.mode || state.mode; state.modeLabel = msg.mode_label || state.modeLabel; state.lang = msg.lang || state.lang;
-      if (el.badge) {
-        el.badge.textContent = (state.isStatic && state.modeLabel !== "BROWSER MIC") ? t("badge_static") : state.modeLabel;
-        el.badge.className = `badge-pill mode-${state.mode}`; el.badge.classList.remove("hidden");
-      }
+      if (el.badge) { el.badge.textContent = (state.isStatic && state.modeLabel !== "BROWSER MIC") ? t("badge_static") : state.modeLabel; el.badge.className = `badge-pill mode-${state.mode}`; el.badge.classList.remove("hidden"); }
       if (el.synthetic) el.synthetic.classList.toggle("hidden", !msg.synthetic);
       const running = (msg.state === "listening" || msg.state === "starting");
       if (!running) stopMic();
       if (el.btnStart) el.btnStart.disabled = running; if (el.btnStop) el.btnStop.disabled = !running;
     } else if (msg.type === "risk") {
-      const prev = state.level; state.score = msg.score; state.level = msg.level;
-      document.body.setAttribute("data-level", msg.level);
+      const prev = state.level; state.score = msg.score; state.level = msg.level; document.body.setAttribute("data-level", msg.level);
       if (prev !== msg.level && el.polite) el.polite.textContent = `Risk level ${msg.level}, score ${msg.score}`;
     } else if (msg.type === "alert" && !state.alertFired) {
       state.alertFired = true; if (el.assertive) el.assertive.textContent = t("alert_announcement");
     } else if (msg.type === "error") {
-      showBanner(msg.code, msg.message);
-      if (!msg.recoverable) { el.btnStart.disabled = false; el.btnStop.disabled = true; }
+      showBanner(msg.code, msg.message); if (!msg.recoverable) { el.btnStart.disabled = false; el.btnStop.disabled = true; }
     }
     [eye, tape, why, waveform, stamp, phone, receipt].forEach((mod) => mod.handle(msg, state));
     live.handle(msg);
