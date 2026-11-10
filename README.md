@@ -1,10 +1,30 @@
 # Savdhaan (सावधान) · Live Scam-Call Shield
 
-Savdhaan protects citizens from scam calls in real time using explainable speech intelligence.
+Savdhaan helps protect citizens from scam calls in real time using explainable speech intelligence.
 It listens to incoming phone conversations via browser microphone (e.g. a call on speakerphone), scores rolling bilingual transcripts with deterministic rules,
 and speaks immediate warnings while simulating family alerts before money or credentials are lost.
 
 Built for the **Great Indian AI Internship Challenge** by **Gnani AI** (Deadline: Nov 10, 2026, 11:59 PM IST).
+
+## One-Page Pitch
+
+**Problem.** In India, scam calls ("digital arrest", fake bank or KYC calls, OTP fraud) work by pressure: the caller threatens, demands secrecy and urgency, then asks for money or an OTP. Victims realise only after paying, and people alone on a call have nobody to ask.
+
+**Solution.** Savdhaan (सावधान) listens to a call as it happens and warns the listener before they pay:
+1. **Live transcript:** every sentence appears as it is spoken (Hindi, English, Hinglish).
+2. **Explainable score:** a deterministic rule engine scores the call 0-100 (calm / careful / danger) and shows the exact phrases behind the score, with no black box.
+3. **Spoken warning:** a short voice warning in the caller's language (Gnani Timbre).
+4. **Family alert:** a notification to a trusted contact (simulated in this demo).
+
+**Built with Gnani AI.** Gnani Prisma v2.5 for realtime speech recognition and Gnani Timbre v3.0 for the spoken warning, in local live mode. The hosted demo needs no keys: it replays a recorded call or uses browser speech recognition feeding the same scorer, running in your browser.
+
+**Honest results.** On perfect transcripts: dev 5/5 scam calls caught, test 4/5, with 0 false alarms on normal calls. Calls are synthetic, each split has only 10 calls, and real Prisma accuracy and the blind set are not measured yet. Every number is in the open ledger (`data/eval/results.json`, `/report.html`).
+
+**Who it helps.** Elderly and first-time digital users, and families who want a safety net during a call.
+
+**Next steps.** Measure real Prisma accuracy on noisy phone audio, build a blind test set written by others, add more languages and a real (consented) family-alert channel.
+
+**Links.** Demo: https://savdhaan-gnani.vercel.app · Video: https://youtu.be/kchWbfNAtrE
 
 ![Savdhaan Architecture & Flow](docs/how_it_works.svg)
 
