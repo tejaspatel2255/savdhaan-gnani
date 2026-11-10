@@ -86,7 +86,7 @@ When using **Try your own words**, text sentences are evaluated 100% locally on 
 ## Submission
 
 - **Live Hosted Demo**: https://savdhaan-gnani.vercel.app
-- **Demo Video (75s)**: <<VIDEO LINK>>
+- **Demo Video**: https://youtu.be/kchWbfNAtrE
 - **Repository**: https://github.com/tejaspatel2255/savdhaan-gnani
 - **Challenge**: Great Indian AI Internship Challenge by Gnani AI
 - **Tags**: #GnaniAI #GreatIndianAIInternshipChallenge
